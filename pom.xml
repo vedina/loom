@@ -84,4 +84,9 @@
        </plugins>
      </pluginManagement>
 </build>	
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>4.8.1</junit.version>
+  </properties>
+
 </project>

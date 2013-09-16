@@ -3,6 +3,7 @@ package net.idea.ops.cli;
 import java.util.Properties;
 
 import net.idea.ops.cli.compound.OPSCompoundClient;
+import net.idea.ops.cli.compound.OPSPharmacologyClient;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -16,6 +17,13 @@ public class OPSClient {
 	public enum keys {
 		app_id,
 		app_key
+	}
+	public enum pagination {
+		_page,
+		_pageSize
+	}	
+	public enum params {
+		uri
 	}
 	protected HttpClient httpClient;
 	protected Properties properties = config();
@@ -47,7 +55,14 @@ public class OPSClient {
 		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
 		return cli;
 	}
-
+	
+	
+	public OPSPharmacologyClient getPharmacologyClient() {
+		OPSPharmacologyClient cli =  new OPSPharmacologyClient(getHttpClient());
+		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
+		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
+		return cli;
+	}
 	
 	public static Properties config()  {
 		try {

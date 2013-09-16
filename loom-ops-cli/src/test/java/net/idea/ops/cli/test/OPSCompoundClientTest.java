@@ -22,9 +22,7 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchSimilar() throws Exception {
 		
 		OPSCompoundClient cli = getOPSClient();
-		//get the first record
 		List<Compound> list = cli.searchSimilarStructures(new URL(TEST_SERVER),"c1ccccc1",0.6,5);
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertEquals(5,list.size());
 	}	
@@ -33,9 +31,7 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchSubsttructure() throws Exception {
 		
 		OPSCompoundClient cli = getOPSClient();
-		//get the first record
 		List<Compound> list = cli.searchSubstructures(new URL(TEST_SERVER),"c1ccccc1",5);
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertEquals(5,list.size());
 	}		
@@ -43,9 +39,7 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	@Test
 	public void testSearchExact() throws Exception {
 		OPSCompoundClient cli = getOPSClient();
-		//get the first record
 		List<Compound> list = cli.searchExactStructures(new URL(TEST_SERVER),"c1ccccc1");
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertNotNull(list.get(0).getSMILES());
 	}
@@ -54,7 +48,6 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchByInChI() throws Exception {
 		OPSCompoundClient cli = getOPSClient();
 		List<Compound> list = cli.searchStructuresByInchi(new URL(TEST_SERVER),"InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)");
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertNotNull(list.get(0).getInChI());
 	}
@@ -62,7 +55,6 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchBySMILES() throws Exception {
 		OPSCompoundClient cli = getOPSClient();
 		List<Compound> list = cli.searchStructuresBySMILES(new URL(TEST_SERVER),"CC(=O)Oc1ccccc1C(=O)O");
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertNotNull(list.get(0).getSMILES());
 	}
@@ -71,7 +63,6 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchByInChIKey() throws Exception {
 		OPSCompoundClient cli = getOPSClient();
 		List<Compound> list = cli.searchStructuresByInchikey(new URL(TEST_SERVER),"BSYNRYMUTXBXSQ-UHFFFAOYSA-N");
-		//verify if a record is retrieved
 		Assert.assertTrue(list.size()>0);
 		Assert.assertNotNull(list.get(0).getInChIKey());
 	}
