@@ -22,13 +22,13 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCom
 	public void testSearchSimilar() throws Exception {
 		
 		OPSCompoundClient cli = getOPSClient();
-		List<Compound> list = cli.searchSimilarStructures(new URL(TEST_SERVER),"c1ccccc1",0.6,5);
+		List<Compound> list = cli.searchSimilarStructures(new URL(TEST_SERVER),"c1ccccc1",0.75,50);
 		Assert.assertTrue(list.size()>0);
-		Assert.assertEquals(5,list.size());
+		Assert.assertEquals(8,list.size());
 	}	
 	
 	@Test
-	public void testSearchSubsttructure() throws Exception {
+	public void testSearchSubstructure() throws Exception {
 		
 		OPSCompoundClient cli = getOPSClient();
 		List<Compound> list = cli.searchSubstructures(new URL(TEST_SERVER),"c1ccccc1",5);

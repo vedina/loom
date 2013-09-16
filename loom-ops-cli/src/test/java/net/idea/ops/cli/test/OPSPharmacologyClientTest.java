@@ -39,9 +39,10 @@ public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult
 	public void testTargetPharmacology() throws Exception {
 		Target target = new Target(new URL("http://www.conceptwiki.org/concept/cb62ca8a-3939-443b-ab77-9a8d45820d2c"));
 		OPSPharmacologyClient cli = getOPSClient();
-		List<AssayResult> list = cli.getTargetPharmacology(new URL(TEST_SERVER),target,100,5);
+		int pagesize =100;
+		List<AssayResult> list = cli.getTargetPharmacology(new URL(TEST_SERVER),target,0,pagesize);
 		Assert.assertTrue(list.size()>0);
-		Assert.assertEquals(5,list.size());
+		Assert.assertEquals(pagesize,list.size());
 		for (AssayResult assayResult: list) {
 			Compound compound = assayResult.getCompound();
 			Assert.assertNotNull(compound.getResourceIdentifier());
@@ -50,10 +51,21 @@ public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult
 			Assert.assertNotNull(compound.getName());
 			System.out.println(assayResult);
 		}
+		System.out.println("Activity types\t"+cli.getActivityTypes().size());
+		System.out.println(cli.getActivityTypes());
+		System.out.println("Activities\t"+cli.getActivities().size());
 		System.out.println(cli.getActivities());
+		System.out.println("Targets\t"+cli.getTargets().size());
 		System.out.println(cli.getTargets());
+		System.out.println("Citations\t"+cli.getCitations().size());
 		System.out.println(cli.getCitations());
-		System.out.println(cli.getCompounds());
+		System.out.println("Compounds\t"+cli.getCompounds().size());
+		for (String cmp : cli.getCompounds().keySet()) {
+			System.out.print(cmp);
+			System.out.print("\t");
+			System.out.println(cli.getCompounds().get(cmp));
+		}
+		System.out.println("Assays\t"+cli.getAssays().size());
 		System.out.println(cli.getAssays());
 	}	
 

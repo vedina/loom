@@ -16,6 +16,7 @@ import net.idea.ops.cli.assay.Assay;
 import net.idea.ops.cli.assay.AssayResult;
 import net.idea.ops.cli.assay.Target;
 import net.idea.ops.cli.lookup.ActivityLookup;
+import net.idea.ops.cli.lookup.ActivityTypeLookup;
 import net.idea.ops.cli.lookup.AssayLookup;
 import net.idea.ops.cli.lookup.CitationsLookup;
 import net.idea.ops.cli.lookup.CompoundLookup;
@@ -33,6 +34,11 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 	protected TargetLookup targets = new TargetLookup();
 	protected AssayLookup assays = new AssayLookup();
 	protected ActivityLookup activities = new ActivityLookup();
+	protected ActivityTypeLookup activityTypes = new ActivityTypeLookup();
+	public ActivityTypeLookup getActivityTypes() {
+		return activityTypes;
+	}
+
 	protected CitationsLookup citations = new CitationsLookup();
 	protected CompoundLookup compounds = new CompoundLookup();
 	protected DatasetLookup datasets = new DatasetLookup();
@@ -120,7 +126,9 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 		if (node !=null && (node.getTextValue()!=null)) {
 			activity = activities.lookup(node.getTextValue());
 			node = item.get("activity_type");
-			if (node!=null && (node.getTextValue()!=null)) activity.setActivityType(node.getTextValue());
+			if (node!=null && (node.getTextValue()!=null)) {
+				activity.setType(activityTypes.lookup(node.getTextValue()));
+			}
 		} else activity = null;
 		//Results themselves
 		AssayResult readout = new AssayResult();

@@ -128,7 +128,9 @@ public class AssayResult extends AbstractURLResource {
 		b.append("\n\tActivity:\n\t\t");
 		b.append(getActivity());
 		b.append("\n\t\t");
-		b.append(getActivity().getActivityType());
+		b.append(getActivity().getType().getLabel());
+		b.append("\t");
+		b.append(getActivity().getType().getResourceIdentifier());
 		
 	
 		

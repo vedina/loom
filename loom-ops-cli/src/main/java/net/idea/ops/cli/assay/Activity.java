@@ -10,16 +10,17 @@ public class Activity extends AbstractURLResource {
 	 * 
 	 */
 	private static final long serialVersionUID = 8436633064700482394L;
-	String activityType;
+	ActivityType type;
+
 	
-	public String getActivityType() {
-		return activityType;
+	public ActivityType getType() {
+		return type;
 	}
 
-	public void setActivityType(String activityType) {
-		this.activityType = activityType;
+	public void setType(ActivityType type) {
+		this.type = type;
 	}
-	
+
 	public Activity(URL url) {
 		super(url);
 	}
