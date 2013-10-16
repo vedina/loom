@@ -3,7 +3,7 @@ package net.idea.ops.cli;
 import java.util.Properties;
 
 import net.idea.ops.cli.compound.OPSCompoundClient;
-import net.idea.ops.cli.compound.OPSPharmacologyClient;
+import net.idea.ops.cli.pharmacology.OPSPharmacologyClient;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;

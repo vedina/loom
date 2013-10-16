@@ -1,4 +1,4 @@
-package net.idea.ops.cli.compound;
+package net.idea.ops.cli.pharmacology;
 
 import java.io.IOException;
 import java.io.InputStream;

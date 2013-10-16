@@ -6,7 +6,7 @@ import java.util.List;
 import net.idea.opentox.cli.structure.Compound;
 import net.idea.ops.cli.assay.AssayResult;
 import net.idea.ops.cli.assay.Target;
-import net.idea.ops.cli.compound.OPSPharmacologyClient;
+import net.idea.ops.cli.pharmacology.OPSPharmacologyClient;
 
 import org.junit.Assert;
 import org.junit.Test;
