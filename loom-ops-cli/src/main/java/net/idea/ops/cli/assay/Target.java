@@ -16,6 +16,14 @@ public class Target extends AbstractURLResource {
 	 * 
 	 */
 	private static final long serialVersionUID = -3642704198653144268L;
+	protected String targetFamily;
+	public String getTargetFamily() {
+		return targetFamily;
+	}
+
+	public void setTargetFamily(String targetFamily) {
+		this.targetFamily = targetFamily;
+	}
 	protected String title;
 	protected String prefLabel;
 	protected String prefLabelEN;
