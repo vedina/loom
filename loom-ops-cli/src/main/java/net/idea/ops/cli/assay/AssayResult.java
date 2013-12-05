@@ -1,5 +1,7 @@
 package net.idea.ops.cli.assay;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 
 import net.idea.opentox.cli.AbstractURLResource;
@@ -128,9 +130,11 @@ public class AssayResult extends AbstractURLResource {
 		b.append("\n\tActivity:\n\t\t");
 		b.append(getActivity());
 		b.append("\n\t\t");
-		b.append(getActivity().getType().getLabel());
-		b.append("\t");
-		b.append(getActivity().getType().getResourceIdentifier());
+		if (getActivity().getType()!=null) {
+			b.append(getActivity().getType().getLabel());
+			b.append("\t");
+			b.append(getActivity().getType().getResourceIdentifier());
+		}
 		
 	
 		
@@ -181,4 +185,5 @@ public class AssayResult extends AbstractURLResource {
 
 		return b.toString();
 	}
+	
 }

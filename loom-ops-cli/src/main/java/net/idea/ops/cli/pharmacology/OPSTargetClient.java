@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.List;
 
 import net.idea.ops.cli.AbstractOPSClient;
-import net.idea.ops.cli.OPSClient.pagination;
 import net.idea.ops.cli.OPSClient.params;
 import net.idea.ops.cli.assay.Target;
 

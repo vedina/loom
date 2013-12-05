@@ -37,7 +37,7 @@ public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult
 	
 	@Test
 	public void testTargetPharmacology() throws Exception {
-		Target target = new Target(new URL("http://www.conceptwiki.org/concept/cb62ca8a-3939-443b-ab77-9a8d45820d2c"));
+		Target target = new Target(new URL("http://www.uniprot.org/uniprot/P19099"));
 		OPSPharmacologyClient cli = getOPSClient();
 		int pagesize =100;
 		List<AssayResult> list = cli.getTargetPharmacology(new URL(TEST_SERVER),target,0,pagesize);
