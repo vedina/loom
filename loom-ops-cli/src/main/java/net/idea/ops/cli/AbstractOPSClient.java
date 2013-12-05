@@ -15,10 +15,10 @@ import org.opentox.rest.RestException;
 
 public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> extends AbstractClient<T,String> {
 	//protected String server_root = "https://beta.openphacts.org/";
-	protected String server_root = "https://beta.openphacts.org/1.3/";
+	protected String server_root = "https://beta.openphacts.org/";
 	protected String resource;
 	protected Hashtable<String, String> parameters = new Hashtable<String, String>();
-
+	protected String api_version = null;
 
 	public enum _format {
 		json,

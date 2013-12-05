@@ -177,6 +177,8 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 			 JsonNode node = m.readTree(in);
 			 JsonNode format = (JsonNode)node.get("format");
 			 if (!"linked-data-api".equals(format.getTextValue())) return null;
+			 JsonNode version = (JsonNode)node.get("version");
+			 api_version = version==null?"1.2":version.getTextValue();
 			 JsonNode result = node.get("result");
 			 JsonNode uri = result.get("items");
 			 if (uri instanceof ArrayNode) {
@@ -220,7 +222,10 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 		
 		//Compound
 		Compound compound = null;
-		JsonNode forMolecule = item.get("forMolecule");
+		JsonNode forMolecule;
+		if ("1.3".equals(api_version)) forMolecule = item.get("hasMolecule");
+		else  forMolecule = item.get("forMolecule");
+		
 		/*
 		 * we prefer the concept wiki URI, but will take anything else as afallback
 		 */
@@ -255,7 +260,10 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 			compound.getProperties().put("full_mwt",forMolecule.get("full_mwt").asText());
 		readout.setCompound(compound);
 		//assay details
-		JsonNode onAssay = item.get("onAssay");
+		JsonNode onAssay = null;
+		if ("1.3".equals(api_version)) onAssay = item.get("hasAssay");
+		else  onAssay = item.get("onAssay");
+		
 		uri = onAssay.get("_about");
 		if (uri!=null && uri.getTextValue()!=null) {
 			//assay

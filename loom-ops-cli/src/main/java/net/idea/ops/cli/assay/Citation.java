@@ -27,7 +27,8 @@ public class Citation  extends AbstractURLResource {
 	
 	protected void setPubmedID(String pubmedid) {
 		try {
-			setResourceIdentifier(new URL("http://www.ncbi.nlm.nih.gov/pubmed/"+pubmedid));
+			if (pubmedid.startsWith("http")) setResourceIdentifier(new URL(pubmedid));
+			else setResourceIdentifier(new URL("http://www.ncbi.nlm.nih.gov/pubmed/"+pubmedid));
 		} catch (Exception x) {
 			setResourceIdentifier(null);
 		}

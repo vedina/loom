@@ -137,6 +137,8 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 			 JsonNode node = m.readTree(in);
 			 JsonNode format = (JsonNode)node.get("format");
 			 if (!"linked-data-api".equals(format.getTextValue())) return null;
+			 JsonNode version = (JsonNode)node.get("version");
+			 api_version = version==null?"1.2":version.getTextValue();			 
 			 Compound compound = null;
 			 JsonNode result = node.get("result");
 			 JsonNode primaryTopic = result.get("primaryTopic");

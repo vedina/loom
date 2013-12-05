@@ -27,7 +27,7 @@ public abstract class AbstractOPSClientTest<T extends AbstractURLResource, C ext
 	
 	public static String config()  {
 		//String local = "https://beta.openphacts.org";
-		String local = "https://beta.openphacts.org/1.3/";
+		String local = "https://beta.openphacts.org/";
 		try {
 			properties = OPSClient.config();
 			String testServer = properties.getProperty("ops.server_root");
