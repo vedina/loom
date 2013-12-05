@@ -36,6 +36,21 @@ public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult
 	}	
 	
 	@Test
+	public void testCompoundPharmacologyCount() throws Exception {
+		Compound cmp = new Compound(new URL("http://rdf.chemspider.com/236"));
+		OPSPharmacologyClient cli = getOPSClient();
+		Integer count = cli.getCompoundPharmacologyCount(new URL(TEST_SERVER),cmp);
+		Assert.assertEquals(30,count.intValue());
+	}	
+	
+	@Test
+	public void testTragetPharmacologyCount() throws Exception {
+		Target target = new Target(new URL("http://www.uniprot.org/uniprot/P19099"));
+		OPSPharmacologyClient cli = getOPSClient();
+		Integer count = cli.getTargetPharmacologyCount(new URL(TEST_SERVER),target);
+		Assert.assertEquals(822,count.intValue());
+	}	
+	@Test
 	public void testTargetPharmacology() throws Exception {
 		Target target = new Target(new URL("http://www.uniprot.org/uniprot/P19099"));
 		OPSPharmacologyClient cli = getOPSClient();

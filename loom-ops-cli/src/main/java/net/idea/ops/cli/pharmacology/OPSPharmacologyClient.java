@@ -23,7 +23,12 @@ import net.idea.ops.cli.lookup.CompoundLookup;
 import net.idea.ops.cli.lookup.DatasetLookup;
 import net.idea.ops.cli.lookup.TargetLookup;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -97,6 +102,72 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 	}	
 	
 
+	public Integer getCompoundPharmacologyCount(URL queryService,Compound cmp) throws RestException,IOException {
+		URL ref = new URL(String.format("%s/compound%s/count",queryService,resource));
+		return getCount(
+				"compoundPharmacologyTotalResults",				
+				ref,mime_json,
+				params.uri.name(),cmp.getResourceIdentifier().toExternalForm(),
+				"_format",_format.json.name());
+	}	
+	
+	public Integer getTargetPharmacologyCount(URL queryService,Target target) throws RestException,IOException {
+		URL ref = new URL(String.format("%s/target%s/count",queryService,resource));
+		return getCount(
+				"targetPharmacologyTotalResults",
+				ref,mime_json,
+				params.uri.name(),target.getResourceIdentifier().toExternalForm(),
+				"_format",_format.json.name());
+	}		
+	
+	protected Integer getCount(String field,URL url,String mediaType,String... params) throws RestException, IOException {
+		String address = prepareParams(url,extendParams(params));
+		HttpGet httpGet = new HttpGet(address);
+		if (headers!=null) for (Header header : headers) httpGet.addHeader(header);
+		httpGet.addHeader("Accept",mediaType);
+		httpGet.addHeader("Accept-Charset", "utf-8");
+
+		InputStream in = null;
+		try {
+			HttpResponse response = getHttpClient().execute(httpGet);
+			HttpEntity entity  = response.getEntity();
+			in = entity.getContent();
+			if (response.getStatusLine().getStatusCode()== HttpStatus.SC_OK) {
+				/*
+				Model model = ModelFactory.createDefaultModel();
+				model.read(new InputStreamReader(in,"UTF-8"),OpenTox.URI);
+				return getIOClass().fromJena(model);
+				*/
+				return parseCount(in,mediaType,field);
+
+			} else if (response.getStatusLine().getStatusCode()== HttpStatus.SC_NOT_FOUND) {	
+				return null;
+			} else throw new RestException(response.getStatusLine().getStatusCode(),response.getStatusLine().getReasonPhrase());
+		
+		} finally {
+			try {if (in != null) in.close();} catch (Exception x) {}
+		}
+	}	
+		
+		
+	protected Integer parseCount(InputStream in, String mediaType, String field)
+				throws RestException, IOException {
+			if (mime_json.equals(mediaType)) {
+				 ObjectMapper m = new ObjectMapper();
+				 JsonNode node = m.readTree(in);
+				 JsonNode format = (JsonNode)node.get("format");
+				 if (!"linked-data-api".equals(format.getTextValue())) return null;
+				 JsonNode result = node.get("result");
+				 JsonNode uri = result.get("primaryTopic");
+				 try {
+					 return uri.get(field).getIntValue();
+				 } catch (Exception x) {
+					 throw new IOException(x);
+				 }
+			} 
+			throw new RestException(HttpStatus.SC_OK,"parsing not implemented "+mediaType);
+	}
+	
 	@Override
 	protected List<AssayResult> processPayload(InputStream in, String mediaType)
 			throws RestException, IOException {
