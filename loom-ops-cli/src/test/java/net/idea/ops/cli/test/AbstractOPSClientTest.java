@@ -10,13 +10,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 public abstract class AbstractOPSClientTest<T extends AbstractURLResource, C extends AbstractOPSClient<T>> {
-	public final static OPSClient opscli = new OPSClient();
+	public static OPSClient opscli;
 	public final static String TEST_SERVER = config();
 	//should be configured in the .m2/settings.xml 
 	protected static Properties properties;
 
 	@BeforeClass
 	public static void setup() throws Exception {
+		 opscli = new OPSClient(true);
 	}
 	
 
@@ -38,7 +39,7 @@ public abstract class AbstractOPSClientTest<T extends AbstractURLResource, C ext
 	}
 	
 	
-	protected abstract C getOPSClient();
+	protected abstract C getOPSClient() throws Exception;
 	
 	
 }

@@ -14,7 +14,7 @@ import org.junit.Test;
 public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult,OPSPharmacologyClient> {
 
 	@Override
-	protected OPSPharmacologyClient getOPSClient() {
+	protected OPSPharmacologyClient getOPSClient() throws Exception {
 		return opscli.getPharmacologyClient();
 	}
 	

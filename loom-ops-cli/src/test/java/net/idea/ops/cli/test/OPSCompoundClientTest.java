@@ -13,7 +13,7 @@ import org.junit.Test;
 public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound,OPSCompoundClient> {
 
 	@Override
-	protected OPSCompoundClient getOPSClient() {
+	protected OPSCompoundClient getOPSClient() throws Exception{
 		return opscli.getCompoundClient();
 	}
 	
