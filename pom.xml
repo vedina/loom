@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ideaconsult</groupId>
@@ -26,6 +26,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <inceptionYear>2011</inceptionYear>
   <licenses>
     <license>
       <name>LGPL3</name>
@@ -78,6 +79,10 @@
       <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/snapshots</url>
     </repository>
   </repositories>
+  <organization>
+  	<name>Ideaconsult Ltd</name>
+  	<url>http://www.ideaconsult.net</url>
+  </organization>
   <build>
     <finalName>loom</finalName>
     <resources>
@@ -100,6 +105,43 @@
       </plugins>
     </pluginManagement>
   </build>
+<reporting>
+    <plugins>
+      <plugin>
+        <!-- UML class diagrams  -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <!-- <docletPath>/path/to/UmlGraph.jar</docletPath> -->
+        <configuration>
+          <source>1.5</source>
+          <aggregate>false</aggregate>
+          <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+          <docletArtifact>
+            <groupId>gr.spinellis</groupId>
+            <artifactId>UmlGraph</artifactId>
+            <version>4.6</version>
+          </docletArtifact>
+          <additionalparam>
+            <!--  http://www.umlgraph.org/doc/cd-opt.html 
+	          	-attributes
+	          	-views
+	          	-types 
+	            -inferrel -inferdep -quiet -hide java.*
+	            -collpackages java.util.* -qualify
+	            -postfixpackage 
+	            --> 
+	            -all
+	          </additionalparam>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+        <version>2.0-beta-2</version>
+      </plugin>
+    </plugins>
+  </reporting>  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
