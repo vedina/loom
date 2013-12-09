@@ -141,7 +141,20 @@
         <version>2.0-beta-2</version>
       </plugin>
     </plugins>
-  </reporting>  
+  </reporting>
+   <profile>
+      <id>loom</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+      	<!-- Gte your OPS app id and key at https://dev.openphacts.org/docs  -->
+		<ops.server_root>https://beta.openphacts.org</ops.server_root>
+		<ops.app_id>opsappid</ops.app_id>
+		<ops.app_key>opsappkey</ops.app_key>
+      </properties>
+      
+    </profile>       
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
