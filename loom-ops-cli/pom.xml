@@ -1,17 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-ops-cli</artifactId>
   <name>loom-ops-cli</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <description>Client for https://dev.openphacts.org/</description>
   <organization>
-  	<name>Ideaconsult Ltd.</name>
-  	<url>http://www.ideaconsult.net</url>
+    <name>Ideaconsult Ltd.</name>
+    <url>http://www.ideaconsult.net</url>
   </organization>
 </project>
