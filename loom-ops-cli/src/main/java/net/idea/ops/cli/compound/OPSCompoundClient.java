@@ -2,6 +2,7 @@ package net.idea.ops.cli.compound;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,4 +191,9 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 	}
 	*/
 
+	@Override
+	protected Compound parseItem(ObjectMapper m, JsonNode result, JsonNode item)
+			throws MalformedURLException {
+		return null;
+	}
 }

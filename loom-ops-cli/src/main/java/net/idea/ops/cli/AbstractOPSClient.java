@@ -1,16 +1,27 @@
 package net.idea.ops.cli;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import net.idea.opentox.cli.AbstractClient;
 import net.idea.opentox.cli.IIdentifiableResource;
 import net.idea.opentox.cli.task.RemoteTask;
+import net.idea.ops.cli.assay.AssayResult;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.opentox.rest.RestException;
 
 public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> extends AbstractClient<T,String> {
@@ -102,4 +113,77 @@ public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> ex
 		else parameters.put(key,value);
 	}
 
+	protected Integer getCount(String field,URL url,String mediaType,String... params) throws RestException, IOException {
+		String address = prepareParams(url,extendParams(params));
+		HttpGet httpGet = new HttpGet(address);
+		if (headers!=null) for (Header header : headers) httpGet.addHeader(header);
+		httpGet.addHeader("Accept",mediaType);
+		httpGet.addHeader("Accept-Charset", "utf-8");
+
+		InputStream in = null;
+		try {
+			HttpResponse response = getHttpClient().execute(httpGet);
+			HttpEntity entity  = response.getEntity();
+			in = entity.getContent();
+			if (response.getStatusLine().getStatusCode()== HttpStatus.SC_OK) {
+				/*
+				Model model = ModelFactory.createDefaultModel();
+				model.read(new InputStreamReader(in,"UTF-8"),OpenTox.URI);
+				return getIOClass().fromJena(model);
+				*/
+				return parseCount(in,mediaType,field);
+
+			} else if (response.getStatusLine().getStatusCode()== HttpStatus.SC_NOT_FOUND) {	
+				return null;
+			} else throw new RestException(response.getStatusLine().getStatusCode(),response.getStatusLine().getReasonPhrase());
+		
+		} finally {
+			try {if (in != null) in.close();} catch (Exception x) {}
+		}
+	}	
+		
+		
+	protected Integer parseCount(InputStream in, String mediaType, String field)
+				throws RestException, IOException {
+			if (mime_json.equals(mediaType)) {
+				 ObjectMapper m = new ObjectMapper();
+				 JsonNode node = m.readTree(in);
+				 JsonNode format = (JsonNode)node.get("format");
+				 if (!"linked-data-api".equals(format.getTextValue())) return null;
+				 JsonNode result = node.get("result");
+				 JsonNode uri = result.get("primaryTopic");
+				 try {
+					 return uri.get(field).getIntValue();
+				 } catch (Exception x) {
+					 throw new IOException(x);
+				 }
+			} 
+			throw new RestException(HttpStatus.SC_OK,"parsing not implemented "+mediaType);
+	}
+	
+	@Override
+	protected List<T> processPayload(InputStream in, String mediaType)
+			throws RestException, IOException {
+		List<T> list = null;
+		if (mime_json.equals(mediaType)) {
+			 ObjectMapper m = new ObjectMapper();
+			 JsonNode node = m.readTree(in);
+			 JsonNode format = (JsonNode)node.get("format");
+			 if (!"linked-data-api".equals(format.getTextValue())) return null;
+			 JsonNode version = (JsonNode)node.get("version");
+			 api_version = version==null?"1.2":version.getTextValue();
+			 JsonNode result = node.get("result");
+			 JsonNode uri = result.get("items");
+			 if (uri instanceof ArrayNode) {
+				 ArrayNode items = ((ArrayNode) uri);
+				 list = new ArrayList<T>();
+				 for (int i=0; i < items.size(); i ++) {
+					 list.add(parseItem(m,result,items.get(i)));
+				 }
+			 } 
+			 return list;
+		} else return super.processPayload(in, mediaType);
+	}
+	
+	protected abstract T parseItem(ObjectMapper m,JsonNode result,JsonNode item) throws MalformedURLException;
 }

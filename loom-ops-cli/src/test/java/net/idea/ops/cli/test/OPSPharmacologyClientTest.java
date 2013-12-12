@@ -44,7 +44,7 @@ public class OPSPharmacologyClientTest extends AbstractOPSClientTest<AssayResult
 	}	
 	
 	@Test
-	public void testTragetPharmacologyCount() throws Exception {
+	public void testTargetPharmacologyCount() throws Exception {
 		Target target = new Target(new URL("http://www.uniprot.org/uniprot/P19099"));
 		OPSPharmacologyClient cli = getOPSClient();
 		Integer count = cli.getTargetPharmacologyCount(new URL(TEST_SERVER),target);

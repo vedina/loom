@@ -120,54 +120,6 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 				"_format",_format.json.name());
 	}		
 	
-	protected Integer getCount(String field,URL url,String mediaType,String... params) throws RestException, IOException {
-		String address = prepareParams(url,extendParams(params));
-		HttpGet httpGet = new HttpGet(address);
-		if (headers!=null) for (Header header : headers) httpGet.addHeader(header);
-		httpGet.addHeader("Accept",mediaType);
-		httpGet.addHeader("Accept-Charset", "utf-8");
-
-		InputStream in = null;
-		try {
-			HttpResponse response = getHttpClient().execute(httpGet);
-			HttpEntity entity  = response.getEntity();
-			in = entity.getContent();
-			if (response.getStatusLine().getStatusCode()== HttpStatus.SC_OK) {
-				/*
-				Model model = ModelFactory.createDefaultModel();
-				model.read(new InputStreamReader(in,"UTF-8"),OpenTox.URI);
-				return getIOClass().fromJena(model);
-				*/
-				return parseCount(in,mediaType,field);
-
-			} else if (response.getStatusLine().getStatusCode()== HttpStatus.SC_NOT_FOUND) {	
-				return null;
-			} else throw new RestException(response.getStatusLine().getStatusCode(),response.getStatusLine().getReasonPhrase());
-		
-		} finally {
-			try {if (in != null) in.close();} catch (Exception x) {}
-		}
-	}	
-		
-		
-	protected Integer parseCount(InputStream in, String mediaType, String field)
-				throws RestException, IOException {
-			if (mime_json.equals(mediaType)) {
-				 ObjectMapper m = new ObjectMapper();
-				 JsonNode node = m.readTree(in);
-				 JsonNode format = (JsonNode)node.get("format");
-				 if (!"linked-data-api".equals(format.getTextValue())) return null;
-				 JsonNode result = node.get("result");
-				 JsonNode uri = result.get("primaryTopic");
-				 try {
-					 return uri.get(field).getIntValue();
-				 } catch (Exception x) {
-					 throw new IOException(x);
-				 }
-			} 
-			throw new RestException(HttpStatus.SC_OK,"parsing not implemented "+mediaType);
-	}
-	
 	@Override
 	protected List<AssayResult> processPayload(InputStream in, String mediaType)
 			throws RestException, IOException {
@@ -185,14 +137,14 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 				 ArrayNode items = ((ArrayNode) uri);
 				 list = new ArrayList<AssayResult>();
 				 for (int i=0; i < items.size(); i ++) {
-					 list.add(parsePharmacologyItem(m,result,items.get(i)));
+					 list.add(parseItem(m,result,items.get(i)));
 				 }
 			 } 
 			 return list;
 		} else return super.processPayload(in, mediaType);
 	}	
-	
-	protected AssayResult parsePharmacologyItem(ObjectMapper m,JsonNode result,JsonNode item) throws MalformedURLException {
+	@Override
+	protected AssayResult parseItem(ObjectMapper m,JsonNode result,JsonNode item) throws MalformedURLException {
 		
 		Activity activity;
 		JsonNode node = item.get("_about");

@@ -1,7 +1,7 @@
 package net.idea.ops.cli.pharmacology;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -10,6 +10,8 @@ import net.idea.ops.cli.OPSClient.params;
 import net.idea.ops.cli.assay.Target;
 
 import org.apache.http.client.HttpClient;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.opentox.rest.RestException;
 
 public class OPSTargetClient extends AbstractOPSClient<Target> {
@@ -28,9 +30,11 @@ public class OPSTargetClient extends AbstractOPSClient<Target> {
 				params.uri.name(),target.getResourceIdentifier().toExternalForm(),
 				"_format",_format.json.name());
 	}	
+	
 	@Override
-	protected List<Target> processPayload(InputStream in, String mediaType)
-			throws RestException, IOException {
+	protected Target parseItem(ObjectMapper m, JsonNode result, JsonNode item)
+			throws MalformedURLException {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

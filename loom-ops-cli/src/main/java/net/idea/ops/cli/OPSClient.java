@@ -12,6 +12,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import net.idea.ops.cli.compound.OPSCompoundClient;
+import net.idea.ops.cli.pharmacology.OPSPathwayClient;
 import net.idea.ops.cli.pharmacology.OPSPharmacologyClient;
 
 import org.apache.http.client.HttpClient;
@@ -119,6 +120,14 @@ public class OPSClient {
 	
 	public OPSPharmacologyClient getPharmacologyClient() throws Exception {
 		OPSPharmacologyClient cli =  new OPSPharmacologyClient(getHttpClient());
+		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
+		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
+		return cli;
+	}
+	
+
+	public OPSPathwayClient getPathwayClient() throws Exception {
+		OPSPathwayClient cli =  new OPSPathwayClient(getHttpClient());
 		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
 		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
 		return cli;
