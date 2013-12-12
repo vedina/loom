@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Loom</name>
   <description>Weaving the space</description>
@@ -80,8 +80,8 @@
     </repository>
   </repositories>
   <organization>
-  	<name>Ideaconsult Ltd</name>
-  	<url>http://www.ideaconsult.net</url>
+    <name>Ideaconsult Ltd</name>
+    <url>http://www.ideaconsult.net</url>
   </organization>
   <build>
     <finalName>loom</finalName>
@@ -105,7 +105,7 @@
       </plugins>
     </pluginManagement>
   </build>
-<reporting>
+  <reporting>
     <plugins>
       <plugin>
         <!-- UML class diagrams  -->
@@ -142,22 +142,20 @@
       </plugin>
     </plugins>
   </reporting>
-<profiles>
-   <profile>
+  <profiles>
+    <profile>
       <id>loom</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-      	<!-- Gte your OPS app id and key at https://dev.openphacts.org/docs  -->
-		<ops.server_root>https://beta.openphacts.org</ops.server_root>
-		<ops.app_id>opsappid</ops.app_id>
-		<ops.app_key>opsappkey</ops.app_key>
+        <!-- Gte your OPS app id and key at https://dev.openphacts.org/docs  -->
+        <ops.server_root>https://beta.openphacts.org</ops.server_root>
+        <ops.app_id>opsappid</ops.app_id>
+        <ops.app_key>opsappkey</ops.app_key>
       </properties>
-      
-    </profile>       
-</profiles>
-
+    </profile>
+  </profiles>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
