@@ -94,6 +94,9 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 					"_format",_format.json.name());
 	}
 	
+	public List<Compound> searchStructuresByInchikey(String term) throws RestException,IOException {
+		return searchStructuresByInchikey(new URL(server_root),term);
+	}
 	public List<Compound> searchStructuresByInchikey(URL queryService, String term) throws RestException,IOException {
 		URL ref = new URL(String.format("%s%s",queryService,resource));
 		return get(ref,mime_json,

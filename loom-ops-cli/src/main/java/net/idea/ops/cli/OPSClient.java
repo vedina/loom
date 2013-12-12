@@ -2,6 +2,7 @@ package net.idea.ops.cli;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Properties;
 
 import javax.net.ssl.SSLContext;
@@ -11,10 +12,13 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import net.idea.opentox.cli.structure.Compound;
+import net.idea.ops.cli.assay.Pathway;
 import net.idea.ops.cli.compound.OPSCompoundClient;
 import net.idea.ops.cli.pharmacology.OPSPathwayClient;
 import net.idea.ops.cli.pharmacology.OPSPharmacologyClient;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -24,6 +28,8 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
+import org.opentox.rest.RestException;
 
 /**
  * Top level OpenTox API client.
@@ -31,6 +37,7 @@ import org.apache.http.impl.conn.SingleClientConnManager;
  *
  */
 public class OPSClient {
+	private static final String ops_server_root ="ops.server_root";
 	public enum keys {
 		app_id,
 		app_key
@@ -112,6 +119,7 @@ public class OPSClient {
 	
 	public OPSCompoundClient getCompoundClient() throws Exception {
 		OPSCompoundClient cli =  new OPSCompoundClient(getHttpClient());
+		cli.setServer_root(properties.get(ops_server_root).toString());
 		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
 		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
 		return cli;
@@ -120,6 +128,7 @@ public class OPSClient {
 	
 	public OPSPharmacologyClient getPharmacologyClient() throws Exception {
 		OPSPharmacologyClient cli =  new OPSPharmacologyClient(getHttpClient());
+		cli.setServer_root(properties.get(ops_server_root).toString());
 		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
 		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
 		return cli;
@@ -128,6 +137,7 @@ public class OPSClient {
 
 	public OPSPathwayClient getPathwayClient() throws Exception {
 		OPSPathwayClient cli =  new OPSPathwayClient(getHttpClient());
+		cli.setServer_root(properties.get(ops_server_root).toString());
 		cli.setParameter(keys.app_id.name(),properties.get(keys.app_id.name()).toString());
 		cli.setParameter(keys.app_key.name(),properties.get(keys.app_key.name()).toString());
 		return cli;
@@ -142,4 +152,75 @@ public class OPSClient {
 			return null;
 		}
 	}
+	
+	public Integer getPathwaysByCompoundCount(Compound cmp) throws Exception {
+		if (cmp.getResourceIdentifier()==null) {
+			if (cmp.getInChIKey()==null) throw new RestException(HttpStatus.SC_BAD_REQUEST);
+			OPSCompoundClient cli = getCompoundClient();
+			List<Compound> list = cli.searchStructuresByInchikey(cmp.getInChIKey());
+			for (Compound l : list) cmp.setResourceIdentifier(l.getResourceIdentifier());
+		}
+		if (cmp.getResourceIdentifier()!=null) {
+			OPSPathwayClient cli = new OPSPathwayClient();
+			return cli.getPathwaysByCompoundCount(cmp);
+		}
+		return null;
+	}
+	//"BSYNRYMUTXBXSQ-UHFFFAOYSA-N"
+	public List<Pathway> getPathwaysByCompound(Compound cmp) throws Exception {
+		if (cmp.getResourceIdentifier()==null) {
+			if (cmp.getInChIKey()==null) throw new RestException(HttpStatus.SC_BAD_REQUEST);
+			OPSCompoundClient cli = getCompoundClient();
+			List<Compound> list = cli.searchStructuresByInchikey(cmp.getInChIKey());
+			for (Compound l : list) cmp.setResourceIdentifier(l.getResourceIdentifier());
+		}
+		if (cmp.getResourceIdentifier()!=null) {
+			OPSPathwayClient cli = new OPSPathwayClient();
+			return cli.getPathwaysByCompound(cmp);
+		}
+		return null;
+	}
+	
+	
+	public Integer getPharmacologyByCompoundCount(String inchikey) throws Exception {
+		if (inchikey==null) throw new RestException(HttpStatus.SC_BAD_REQUEST);
+		OPSCompoundClient cli = getCompoundClient();
+		List<Compound> list = cli.searchStructuresByInchikey(inchikey);
+		OPSPharmacologyClient pcli = getPharmacologyClient();
+		for (Compound l : list) {
+			return pcli.getCompoundPharmacologyCount(l);
+		}
+		return null;
+	}
+	
+	public Integer getPathwaysByCompoundCount(String inchikey) throws Exception {
+		if (inchikey==null) throw new RestException(HttpStatus.SC_BAD_REQUEST);
+		OPSCompoundClient cli = getCompoundClient();
+		List<Compound> list = cli.searchStructuresByInchikey(inchikey);
+		OPSPathwayClient pcli = getPathwayClient();
+		for (Compound l : list) {
+			return pcli.getPathwaysByCompoundCount(l);
+		}
+		return null;
+	}
+	
+	public int[] getCountsbyCompound(String inchikey) throws Exception {
+		if (inchikey==null) throw new RestException(HttpStatus.SC_BAD_REQUEST);
+		OPSCompoundClient cli = getCompoundClient();
+		List<Compound> list = cli.searchStructuresByInchikey(inchikey);
+		OPSPathwayClient pcli = getPathwayClient();
+		OPSPharmacologyClient ccli = getPharmacologyClient();
+		int[] count = {0,0};
+		for (Compound l : list) { 
+			try {
+				count[0] = pcli.getPathwaysByCompoundCount(l);
+			} catch (Exception x) {}
+			try {
+				count[1] = ccli.getCompoundPharmacologyCount(l);
+			} catch (Exception x) {}
+		}	
+		return count;
+	}
+
+	
 }

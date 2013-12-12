@@ -11,7 +11,6 @@ import java.util.List;
 import net.idea.opentox.cli.AbstractClient;
 import net.idea.opentox.cli.IIdentifiableResource;
 import net.idea.opentox.cli.task.RemoteTask;
-import net.idea.ops.cli.assay.AssayResult;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -26,7 +25,15 @@ import org.opentox.rest.RestException;
 
 public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> extends AbstractClient<T,String> {
 	//protected String server_root = "https://beta.openphacts.org/";
-	protected String server_root = "https://beta.openphacts.org/";
+	protected String server_root = "https://beta.openphacts.org/1.3";
+	public String getServer_root() {
+		return server_root;
+	}
+
+	public void setServer_root(String server_root) {
+		this.server_root = server_root;
+	}
+
 	protected String resource;
 	protected Hashtable<String, String> parameters = new Hashtable<String, String>();
 	protected String api_version = null;

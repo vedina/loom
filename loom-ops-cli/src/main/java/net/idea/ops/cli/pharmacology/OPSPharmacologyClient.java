@@ -23,12 +23,7 @@ import net.idea.ops.cli.lookup.CompoundLookup;
 import net.idea.ops.cli.lookup.DatasetLookup;
 import net.idea.ops.cli.lookup.TargetLookup;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -100,7 +95,9 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 				"_orderBy","?compound_chembl",
 				"_format",_format.json.name());
 	}	
-	
+	public Integer getCompoundPharmacologyCount(Compound cmp) throws RestException,IOException {
+		return getCompoundPharmacologyCount(new URL(server_root),cmp);
+	}
 
 	public Integer getCompoundPharmacologyCount(URL queryService,Compound cmp) throws RestException,IOException {
 		URL ref = new URL(String.format("%s/compound%s/count",queryService,resource));

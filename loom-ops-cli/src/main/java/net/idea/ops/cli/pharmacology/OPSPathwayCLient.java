@@ -7,10 +7,8 @@ import java.util.List;
 
 import net.idea.opentox.cli.structure.Compound;
 import net.idea.ops.cli.AbstractOPSClient;
-import net.idea.ops.cli.AbstractOPSClient._format;
 import net.idea.ops.cli.OPSClient.pagination;
 import net.idea.ops.cli.OPSClient.params;
-import net.idea.ops.cli.assay.AssayResult;
 import net.idea.ops.cli.assay.Pathway;
 
 import org.apache.http.client.HttpClient;
@@ -35,7 +33,9 @@ public class OPSPathwayClient extends AbstractOPSClient<Pathway> {
 				params.uri.name(),target.getResourceIdentifier().toExternalForm(),
 				"_format",_format.json.name());
 	}	
-	
+	public Integer getPathwaysByCompoundCount(Compound cmp) throws RestException,IOException {
+		return getPathwaysByCompoundCount(new URL(server_root),cmp);
+	}
 	public Integer getPathwaysByCompoundCount(URL queryService,Compound cmp) throws RestException,IOException {
 		URL ref = new URL(String.format("%s%s/count",queryService,resource));
 		return getCount(
@@ -44,7 +44,12 @@ public class OPSPathwayClient extends AbstractOPSClient<Pathway> {
 				params.uri.name(),cmp.getResourceIdentifier().toExternalForm(),
 				"_format",_format.json.name());
 	}		
-	
+	public List<Pathway> getPathwaysByCompound(Compound cmp) throws RestException,IOException {
+		return getPathwaysByCompound(new URL(server_root),cmp,0,-1);
+	}
+	public List<Pathway> getPathwaysByCompound(Compound cmp,int page,int pagesize) throws RestException,IOException {
+		return getPathwaysByCompound(new URL(server_root),cmp, page, pagesize);
+	}
 	public List<Pathway> getPathwaysByCompound(URL queryService,Compound cmp,int page,int pagesize) throws RestException,IOException {
 		URL ref = new URL(String.format("%s%s",queryService,resource));
 		return get(ref,mime_json,
