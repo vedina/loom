@@ -1,0 +1,5 @@
+SELECT ?uri ?p ?o 
+WHERE { 
+?uri <http://semantic-mediawiki.org/swivt/1.0#page> "%s".
+?uri ?p ?o.
+}
