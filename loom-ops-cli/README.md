@@ -1,0 +1,1 @@
+Loom-ops-cli-1.0.0 supports OpenPhacts API 1.3
