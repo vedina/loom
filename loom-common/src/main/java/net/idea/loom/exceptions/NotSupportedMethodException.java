@@ -1,4 +1,4 @@
-package net.idea.ops.cli;
+package net.idea.loom.exceptions;
 
 public class NotSupportedMethodException extends Exception {
 

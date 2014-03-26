@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import net.idea.loom.exceptions.NotSupportedMethodException;
 import net.idea.opentox.cli.AbstractClient;
 import net.idea.opentox.cli.IIdentifiableResource;
 import net.idea.opentox.cli.task.RemoteTask;
