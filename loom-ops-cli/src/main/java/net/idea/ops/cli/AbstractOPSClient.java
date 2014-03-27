@@ -9,7 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import net.idea.loom.exceptions.NotSupportedMethodException;
-import net.idea.opentox.cli.AbstractClient;
+import net.idea.opentox.cli.AbstractURIClient;
 import net.idea.opentox.cli.IIdentifiableResource;
 import net.idea.opentox.cli.task.RemoteTask;
 
@@ -24,7 +24,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.opentox.rest.RestException;
 
-public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> extends AbstractClient<T,String> {
+public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> extends AbstractURIClient<T,String> {
 	//protected String server_root = "https://beta.openphacts.org/";
 	protected String server_root = "https://beta.openphacts.org/1.3";
 	public String getServer_root() {
