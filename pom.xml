@@ -13,6 +13,7 @@
     <module>loom-pubchemrest-cli</module>
     <module>loom-tb-wiki</module>
     <module>loom-common</module>
+    <module>loom-nm</module>
   </modules>
   <dependencies>
     <dependency>
@@ -161,5 +162,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
+    <ambit.version>2.5.5-SNAPSHOT</ambit.version>
   </properties>
+  
 </project>
