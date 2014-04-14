@@ -4,6 +4,16 @@
 
  http://ambit.uni-plovdiv.bg:8083/nexus/index.html#nexus-search;gav~net.ideaconsult~loom~~~
  
+Development 
+````
+<dependency>
+  <groupId>net.ideaconsult</groupId>
+  <artifactId>loom</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
+</dependency>
+````
+
+Stable 
 ````
 <dependency>
   <groupId>net.ideaconsult</groupId>
