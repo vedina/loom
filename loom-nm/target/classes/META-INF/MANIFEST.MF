@@ -1,0 +1,14 @@
+Manifest-version: 1.0
+Package: net.idea.loom.nm
+Main-Class: net.idea.loom.nm.nanowiki.NanoWikiRDFReader
+
+Name: net/idea/loom/nm/nanowiki
+Specification-Title: Nano materials support
+Specification-Version: 1.0.1-SNAPSHOT
+Specification-Vendor: Ideaconsult LTD
+Implementation-Title: net.idea.loom.nm
+Implementation-Version: 1.0.1-SNAPSHOT-${buildNumber}-${timestamp}
+Implementation-Vendor: Ideaconsult Ltd.
+Package-Title: net.idea.loom.nm
+Package-Version: 1.0.1-SNAPSHOT
+Package-Vendor: Ideaconsult Ltd.
