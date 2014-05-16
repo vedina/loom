@@ -71,7 +71,7 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 
 	@Override
 	protected StringArrayHeader createPropertyByColumnName(String name) {
-		return new StringArrayHeader(getNumberOfHeaderLines(),name) {
+		return new StringArrayHeader("PRCR-",getNumberOfHeaderLines(),name) {
 			@Override
 			protected ProtocolApplication<Protocol, Params, String, Params, String> getExperiment(Protocol protocol) {
 				ProtocolApplication<Protocol, Params, String, Params, String> exp = new ProtocolApplication<Protocol, Params, String, Params, String>(protocol);
