@@ -1,7 +1,5 @@
 package net.idea.loom.nm.nanowiki;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +18,7 @@ import ambit2.base.data.Property;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
@@ -43,7 +42,6 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-
 public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implements IRawReader<IStructureRecord>, ICiteable {
 	protected Model rdf;
 	protected ResIterator materials;
@@ -53,9 +51,10 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		super();
 		setReader(reader);
 	}
-	public static String generateUUID(String prefix) {
-		return prefix + "-" + UUID.randomUUID();
-	}	
+	
+	public static String generateUUIDfromString(String prefix,String id) {
+		return prefix + "-" + (id==null?UUID.randomUUID():UUID.nameUUIDFromBytes(id.getBytes()));
+	}
 
 	@Override
 	public void setReader(Reader reader) throws CDKException {
@@ -128,6 +127,40 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		return record;
 	} 
 
+	/*
+	private void parseStudy(Model rdf,RDFNode studyNode,SubstanceRecord record) {
+		StmtIterator ii = rdf.listStatements(studyNode.asResource(),null,(RDFNode)null);
+		String endpoint = "unknown";
+		Protocol protocol = null;
+		ProtocolApplication papp = new ProtocolApplication(protocol);
+		record.addtMeasurement(papp);
+		while (ii.hasNext()) {
+			Statement stmt = ii.next();
+			Property p = stmt.getPredicate();
+			RDFNode node = stmt.getObject();
+			if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Endpoint")) {
+				endpoint = node.asResource().getLocalName(); //TODO this is a resource
+				protocol = new Protocol(endpoint);
+				papp.setProtocol(protocol);
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Identifier")) {
+				
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Study_Type")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Source")) {
+			} else if (p.getURI().equals("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Q2")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_R2")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_RMSEP")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AUses_Descriptor")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_EA")) {
+			} else if (p.getURI().equals("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AFor_Cell_line")) {				
+				
+				
+			}
+			//printStmt(stmt);
+		}
+
+	}
+	*/
 	private static final String m_material =
 		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
@@ -173,32 +206,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI()
 				),
 				new ProcessMaterial(rdf,material,record));
-	}
-	
-	public static void main(String[] args) {
-		if (args==null || args.length==0) {
-			System.out.println("Nanowiki RDF dump expected as the first argument");
-			System.exit(-1);
-		}
-		NanoWikiRDFReader reader = null;
-		try {
-			reader = new NanoWikiRDFReader(new FileReader(new File(args[0])));
-			while (reader.hasNext()) {
-				IStructureRecord record = reader.nextRecord();
-				if (record instanceof SubstanceRecord) {
-					//this is the substance
-					System.out.println(((SubstanceRecord)record).toJSON("http://example.com"));
-					if (((SubstanceRecord)record).getMeasurements()!=null)  {
-						//this are the studies
-						System.out.println(((SubstanceRecord)record).getMeasurements());
-					}
-				}	
-			}
-		} catch (Exception x) {
-			x.printStackTrace();
-		} finally {
-			try {reader.close();} catch (Exception x) {}
-		}
 	}
 }
 
@@ -412,7 +419,7 @@ class ProcessMeasurement extends ProcessSolution {
 		RDFNode method = qs.get("method");
 		try {protocol.addGuideline(method.asResource().getLocalName());} catch (Exception x) {}
 		
-		ProtocolApplication<Protocol,Params,String,Params,String> papp = new ProtocolApplication<Protocol,Params,String,Params,String>(protocol);
+		ProtocolApplication<Protocol,IParams,String,IParams,String> papp = new ProtocolApplication<Protocol,IParams,String,IParams,String>(protocol);
 		//papp.setReliability(reliability)
 		papp.setParameters(new Params());
 		try {
@@ -421,14 +428,14 @@ class ProcessMeasurement extends ProcessSolution {
 		} catch (Exception x) {
 			
 		}
-		papp.setDocumentUUID(NanoWikiRDFReader.generateUUID("NWKI"));
+		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 		try {papp.setReference(qs.get("definedBy").asResource().getURI());} catch (Exception x) {}
 		try {
 			papp.setCompanyName(qs.get("measurement").asResource().getURI());
 		} catch (Exception x) {}
 		try {papp.setInterpretationResult(qs.get("resultInterpretation").asLiteral().getString());} catch (Exception x) {}
 		
-		EffectRecord<String,Params,String> effect = new EffectRecord<String,Params,String>();
+		EffectRecord<String,IParams,String> effect = new EffectRecord<String,IParams,String>();
 		effect.setEndpoint(measuredEndpoint);
 		effect.setConditions(new Params());
 		try {effect.setTextValue(qs.get("resultInterpretation").asLiteral().getString());} catch (Exception x) {}
@@ -449,10 +456,10 @@ class ProcessMeasurement extends ProcessSolution {
 
 		RDFNode dose = qs.get("dose"); 
 		if (dose!=null) {
-			Params v = new Params();
+			IParams v = new Params();
 			try {v.setLoValue(Double.parseDouble(dose.asLiteral().getString()));} catch (Exception x) {v.setLoValue(null);}
 			try {v.setUnits(qs.get("doseUnit").asLiteral().getString());} catch (Exception x) {}
-			Params conditions = effect.getConditions(); 
+			IParams conditions = effect.getConditions(); 
 			if (effect.getConditions()==null) conditions = new Params();				
 			conditions.put(I5CONSTANTS.cDoses, v);
 			effect.setConditions(conditions);
@@ -491,7 +498,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 			try {protocol.addGuideline(method.asResource().getLocalName());} catch (Exception x) {}
 			
 			ProtocolApplication<Protocol,Params,String,Params,String> papp = new ProtocolApplication<Protocol,Params,String,Params,String>(protocol);
-			papp.setDocumentUUID(NanoWikiRDFReader.generateUUID("NWKI"));
+			papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 			papp.setSubstanceUUID(record.getCompanyUUID());
 			papp.setParameters(new Params());
 			
@@ -511,7 +518,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 			}
 			try {effect.setUpValue(value.asLiteral().getDouble()+qs.get("valueError").asLiteral().getDouble());effect.setLoQualifier("<=");effect.setUpQualifier("<=");} catch (Exception x) {}
 			
-			try {effect.setLoValue(qs.get("valueMin").asLiteral().getDouble());;effect.setLoQualifier("<=");} catch (Exception x) {}
+			try {effect.setLoValue(qs.get("valueMin").asLiteral().getDouble());;effect.setLoQualifier(">=");} catch (Exception x) {}
 			try {effect.setUpValue(qs.get("valueMax").asLiteral().getDouble());effect.setUpQualifier("<=");} catch (Exception x) {}
 			
 			try {effect.setUnit(qs.get("valueUnit").asLiteral().getString());} catch (Exception x) {}
@@ -531,7 +538,7 @@ class ProcessCoatings extends ProcessSolution {
 		this.record = record;
 		this.rdf = rdf;
 		this.material = material;
-		composition_uuid = NanoWikiRDFReader.generateUUID("NWKI");
+		composition_uuid = NanoWikiRDFReader.generateUUIDfromString("NWKI",null);
 	}
 	@Override
 	void processHeader(ResultSet rs) {
@@ -560,12 +567,15 @@ class ProcessMaterial extends ProcessSolution {
 	}
 	@Override
 	void process(ResultSet rs, QuerySolution qs) {
-		record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUID("NWKI"));
-		record.setCompanyUUID(NanoWikiRDFReader.generateUUID("NWKI"));
+		String name = null;
+		try {name = qs.get("label2").asLiteral().getString();} catch (Exception x) {};
+		
+		record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
+		record.setCompanyUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
 		
 		try {record.setOwnerName(qs.get("source").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setSubstancetype(qs.get("type").asResource().getLocalName());} catch (Exception x) {};
-		try {record.setCompanyName(qs.get("label2").asLiteral().getString());} catch (Exception x) {};
+		try {record.setCompanyName(name);} catch (Exception x) {};
 		try {record.setPublicName(qs.get("label").asLiteral().getString());} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Has_Identifier",qs.get("id").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Alternative Identifier",qs.get("altid").asLiteral().getString()));} catch (Exception x) {};
@@ -675,6 +685,5 @@ class ProcessMaterial extends ProcessSolution {
 	private void parseMeasurement(Model rdf,RDFNode material,SubstanceRecord record) {
 		execQuery(rdf, String.format(m_sparql, material.asResource().getURI()),new ProcessMeasurement(record));
 	}
-
 	
 }
