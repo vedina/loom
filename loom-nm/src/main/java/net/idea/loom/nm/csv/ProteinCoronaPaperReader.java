@@ -71,15 +71,7 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 
 	@Override
 	protected StringArrayHeader createPropertyByColumnName(String name) {
-		return new StringArrayHeader("PRCR-",getNumberOfHeaderLines(),name) {
-			@Override
-			protected ProtocolApplication<Protocol, Params, String, Params, String> getExperiment(Protocol protocol) {
-				ProtocolApplication<Protocol, Params, String, Params, String> exp = new ProtocolApplication<Protocol, Params, String, Params, String>(protocol);
-				exp.setReferenceYear("2014");
-				exp.setReference("Protein Corona Fingerprinting Predicts the Cellular Interaction of Gold and Silver Nanoparticles");
-				return exp;
-			}
-		};
+		return new ProteinCoronaCSVHeader("PRCR-",getNumberOfHeaderLines(),name);
 	}
 	
 }

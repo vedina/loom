@@ -162,7 +162,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
+    <!-- ambit.sf.net -->
     <ambit.version>2.5.5-SNAPSHOT</ambit.version>
+    <!--  https://github.com/ideaconsult/i5 -->
+    <i5.version>0.0.6-SNAPSHOT</i5.version>
   </properties>
   
 </project>
