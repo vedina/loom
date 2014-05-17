@@ -67,7 +67,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				EffectRecord<String,IParams,String> effect = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				effect.setEndpoint("ATOMIC COMPOSITION");
 				effect.setTextValue(value.toString());
-				effect.getConditions().put("ELEMENT_OR_GROUP", new Value(value));
+				//effect.getConditions().put("ELEMENT_OR_GROUP", new Value(value));
 				effect.getConditions().put("TYPE", new Value("CORE"));
 				experiment.addEffect(effect);
 				record.addMeasurement(experiment);
@@ -93,7 +93,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				EffectRecord<String,IParams,String> effect = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				effect.setEndpoint("FUNCTIONAL GROUP");
 				effect.setTextValue(value.toString());
-				effect.getConditions().put("ELEMENT_OR_GROUP", new Value(value));
+				//effect.getConditions().put("ELEMENT_OR_GROUP", new Value(value));
 				effect.getConditions().put("TYPE", new Value("FUNCTIONALIZATION"));
 				experiment.addEffect(effect);
 				record.addMeasurement(experiment);
@@ -106,7 +106,14 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			}
 		} else if ("LCMSMS".equals(lines[_lines.endpoint.ordinal()])) {			
 		} else {
-			if (("".equals(lines[_lines.result.ordinal()]) || "mean".equals(lines[_lines.result.ordinal()].toLowerCase()))) {
+			String line = lines[_lines.result.ordinal()].toLowerCase();
+			if (("".equals(line) 
+					|| "mean".equals(line)
+					|| "sd".equals(line)
+					|| "std".equals(line)
+					|| "sem".equals(line)
+					|| "n".equals(line))
+					) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
 					category = category.valueOf(lines[_lines.endpointcategory.ordinal()]);
@@ -119,24 +126,64 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				//{"TESTMAT_FORM":null,"DISTRIBUTION_TYPE":null}
 				
 				experiment.getParameters().put("Type of method", lines[1]);
-				EffectRecord<String,IParams,String> effect = category.createEffectRecord();
-				effect.setEndpoint(lines[_lines.endpoint.ordinal()].length()>45?lines[_lines.endpoint.ordinal()].substring(0,45):lines[_lines.endpoint.ordinal()]);
-				effect.setConditions(new Params());
-				effect.getConditions().put("MEDIUM", getMedium(lines[_lines.medium.ordinal()]));
+				EffectRecord<String,IParams,String> effect = getEffectRecord(category, experiment);
+				if ("mean".equals(line) || "".equals(line) ) {
+					String endpoint = lines[_lines.endpoint.ordinal()];
+					effect.setEndpoint(endpoint.length()>45?endpoint.substring(0,45):endpoint);
+					effect.getConditions().put("MEDIUM", getMedium(lines[_lines.medium.ordinal()]));
+					
+					if (endpoint.toLowerCase().indexOf("mean")<0)
+						effect.setLoQualifier(line);
+					effect.setLoValue(Double.parseDouble(value.toString()));
+					effect.setUnit(lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+					experiment.addEffect(effect);
+					record.addMeasurement(experiment);
+				} else if ("sd".equals(line) || "std".equals(line)  || "sem".equals(line)) {
+					try {
+						effect.setStdDev(Double.parseDouble(value.toString()),lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+					} catch (Exception x) {
+						effect.setStdDev((Double)null);
+					}
+				} else if ("n".equals(line)) {
+					try {
+						Value n = new Value<Integer>(Integer.parseInt(value.toString()));
+						n.setLoQualifier("=");
+						effect.getConditions().put("N",n);
+					} catch (Exception x) {
+						effect.getConditions().put("N",null);
+					}
+				}
 				
-				effect.setLoValue(Double.parseDouble(value.toString()));
-				effect.setUnit(lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
-				experiment.addEffect(effect);
-				record.addMeasurement(experiment);
 			}
 		}	
 	
 		}
-	
+	protected EffectRecord<String,IParams,String> getEffectRecord(I5_ROOT_OBJECTS category, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment) {
+		String sampleUUID = prefix+UUID.nameUUIDFromBytes(
+				(	
+				lines[_lines.endpointcategory.ordinal()]+
+				lines[_lines.technology.ordinal()]+
+				lines[_lines.endpoint.ordinal()]+
+				lines[_lines.medium.ordinal()]
+				      ).getBytes()
+		);		
+		if (experiment.getEffects()!=null)
+			for (EffectRecord<String,IParams,String> effect : experiment.getEffects()) 
+				if (sampleUUID.equals(effect.getSampleID())) {
+					return effect;
+				}
+		EffectRecord<String,IParams,String> effect = category.createEffectRecord();
+		effect.setSampleID(sampleUUID);
+		return effect;
+	}
 	protected ProtocolApplication<Protocol, IParams, String, IParams, String> getExperiment(
 			I5_ROOT_OBJECTS category, SubstanceRecord record,Protocol protocol) {
 		String experimentUUID = prefix+UUID.nameUUIDFromBytes(
-				(record.getCompanyUUID() + lines[_lines.technology.ordinal()]+lines[_lines.endpoint.ordinal()]).getBytes()
+				(record.getCompanyUUID() +
+						category.name() + 
+						lines[_lines.technology.ordinal()]
+				                                 //+lines[_lines.endpoint.ordinal()]
+				                                        ).getBytes()
 				);
 		
 		if (record.getMeasurements()!=null)
@@ -158,10 +205,10 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		experiment.setReference("Protein Corona Fingerprinting Predicts the Cellular Interaction of Gold and Silver Nanoparticles");
 	}
 	@Override
-	protected Value getMedium(String cell) {
-		Value medium = null;
+	protected String getMedium(String cell) {
+		String medium = null;
 		if ((cell!=null) && cell.indexOf("serum")>0) {
-			medium = new Value(cell.trim());
+			medium = "Human serum";
 		} return medium;
 	}
 	

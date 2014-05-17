@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.StringUtils;
 import org.openscience.cdk.exception.CDKException;
 
+import ambit2.base.data.ILiteratureEntry._type;
+import ambit2.base.data.LiteratureEntry;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
@@ -72,6 +74,12 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	@Override
 	protected StringArrayHeader createPropertyByColumnName(String name) {
 		return new ProteinCoronaCSVHeader("PRCR-",getNumberOfHeaderLines(),name);
+	}
+	@Override
+	protected LiteratureEntry getReference() {
+		LiteratureEntry entry = new LiteratureEntry("Protein Corona","http://dx.doi.org/10.1021/nn406018q");
+		entry.setType(_type.Dataset);
+		return entry;
 	}
 	
 }
