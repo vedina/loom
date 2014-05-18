@@ -23,11 +23,11 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	public ProteinCoronaPaperReader(InputStream in)
 			throws UnsupportedEncodingException, CDKException {
 		super(in);
-		setNumberOfHeaderLines(6);
+		setNumberOfHeaderLines(7);
 	}
 	public ProteinCoronaPaperReader(Reader reader)  throws CDKException {
 		super(reader);
-		setNumberOfHeaderLines(6);
+		setNumberOfHeaderLines(7);
 	}
 
 	@Override
