@@ -14,6 +14,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
@@ -56,6 +57,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				if (value != null) {
 					List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
 					ids.add(new ExternalIdentifier(lines[_lines.technology.ordinal()],value.toString()));
+					ids.add(new ExternalIdentifier("DOI","http://dx.doi.org/10.1021/nn406018q"));
 					record.setExternalids(ids);
 				}
 		} else if ("Core composition".equals(lines[_lines.endpoint.ordinal()])) {
@@ -216,6 +218,9 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				if (experimentUUID.equals(experiment.getDocumentUUID())) return experiment;
 			}
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = category.createExperimentRecord(protocol);
+		ReliabilityParams reliability = new ReliabilityParams();
+		reliability.setStudyResultType("experimental result");
+		experiment.setReliability(reliability);
 		experiment.setParameters(new Params());
 		experiment.getParameters().put("testmat_form", null);
 		experiment.getParameters().put("Type of method",null);
