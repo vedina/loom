@@ -96,10 +96,11 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 	public boolean hasNext() {
 		if (materials==null) return false;
 		if (materials.hasNext()) {
+			Resource material = materials.next();
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
-			parseMaterial(rdf, materials.next(),record);
-			parseCoatings(rdf, materials.next(),record);
+			parseMaterial(rdf, material,record);
+			parseCoatings(rdf, material,record);
 			return true;
 		} else {
 			record = null;
@@ -215,7 +216,6 @@ class ProcessSolution {
 	public int process(ResultSet rs) {
 		int records = 0;
 		processHeader(rs);
-		System.out.println();
 		while (rs.hasNext()) {
 			records++;
 			QuerySolution qs = rs.next();
@@ -556,7 +556,11 @@ class ProcessMaterial extends ProcessSolution {
 		try {record.setOwnerName(qs.get("source").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setSubstancetype(qs.get("type").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setCompanyName(name);} catch (Exception x) {};
-		try {record.setPublicName(qs.get("label").asLiteral().getString());} catch (Exception x) {};
+		try {
+			record.setPublicName(qs.get("label").asLiteral().getString());
+		} catch (Exception x) {
+			x.printStackTrace();
+		};
 		try {record.getExternalids().add(new ExternalIdentifier("Has_Identifier",qs.get("id").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Alternative Identifier",qs.get("altid").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Composition",qs.get("composition").asLiteral().getString()));} catch (Exception x) {};
