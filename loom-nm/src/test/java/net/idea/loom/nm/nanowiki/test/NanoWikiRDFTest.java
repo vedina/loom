@@ -19,7 +19,7 @@ public class NanoWikiRDFTest  {
 		NanoWikiRDFReader reader = null;
 		int records = 0;
 		try {
-			reader = new NanoWikiRDFReader(new InputStreamReader(new FileInputStream(new File("D:/src-other/nanowiki/backup.rdf")),"UTF-8"));
+			reader = new NanoWikiRDFReader(new InputStreamReader(new FileInputStream(new File("D:/src-other/nanowiki/backup_public.rdf")),"UTF-8"));
 			while (reader.hasNext()) {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
