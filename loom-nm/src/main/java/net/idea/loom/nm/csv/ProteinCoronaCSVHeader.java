@@ -136,6 +136,8 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			}
 		} else {
 			String line = lines[_lines.result.ordinal()].toLowerCase();
+			if (value==null || "".equals(value.toString())) 
+				return;
 			if (("".equals(line) 
 					|| "mean".equals(line)
 					|| "sd".equals(line)
