@@ -67,7 +67,6 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				protocol.addGuideline(lines[_lines.technology.ordinal()]);
 
 				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(I5_ROOT_OBJECTS.SURFACE_CHEMISTRY,record,protocol);
-				
 				EffectRecord<String,IParams,String> effect = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				effect.setEndpoint("ATOMIC COMPOSITION");
 				effect.setTextValue(value.toString());

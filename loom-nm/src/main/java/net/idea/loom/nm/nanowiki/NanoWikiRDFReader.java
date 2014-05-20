@@ -24,6 +24,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
@@ -513,7 +514,9 @@ class ProcessNMMeasurement extends ProcessSolution {
 			} catch (Exception x) {
 				effect.setTextValue(value.asLiteral().getString());
 			}
-			try {effect.setUpValue(value.asLiteral().getDouble()+qs.get("valueError").asLiteral().getDouble());effect.setLoQualifier("<=");effect.setUpQualifier("<=");} catch (Exception x) {}
+			try {
+				effect.setStdDev(qs.get("valueError").asLiteral().getDouble());
+			} catch (Exception x) {}
 			
 			try {effect.setLoValue(qs.get("valueMin").asLiteral().getDouble());;effect.setLoQualifier(">=");} catch (Exception x) {}
 			try {effect.setUpValue(qs.get("valueMax").asLiteral().getDouble());effect.setUpQualifier("<=");} catch (Exception x) {}
@@ -548,6 +551,27 @@ class ProcessCoatings extends ProcessSolution {
 		try {record.setOwnerName(qs.get("coating").asResource().getLocalName());} catch (Exception x) {};
 		try {coating.setProperty(Property.getNameInstance(),qs.get("chemical").asResource().getLocalName());} catch (Exception x) {};
 		try {coating.setContent(qs.get("smiles").asLiteral().getString()); coating.setFormat("INC"); coating.setSmiles(coating.getContent());} catch (Exception x) {};
+		
+		//now add the same info as measurement - at least to test the approach
+		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol("Unknown");
+		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createExperimentRecord(protocol);
+		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
+		record.addMeasurement(experiment);//should be one and the same experiment...
+		EffectRecord<String,IParams,String> record = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
+		record.setEndpoint("ATOMIC COMPOSITION");
+		record.setTextValue(coating.getContent());
+		record.getConditions().put("TYPE", new Value("COATING"));
+		try {
+			//smth wrong here
+			record.setTextValue(qs.get("smiles").asResource().getLocalName());
+		} catch (Exception x) {;}		
+		try {
+			record.getConditions().put("COATING_DESCRIPTION", new Value(qs.get("coating").asResource().getLocalName()));
+		} catch (Exception x) {}
+		try {
+			record.getConditions().put("DESCRIPTION", new Value(qs.get("chemical").asResource().getLocalName()));
+		} catch (Exception x) {}
+		experiment.addEffect(record);
 	}
 }
 class ProcessMaterial extends ProcessSolution {
