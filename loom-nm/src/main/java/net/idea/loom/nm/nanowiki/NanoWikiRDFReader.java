@@ -168,7 +168,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
-		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?usedinstudy\n"+
+		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source \n"+
 		"WHERE {\n"+
 		"<%s> rdf:type mw:Category-3AMaterials.\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"+
@@ -179,7 +179,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n"+
 		"OPTIONAL {<%s> rdfs:label ?label2.}\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source.}\n"+
-		"OPTIONAL {<%s> mw:Property-3AUsed_in_Study ?usedinstudy.}\n"+
 		"}";
 
 	private static final String m_coating =
@@ -207,7 +206,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		ProcessSolution.execQuery(rdf, String.format(m_material, 
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),
-				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI()
+				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI()
 				),
 				new ProcessMaterial(rdf,material,record));
 	}
