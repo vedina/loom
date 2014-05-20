@@ -207,7 +207,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		ProcessSolution.execQuery(rdf, String.format(m_material, 
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),
-				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI()
+				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI()
 				),
 				new ProcessMaterial(rdf,material,record));
 	}
