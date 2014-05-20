@@ -15,6 +15,7 @@ import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.iterator.DefaultIteratingChemObjectReader;
 
 import ambit2.base.data.ILiteratureEntry;
+import ambit2.base.data.LiteratureEntry;
 import ambit2.base.data.Property;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
@@ -167,7 +168,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
-		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source\n"+
+		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?usedinstudy\n"+
 		"WHERE {\n"+
 		"<%s> rdf:type mw:Category-3AMaterials.\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"+
@@ -178,6 +179,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n"+
 		"OPTIONAL {<%s> rdfs:label ?label2.}\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source.}\n"+
+		"OPTIONAL {<%s> mw:Property-3AUsed_in_Study ?usedinstudy.}\n"+
 		"}";
 
 	private static final String m_coating =
@@ -258,8 +260,10 @@ class ProcessSolution {
 
 class ProcessMeasurement extends ProcessSolution {
 	SubstanceRecord record;
+	ILiteratureEntry citation;
 	public ProcessMeasurement(SubstanceRecord record) {
 		this.record = record;
+		this.citation = record.getReference();
 	}
 	@Override
 	void processHeader(ResultSet rs) {
@@ -411,7 +415,14 @@ class ProcessMeasurement extends ProcessSolution {
 			
 		}
 		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
-		try {papp.setReference(qs.get("definedBy").asResource().getURI());} catch (Exception x) {}
+		try {
+			if (citation == null)
+				papp.setReference(qs.get("study").asResource().getURI());
+			else {
+				papp.setReference(citation.getURL());
+			}	
+			//record.setReference(null);
+		} catch (Exception x) {}
 		try {
 			papp.setCompanyName(qs.get("measurement").asResource().getURI());
 		} catch (Exception x) {}
@@ -457,11 +468,13 @@ class ProcessNMMeasurement extends ProcessSolution {
 		SubstanceRecord record;
 		String endpoint;
 		I5_ROOT_OBJECTS category;
-		
+		ILiteratureEntry citation;
+
 		public ProcessNMMeasurement(SubstanceRecord record,I5_ROOT_OBJECTS category,String endpoint) {
 			this.record = record;
 			this.endpoint = endpoint;
 			this.category = category;
+			this.citation = record.getReference();
 		}
 		@Override
 		void processHeader(ResultSet rs) {
@@ -481,6 +494,11 @@ class ProcessNMMeasurement extends ProcessSolution {
 			ProtocolApplication<Protocol,IParams,String,IParams,String> papp = category.createExperimentRecord(protocol);
 			papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 			papp.setSubstanceUUID(record.getCompanyUUID());
+			
+			try {
+				if (citation != null)
+					papp.setReference(citation.getURL());
+			} catch (Exception x) {}
 			
 			try {
 				if (method!=null)
@@ -552,7 +570,7 @@ class ProcessMaterial extends ProcessSolution {
 		
 		record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
 		record.setCompanyUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
-		
+		//?source variable is a pointer to the paper the material
 		try {record.setOwnerName(qs.get("source").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setSubstancetype(qs.get("type").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setCompanyName(name);} catch (Exception x) {};
@@ -565,7 +583,16 @@ class ProcessMaterial extends ProcessSolution {
 		try {record.getExternalids().add(new ExternalIdentifier("Alternative Identifier",qs.get("altid").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Composition",qs.get("composition").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Coating",qs.get("coating").asResource().getLocalName()));} catch (Exception x) {};
-
+		try {record.getExternalids().add(new ExternalIdentifier("DATASET","NanoWiki"));} catch (Exception x) {};
+		
+		try {
+			if (qs.get("source")!=null) {
+				Resource resource = qs.get("source").asResource();
+				record.setReference(new LiteratureEntry(resource.getLocalName(),resource.getURI()));
+			}
+		} catch (Exception x) { 
+			record.setReference(null);
+		};
 		parseSize(rdf, material, record);
 		parseIEP(rdf, material, record);
 		parseZetaPotential(rdf, material, record);
@@ -626,7 +653,7 @@ class ProcessMaterial extends ProcessSolution {
 		"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
 		"SELECT DISTINCT \n"+
-		"?study ?measurement ?label ?method ?definedBy ?endpoint ?dose ?doseUnit\n"+ 
+		"?study ?measurement ?label ?method ?definedBy ?study ?endpoint ?dose ?doseUnit\n"+ 
 		"?value ?valueUnit ?valueError ?resultInterpretation\n"+
 		"WHERE {\n"+
 		//"?material rdf:type mw:Category-3AMaterials.\n"+

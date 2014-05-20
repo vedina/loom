@@ -10,6 +10,7 @@ import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 import org.junit.Test;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 
 public class NanoWikiRDFTest  {
@@ -24,7 +25,23 @@ public class NanoWikiRDFTest  {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				//if (((SubstanceRecord)record).getMeasurements()!=null) System.out.println(((SubstanceRecord)record).getMeasurements());
-				System.out.println(((SubstanceRecord)record).getCompanyName());
+				SubstanceRecord material = (SubstanceRecord)record;
+				System.out.print(material.getCompanyName());
+				System.out.print("\t");
+				System.out.print(material.getReference());
+				System.out.print("\t");
+				if (material.getMeasurements()==null)
+					System.out.print("\t");
+				else {
+					System.out.print(material.getMeasurements().size());
+					System.out.print("\t");
+					for (ProtocolApplication papp : material.getMeasurements()) {
+						System.out.print("Ref "+ papp.getReference());
+						System.out.print("\t");
+					}
+				}
+				System.out.println();
+				
 				records++;
 			}
 		} finally {
