@@ -52,6 +52,8 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				record.setCompanyName(value.toString());
 				record.setCompanyUUID(prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));
 			}
+			record.setOwnerName("Protein Corona fingerprinting");
+			record.setOwnerUUID(prefix + UUID.nameUUIDFromBytes("http://dx.doi.org/10.1021/nn406018q".getBytes()));
 			record.setSubstancetype("nanoparticle");
 		} else if ("Classification".equals(lines[_lines.endpoint.ordinal()])) {
 				if (value != null) {
