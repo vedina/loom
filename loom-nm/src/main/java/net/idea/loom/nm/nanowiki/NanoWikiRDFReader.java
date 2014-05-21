@@ -24,6 +24,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.ICiteable;
@@ -494,6 +495,9 @@ class ProcessNMMeasurement extends ProcessSolution {
 			ProtocolApplication<Protocol,IParams,String,IParams,String> papp = category.createExperimentRecord(protocol);
 			papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 			papp.setSubstanceUUID(record.getCompanyUUID());
+			ReliabilityParams reliability = new ReliabilityParams();
+			reliability.setStudyResultType("experimental result");
+			papp.setReliability(reliability);
 			
 			try {
 				if (citation != null)
@@ -538,7 +542,7 @@ class ProcessCoatings extends ProcessSolution {
 		this.record = record;
 		this.rdf = rdf;
 		this.material = material;
-		composition_uuid = NanoWikiRDFReader.generateUUIDfromString("NWKI",null);
+		composition_uuid = record.getCompanyUUID();
 	}
 	@Override
 	void processHeader(ResultSet rs) {
@@ -546,32 +550,49 @@ class ProcessCoatings extends ProcessSolution {
 	@Override
 	void process(ResultSet rs, QuerySolution qs) {
 		
-		IStructureRecord coating = new StructureRecord();
-		record.addStructureRelation(composition_uuid, coating, STRUCTURE_RELATION.HAS_COATING, new Proportion());
-		try {record.setOwnerName(qs.get("coating").asResource().getLocalName());} catch (Exception x) {};
-		try {coating.setProperty(Property.getNameInstance(),qs.get("chemical").asResource().getLocalName());} catch (Exception x) {};
-		try {coating.setContent(qs.get("smiles").asLiteral().getString()); coating.setFormat("INC"); coating.setSmiles(coating.getContent());} catch (Exception x) {};
-		
 		//now add the same info as measurement - at least to test the approach
 		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol("Unknown");
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createExperimentRecord(protocol);
 		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 		record.addMeasurement(experiment);//should be one and the same experiment...
-		EffectRecord<String,IParams,String> record = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
-		record.setEndpoint("ATOMIC COMPOSITION");
-		record.setTextValue(coating.getContent());
-		record.getConditions().put("TYPE", new Value("COATING"));
+		EffectRecord<String,IParams,String> erecord;
+		
+		if (record.getRelatedStructures()==null || (record.getRelatedStructures().size()<2)) {
+			if (record.getFormula()!=null && !"".equals(record.getFormula())) {
+				erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
+				erecord.setEndpoint("ATOMIC COMPOSITION");
+				erecord.setTextValue(record.getFormula());
+				erecord.getConditions().put("TYPE", new Value("CORE"));
+				erecord.getConditions().put("ELEMENT_OR_GROUP",new Value(record.getFormula()));
+				experiment.addEffect(erecord);
+			}
+		}
+		//coating
+		IStructureRecord coating = new StructureRecord();
+		
+		record.addStructureRelation(composition_uuid, coating, STRUCTURE_RELATION.HAS_COATING, new Proportion());
+		try {coating.setProperty(Property.getTradeNameInstance("COATING"),qs.get("coating").asResource().getLocalName());} catch (Exception x) {};
+		try {coating.setProperty(Property.getNameInstance(),qs.get("chemical").asResource().getLocalName());} catch (Exception x) {};
+		try {coating.setContent(qs.get("smiles").asLiteral().getString()); coating.setFormat("INC"); coating.setSmiles(coating.getContent());} catch (Exception x) {};
 		try {
-			//smth wrong here
-			record.setTextValue(qs.get("smiles").asResource().getLocalName());
-		} catch (Exception x) {;}		
+			coating.setProperty(Property.getI5UUIDInstance(),NanoWikiRDFReader.generateUUIDfromString("NWKI",qs.get("chemical").asResource().getLocalName()) );
+		} catch (Exception x) {
+			coating.setProperty(Property.getI5UUIDInstance(),NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
+		};
+
+		erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
+		erecord.setEndpoint("ATOMIC COMPOSITION");
+		try {erecord.getConditions().put("ELEMENT_OR_GROUP",new Value(coating.getContent()));} catch (Exception x) {};
+		try {erecord.setTextValue(qs.get("chemical").asResource().getLocalName());} catch (Exception x) {};
+		erecord.getConditions().put("TYPE", new Value("COATING"));
+
 		try {
-			record.getConditions().put("COATING_DESCRIPTION", new Value(qs.get("coating").asResource().getLocalName()));
+			erecord.getConditions().put("COATING_DESCRIPTION", new Value(qs.get("coating").asResource().getLocalName()));
 		} catch (Exception x) {}
 		try {
-			record.getConditions().put("DESCRIPTION", new Value(qs.get("chemical").asResource().getLocalName()));
+			erecord.getConditions().put("DESCRIPTION", new Value(qs.get("chemical").asResource().getLocalName()));
 		} catch (Exception x) {}
-		experiment.addEffect(record);
+		experiment.addEffect(erecord);
 	}
 }
 class ProcessMaterial extends ProcessSolution {
@@ -594,7 +615,9 @@ class ProcessMaterial extends ProcessSolution {
 		record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
 		record.setCompanyUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",name));
 		//?source variable is a pointer to the paper the material
-		try {record.setOwnerName(qs.get("source").asResource().getLocalName());} catch (Exception x) {};
+		//try {record.setOwnerName(qs.get("source").asResource().getLocalName());} catch (Exception x) {};
+		record.setOwnerName("NanoWiki");
+		record.setOwnerUUID("NWKI-"+UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString());
 		try {record.setSubstancetype(qs.get("type").asResource().getLocalName());} catch (Exception x) {};
 		try {record.setCompanyName(name);} catch (Exception x) {};
 		try {
@@ -607,7 +630,25 @@ class ProcessMaterial extends ProcessSolution {
 		try {record.getExternalids().add(new ExternalIdentifier("Composition",qs.get("composition").asLiteral().getString()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("Coating",qs.get("coating").asResource().getLocalName()));} catch (Exception x) {};
 		try {record.getExternalids().add(new ExternalIdentifier("DATASET","NanoWiki"));} catch (Exception x) {};
+		try {record.getExternalids().add(new ExternalIdentifier("SOURCE",qs.get("source").asResource().getLocalName()));} catch (Exception x) {};
 		
+		try {
+			record.setFormula(qs.get("composition").asLiteral().getString());
+			if (record.getFormula()!=null) {
+				String composition_uuid = record.getCompanyUUID();
+				IStructureRecord core = new StructureRecord();
+				record.addStructureRelation(composition_uuid, core, STRUCTURE_RELATION.HAS_CORE, new Proportion());
+				try {
+					core.setProperty(Property.getI5UUIDInstance(),NanoWikiRDFReader.generateUUIDfromString("NWKI",record.getFormula()) );
+				} catch (Exception x) {
+					core.setProperty(Property.getI5UUIDInstance(),NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
+				};
+
+				core.setFormula(record.getFormula());
+				//todo more info
+				try {core.setProperty(Property.getNameInstance(),record.getFormula());} catch (Exception x) {};
+			}
+		} catch (Exception x) {};
 		try {
 			if (qs.get("source")!=null) {
 				Resource resource = qs.get("source").asResource();
