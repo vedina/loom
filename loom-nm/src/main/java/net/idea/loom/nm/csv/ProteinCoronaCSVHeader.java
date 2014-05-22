@@ -144,7 +144,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 					|| "sd".equals(line)
 					|| "std".equals(line)
 					|| "sem".equals(line)
-					|| "n".equals(line))
+					)
 					) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
@@ -170,9 +170,10 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 
 				} else if ("sd".equals(line) || "std".equals(line)  || "sem".equals(line)) {
 					try {
-						effect.setStdDev(Double.parseDouble(value.toString()),lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+						effect.setErrQualifier(line);
+						effect.setErrorValue(Double.parseDouble(value.toString()));
 					} catch (Exception x) {
-						effect.setStdDev((Double)null);
+						effect.setErrorValue((Double)null);
 					}
 				} else if ("n".equals(line)) {
 					try {
