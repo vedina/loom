@@ -12,22 +12,24 @@ import org.openscience.cdk.exception.CDKException;
 
 import ambit2.base.data.ILiteratureEntry._type;
 import ambit2.base.data.LiteratureEntry;
-import ambit2.base.data.study.Params;
-import ambit2.base.data.study.Protocol;
-import ambit2.base.data.study.ProtocolApplication;
 import ambit2.core.io.IteratingDelimitedFileReaderComplexHeader;
 import ambit2.core.io.StringArrayHeader;
 
 public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComplexHeader<StringArrayHeader> {
-
-	public ProteinCoronaPaperReader(InputStream in)
+	protected LiteratureEntry citation;
+	public ProteinCoronaPaperReader(InputStream in,LiteratureEntry citation)
 			throws UnsupportedEncodingException, CDKException {
 		super(in);
 		setNumberOfHeaderLines(7);
+		this.citation = citation;
 	}
 	public ProteinCoronaPaperReader(Reader reader)  throws CDKException {
+		this(reader,new LiteratureEntry("Protein Corona","http://dx.doi.org/10.1021/nn406018q"));
+	}
+	public ProteinCoronaPaperReader(Reader reader,LiteratureEntry citation)  throws CDKException {
 		super(reader);
 		setNumberOfHeaderLines(7);
+		this.citation = citation;
 	}
 
 	@Override
@@ -46,15 +48,14 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 				line = in.readLine();
 			}
 			String[] tokens = StringUtils.splitPreserveAllTokens(line,new String(format.getFieldDelimiter()));
-			int col = 0;
-			for (String token : tokens) {
+			for (int col = 0; col < tokens.length; col++) {
+				String token = tokens[col];
 				if (nline==0)
 					addHeaderColumn(token);
 				else {
 					StringArrayHeader column = getHeaderColumn(col);
-					column.setValue(nline, token);
+					column.setValue(nline, col, token);
 				}
-				col++;
 			}
 			//no SMILES expected, if needed get code from super class
 			if (nline==0)
@@ -72,14 +73,14 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	}
 
 	@Override
-	protected StringArrayHeader createPropertyByColumnName(String name) {
-		return new ProteinCoronaCSVHeader("PRCR-",getNumberOfHeaderLines(),name);
+	protected ProteinCoronaCSVHeader createPropertyByColumnName(String name) {
+		ProteinCoronaCSVHeader column = new ProteinCoronaCSVHeader("PRCR-",getNumberOfHeaderLines(),name);
+		column.setHeader(header);
+		return column;
 	}
 	@Override
 	protected LiteratureEntry getReference() {
-		LiteratureEntry entry = new LiteratureEntry("Protein Corona","http://dx.doi.org/10.1021/nn406018q");
-		entry.setType(_type.Dataset);
-		return entry;
+		return citation;
 	}
 	
 }

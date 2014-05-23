@@ -139,7 +139,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			String line = lines[_lines.result.ordinal()].toLowerCase();
 			if (value==null || "".equals(value.toString())) 
 				return;
-			if (("".equals(line) 
+			if ((      "".equals(line) 
 					|| "mean".equals(line)
 					|| "sd".equals(line)
 					|| "std".equals(line)
@@ -160,7 +160,9 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				if ("mean".equals(line) || "".equals(line) ) {
 					String endpoint = lines[_lines.endpoint.ordinal()];
 					effect.setEndpoint(endpoint.length()>45?endpoint.substring(0,45):endpoint);
-					effect.getConditions().put("MEDIUM", getMedium(lines[_lines.medium.ordinal()]));
+					effect.getConditions().put(
+							header.get(0).getValue(_lines.medium.ordinal()),
+							getMedium(lines[_lines.medium.ordinal()]));
 					
 					if (endpoint.toLowerCase().indexOf("mean")<0)
 						effect.setLoQualifier(line);
