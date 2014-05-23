@@ -27,7 +27,7 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	public ProteinCoronaPaperReader(InputStream in,LiteratureEntry citation,String prefix)
 			throws UnsupportedEncodingException, CDKException {
 		super(in);
-		setNumberOfHeaderLines(7);
+		setNumberOfHeaderLines(ProteinCoronaCSVHeader._lines.values().length);
 		this.citation = citation;
 		this.prefix = prefix;
 	}
@@ -37,7 +37,7 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	}
 	public ProteinCoronaPaperReader(Reader reader,LiteratureEntry citation,String prefix)  throws CDKException {
 		super(reader);
-		setNumberOfHeaderLines(7);
+		setNumberOfHeaderLines(ProteinCoronaCSVHeader._lines.values().length);
 		this.citation = citation;
 		this.prefix = prefix;
 	}
@@ -60,10 +60,11 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 			String[] tokens = StringUtils.splitPreserveAllTokens(line,new String(format.getFieldDelimiter()));
 			for (int col = 0; col < tokens.length; col++) {
 				String token = tokens[col];
-				if (nline==0)
+				if (nline==0) {
 					addHeaderColumn(token);
-				else {
+				} else {
 					StringArrayHeader column = getHeaderColumn(col);
+					//System.out.println(col + ":" + column + " " + token);
 					column.setValue(nline, col, token);
 				}
 			}

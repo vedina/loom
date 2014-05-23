@@ -24,14 +24,37 @@ import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.StringArrayHeader;
 
 public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
-	enum _lines {
+	public enum _lines {
 		endpointcategory,
-		technology,
+		protocol,
+		guideline,
+		type_of_study,
+		type_of_method,
+		data_gathering_instruments,
 		endpoint,
-		line4,
-		line5,
+		condition1 {
+			@Override
+			public boolean isCondition() {
+				return true;
+			}
+		},
+		condition2 {
+			@Override
+			public boolean isCondition() {
+				return true;
+			}			
+		},
+		condition3 {
+			@Override
+			public boolean isCondition() {
+				return true;
+			}			
+		},		
 		result,
-		units
+		units;
+		public boolean isCondition() {
+			return false;
+		}
 	}
 	
 	public ProteinCoronaCSVHeader(String prefix,int nlines) {
@@ -42,7 +65,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	}
 	@Override
 	public void assign(SubstanceRecord record, Object value) {
-		if ("Change".equals(lines[_lines.line5.ordinal()])) return;
+		if ("Change".equals(lines[_lines.condition2.ordinal()])) return;
 		else if ("Designation".equals(lines[_lines.result.ordinal()])) {
 			if (value == null) {
 				record.setPublicName(null);
@@ -53,15 +76,15 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				record.setCompanyName(value.toString());
 				record.setCompanyUUID(prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));
 			}
-		} else if ("Classification".equals(lines[_lines.endpoint.ordinal()])) {
+		} else if ("external identifier".equals(lines[_lines.endpointcategory.ordinal()].toLowerCase())) {
 				if (value != null) {
 					List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
-					ids.add(new ExternalIdentifier(lines[_lines.technology.ordinal()],value.toString()));
+					ids.add(new ExternalIdentifier(lines[_lines.endpoint.ordinal()],value.toString()));
 					record.setExternalids(ids);
 				}
-		} else if ("Chemical".equals(lines[_lines.endpoint.ordinal()])) {
+		} else if ("Chemical".equals(lines[_lines.endpointcategory.ordinal()])) {
 			record.setSubstancetype("mono constituent substance");
-			if ("SMILES".equals(lines[_lines.line5.ordinal()])) {
+			if ("SMILES".equals(lines[_lines.endpoint.ordinal()])) {
 				
 				UUID uuid = UUID.nameUUIDFromBytes(value.toString().getBytes());
 				record.setReferenceSubstanceUUID(prefix+uuid.toString());
@@ -74,21 +97,27 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				try {structure.setProperty(Property.getNameInstance(),record.getPublicName());} catch (Exception x) {};
 				try {structure.setProperty(Property.getTradeNameInstance("Name"),record.getCompanyName());} catch (Exception x) {};
 				
-			} else if ("CASRN".equals(lines[_lines.line5.ordinal()])) {
+			} else if ("CASRN".equals(lines[_lines.endpoint.ordinal()])) {
 				record.setPublicName(value.toString());
 				if (record.getRelatedStructures()!=null)
 					for (CompositionRelation rel : record.getRelatedStructures()) 
 						if (STRUCTURE_RELATION.HAS_CONSTITUENT.name().equals(rel.getRelation().getClass()))
 								try {rel.getSecondStructure().setProperty(Property.getCASInstance(),value.toString());} catch (Exception x) {};
 			}
-		} else if ("Core composition".equals(lines[_lines.endpoint.ordinal()])) {
+		} else if ("Core composition".equals(lines[_lines.endpointcategory.ordinal()])) {
 			record.setSubstancetype("nanoparticle");
-			if ("Element".equals(lines[_lines.line5.ordinal()])) {
+			if ("Element".equals(lines[_lines.endpoint.ordinal()])) {
 				//get the protocol to characterize composition from the paper!
-				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.technology.ordinal()]);
-				protocol.addGuideline(lines[_lines.technology.ordinal()]);
+				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.data_gathering_instruments.ordinal()]);
+				protocol.addGuideline(lines[_lines.data_gathering_instruments.ordinal()]);
 
-				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(I5_ROOT_OBJECTS.SURFACE_CHEMISTRY,record,protocol);
+				ReliabilityParams rel = new ReliabilityParams();
+				if (lines[_lines.type_of_method.ordinal()].contains("calculation") || lines[_lines.type_of_method.ordinal()].contains("simulation") ) {
+					rel.setStudyResultType("estimated by calculation");
+				} else {
+					rel.setStudyResultType("experimental result");
+				}
+				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(I5_ROOT_OBJECTS.SURFACE_CHEMISTRY,record,protocol,rel);
 				EffectRecord<String,IParams,String> effect = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				effect.setEndpoint("ATOMIC COMPOSITION");
 				effect.setTextValue(value.toString());
@@ -106,13 +135,19 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				try {core.setProperty(Property.getI5UUIDInstance(),prefix+uuid.toString());} catch (Exception x) {};
 
 			}
-		} else if ("Surface modifier".equals(lines[_lines.endpoint.ordinal()])) {
-			if ("Abbreviated".equals(lines[_lines.line5.ordinal()])) {
+		} else if ("Surface modifier".equals(lines[_lines.endpointcategory.ordinal()])) {
+			if ("Abbreviated".equals(lines[_lines.endpoint.ordinal()])) {
 				//get the protocol to characterize composition from the paper!
-				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.technology.ordinal()]);
-				protocol.addGuideline(lines[_lines.technology.ordinal()]);
+				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.data_gathering_instruments.ordinal()]);
+				protocol.addGuideline(lines[_lines.data_gathering_instruments.ordinal()]);
 				
-				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(I5_ROOT_OBJECTS.SURFACE_CHEMISTRY,record,protocol);
+				ReliabilityParams rel = new ReliabilityParams();
+				if (lines[_lines.type_of_method.ordinal()].contains("calculation") || lines[_lines.type_of_method.ordinal()].contains("simulation") ) {
+					rel.setStudyResultType("estimated by calculation");
+				} else {
+					rel.setStudyResultType("experimental result");
+				}
+				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(I5_ROOT_OBJECTS.SURFACE_CHEMISTRY,record,protocol,rel);
 
 				EffectRecord<String,IParams,String> effect = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				effect.setEndpoint("FUNCTIONAL GROUP");
@@ -127,18 +162,24 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				try {coating.setProperty(Property.getNameInstance(),value);} catch (Exception x) {};
 				try {coating.setProperty(Property.getI5UUIDInstance(),prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));} catch (Exception x) {};
 			}
-		} else if ("LC MS/MS".equals(lines[_lines.technology.ordinal()])) {
+		} else if ("PROTEOMICS".equals(lines[_lines.endpointcategory.ordinal()])) {
 			Double num = Double.parseDouble(value.toString());
 			if (num>0) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
 					category = category.valueOf(lines[_lines.endpointcategory.ordinal()]);
 				} catch (Exception x) {}
-				Protocol protocol = category.getProtocol(lines[_lines.technology.ordinal()]);
+				Protocol protocol = category.getProtocol(lines[_lines.data_gathering_instruments.ordinal()]);
 				protocol.addGuideline("Solution-based digestion protocol for serum protein isolates");
 				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = null;
-				experiment = getExperiment(category,record,protocol);
-				experiment.getParameters().put("Type of method", lines[_lines.technology.ordinal()]);
+				ReliabilityParams rel = new ReliabilityParams();
+				if (lines[_lines.type_of_method.ordinal()].contains("calculation") || lines[_lines.type_of_method.ordinal()].contains("simulation") ) {
+					rel.setStudyResultType("estimated by calculation");
+				} else {
+					rel.setStudyResultType("experimental result");
+				}
+				experiment = getExperiment(category,record,protocol,rel);
+				experiment.getParameters().put("Type of method", lines[_lines.data_gathering_instruments.ordinal()]);
 				experiment.getParameters().put(I5CONSTANTS.pDATA_GATHERING_INSTRUMENTS,"Orbitrap-Velos mass spectrometer (Thermo)");
 				EffectRecord<String,IParams,String> effect = null;
 				if (experiment.getEffects()==null || experiment.getEffects().size()==0) { 
@@ -165,30 +206,59 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 					|| "std".equals(line)
 					|| "sem".equals(line)
 					|| "interpretation".equals(line)
+					|| "condition".equals(line)
 					)
 					) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
 					category = category.valueOf(lines[_lines.endpointcategory.ordinal()]);
 				} catch (Exception x) {}
-				Protocol protocol = category.getProtocol(lines[_lines.technology.ordinal()]);
-				protocol.addGuideline(lines[_lines.technology.ordinal()]);
+				Protocol protocol = category.getProtocol(lines[_lines.protocol.ordinal()]);
+				protocol.addGuideline(lines[_lines.guideline.ordinal()]);
+			
+				ReliabilityParams rel = new ReliabilityParams();
+				if (lines[_lines.type_of_method.ordinal()].contains("calculation") || lines[_lines.type_of_method.ordinal()].contains("simulation") ) {
+					rel.setStudyResultType("estimated by calculation");
+				} else {
+					rel.setStudyResultType("experimental result");
+				}
 				
-				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(category,record,protocol);
+				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = getExperiment(category,record,protocol,rel);
 				
-				experiment.getParameters().put("Type of method", lines[_lines.technology.ordinal()]);
+				if (!"".equals(lines[_lines.type_of_method.ordinal()]))
+					experiment.getParameters().put(I5CONSTANTS.cTypeMethod, lines[_lines.type_of_method.ordinal()]);
+				if (!"".equals(lines[_lines.type_of_study.ordinal()]))
+						experiment.getParameters().put(I5CONSTANTS.cTypeStudy, lines[_lines.type_of_study.ordinal()]);
+				if (!"".equals(lines[_lines.data_gathering_instruments.ordinal()]))
+					experiment.getParameters().put(I5CONSTANTS.pDATA_GATHERING_INSTRUMENTS, lines[_lines.data_gathering_instruments.ordinal()]);
+				
+			
+				
 				EffectRecord<String,IParams,String> effect = getEffectRecord(category, experiment);
+				/* doens't work
+				if ("condition".equals(line)) {
+					String name = lines[_lines.endpoint.ordinal()];
+					try {
+						Value cValue = new Value(Double.parseDouble(value.toString()));
+						cValue.setUnits(lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+						effect.getConditions().put(name, cValue);
+					} catch (Exception x) {
+						effect.getConditions().put(name, value.toString());
+					}
+					experiment.addEffect(effect);
+				}
+				*/	
 				if ("mean".equals(line) || "".equals(line) || "interpretation".equals(line)) {
 					String endpoint = lines[_lines.endpoint.ordinal()];
-					effect.setEndpoint(endpoint.length()>45?endpoint.substring(0,45):endpoint);
+					effect.setEndpoint(endpoint);
 					
-					effect.getConditions().put(
-							header.get(0).getValue(_lines.line5.ordinal()),
-							getMedium(lines[_lines.line5.ordinal()]));
-					
-					effect.getConditions().put(
-							header.get(0).getValue(_lines.line4.ordinal()),
-							getMedium(lines[_lines.line4.ordinal()]));
+					for (_lines field : _lines.values()) if (field.isCondition()) {
+						if (!"".equals(header.get(0).getValue(field.ordinal()))) {
+							String cValue = getConditionValue(lines[field.ordinal()]);
+							if (cValue == null || "".equals(cValue)) continue;
+								effect.getConditions().put(header.get(0).getValue(field.ordinal()),cValue);
+						}
+					}	
 					
 					if (endpoint.toLowerCase().indexOf("mean")<0) effect.setLoQualifier(line);
 					if ("interpretation".equals(line)) 
@@ -227,9 +297,15 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		String sampleUUID = prefix+UUID.nameUUIDFromBytes(
 				(	
 				lines[_lines.endpointcategory.ordinal()]+
-				lines[_lines.technology.ordinal()]+
+				lines[_lines.protocol.ordinal()]+
+				lines[_lines.guideline.ordinal()]+
+				lines[_lines.type_of_method.ordinal()]+
+				lines[_lines.type_of_study.ordinal()]+
+				lines[_lines.data_gathering_instruments.ordinal()]+
 				lines[_lines.endpoint.ordinal()]+
-				lines[_lines.line5.ordinal()]
+				lines[_lines.condition1.ordinal()]+
+				lines[_lines.condition2.ordinal()]+
+				lines[_lines.condition3.ordinal()]
 				      ).getBytes()
 		);		
 		if (experiment.getEffects()!=null)
@@ -241,12 +317,17 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		effect.setSampleID(sampleUUID);
 		return effect;
 	}
+	@Override
 	protected ProtocolApplication<Protocol, IParams, String, IParams, String> getExperiment(
-			I5_ROOT_OBJECTS category, SubstanceRecord record,Protocol protocol) {
+			I5_ROOT_OBJECTS category, SubstanceRecord record,Protocol protocol,ReliabilityParams reliability) {
 		String experimentUUID = prefix+UUID.nameUUIDFromBytes(
 				(record.getCompanyUUID() +
-						category.name() + 
-						lines[_lines.technology.ordinal()]
+						category.name() +
+						lines[_lines.protocol.ordinal()]+
+						lines[_lines.guideline.ordinal()]+
+						lines[_lines.type_of_method.ordinal()]+
+						lines[_lines.type_of_study.ordinal()]+
+						lines[_lines.data_gathering_instruments.ordinal()]
 				                                 //+lines[_lines.endpoint.ordinal()]
 				                                        ).getBytes()
 				);
@@ -256,8 +337,6 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				if (experimentUUID.equals(experiment.getDocumentUUID())) return experiment;
 			}
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = category.createExperimentRecord(protocol);
-		ReliabilityParams reliability = new ReliabilityParams();
-		reliability.setStudyResultType("experimental result");
 		experiment.setReliability(reliability);
 		experiment.setParameters(new Params());
 		experiment.getParameters().put("testmat_form", null);
@@ -269,7 +348,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	}
 	
 	@Override
-	protected String getMedium(String cell) {
+	protected String getConditionValue(String cell) {
 		return cell;
 		/*
 		String medium = null;
