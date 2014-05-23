@@ -17,19 +17,29 @@ import ambit2.core.io.StringArrayHeader;
 
 public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComplexHeader<StringArrayHeader> {
 	protected LiteratureEntry citation;
-	public ProteinCoronaPaperReader(InputStream in,LiteratureEntry citation)
+	protected String prefix;
+	public String getPrefix() {
+		return prefix;
+	}
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	public ProteinCoronaPaperReader(InputStream in,LiteratureEntry citation,String prefix)
 			throws UnsupportedEncodingException, CDKException {
 		super(in);
 		setNumberOfHeaderLines(7);
 		this.citation = citation;
+		this.prefix = prefix;
 	}
 	public ProteinCoronaPaperReader(Reader reader)  throws CDKException {
-		this(reader,new LiteratureEntry("Protein Corona","http://dx.doi.org/10.1021/nn406018q"));
+		this(reader,new LiteratureEntry("Protein Corona Fingerprinting Predicts the Cellular Interaction of Gold and Silver Nanoparticles",
+				"http://dx.doi.org/10.1021/nn406018q"),"PRCR-");
 	}
-	public ProteinCoronaPaperReader(Reader reader,LiteratureEntry citation)  throws CDKException {
+	public ProteinCoronaPaperReader(Reader reader,LiteratureEntry citation,String prefix)  throws CDKException {
 		super(reader);
 		setNumberOfHeaderLines(7);
 		this.citation = citation;
+		this.prefix = prefix;
 	}
 
 	@Override
@@ -74,7 +84,12 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 
 	@Override
 	protected ProteinCoronaCSVHeader createPropertyByColumnName(String name) {
-		ProteinCoronaCSVHeader column = new ProteinCoronaCSVHeader("PRCR-",getNumberOfHeaderLines(),name);
+		ProteinCoronaCSVHeader column = new ProteinCoronaCSVHeader(prefix,getNumberOfHeaderLines(),name) {
+			protected void setCitation(ambit2.base.data.study.ProtocolApplication<ambit2.base.data.study.Protocol,ambit2.base.data.study.IParams,String,ambit2.base.data.study.IParams,String> experiment) {
+				experiment.setReferenceYear("2014");
+				experiment.setReference(citation.getName());
+			};
+		};
 		column.setHeader(header);
 		return column;
 	}

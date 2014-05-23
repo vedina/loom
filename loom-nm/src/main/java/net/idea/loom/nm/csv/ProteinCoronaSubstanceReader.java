@@ -7,6 +7,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 
 import ambit2.base.data.LiteratureEntry;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.RawIteratingWrapper;
 import ambit2.core.io.StringArrayHeader;
@@ -39,7 +40,13 @@ public class ProteinCoronaSubstanceReader  extends RawIteratingWrapper<ProteinCo
 //				r.setProperty(key, ((IAtomContainer)o).getProperties().get(key));
 			}
 			if (((SubstanceRecord)r).getCompanyUUID()==null)
-				((SubstanceRecord)r).setCompanyUUID("PRCR-"+UUID.randomUUID());
+				((SubstanceRecord)r).setCompanyUUID(reader.getPrefix()+UUID.randomUUID());
+			
+			//owner is the dataset
+			((SubstanceRecord)r).setOwnerName(reader.getReference().getName());
+			((SubstanceRecord)r).setOwnerUUID(reader.getPrefix() + UUID.nameUUIDFromBytes(reader.getReference().getURL().toString().getBytes()));
+			//ids.add(new ExternalIdentifier("DOI","http://dx.doi.org/10.1021/nn406018q"));
+			
 			((IAtomContainer)o).getProperties().clear();
 
 

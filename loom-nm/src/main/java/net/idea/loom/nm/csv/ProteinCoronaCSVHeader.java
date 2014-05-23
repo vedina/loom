@@ -19,6 +19,7 @@ import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
+import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.StringArrayHeader;
 
@@ -27,8 +28,8 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		endpointcategory,
 		technology,
 		endpoint,
-		cell,
-		medium,
+		line4,
+		line5,
 		result,
 		units
 	}
@@ -41,7 +42,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	}
 	@Override
 	public void assign(SubstanceRecord record, Object value) {
-		if ("Change".equals(lines[_lines.medium.ordinal()])) return;
+		if ("Change".equals(lines[_lines.line5.ordinal()])) return;
 		else if ("Designation".equals(lines[_lines.result.ordinal()])) {
 			if (value == null) {
 				record.setPublicName(null);
@@ -52,18 +53,37 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				record.setCompanyName(value.toString());
 				record.setCompanyUUID(prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));
 			}
-			record.setOwnerName("Protein Corona fingerprinting");
-			record.setOwnerUUID(prefix + UUID.nameUUIDFromBytes("http://dx.doi.org/10.1021/nn406018q".getBytes()));
-			record.setSubstancetype("nanoparticle");
 		} else if ("Classification".equals(lines[_lines.endpoint.ordinal()])) {
 				if (value != null) {
 					List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
 					ids.add(new ExternalIdentifier(lines[_lines.technology.ordinal()],value.toString()));
-					ids.add(new ExternalIdentifier("DOI","http://dx.doi.org/10.1021/nn406018q"));
 					record.setExternalids(ids);
 				}
+		} else if ("Chemical".equals(lines[_lines.endpoint.ordinal()])) {
+			record.setSubstancetype("mono constituent substance");
+			if ("SMILES".equals(lines[_lines.line5.ordinal()])) {
+				
+				UUID uuid = UUID.nameUUIDFromBytes(value.toString().getBytes());
+				record.setReferenceSubstanceUUID(prefix+uuid.toString());
+				IStructureRecord structure = new StructureRecord();
+				record.addStructureRelation(record.getCompanyUUID(), structure, STRUCTURE_RELATION.HAS_CONSTITUENT, new Proportion());
+
+				try {structure.setProperty(Property.getNameInstance(),value.toString());} catch (Exception x) {};
+				try {structure.setContent(value.toString()); structure.setFormat("INC"); structure.setSmiles(structure.getContent());} catch (Exception x) {};
+				try {structure.setProperty(Property.getI5UUIDInstance(),prefix+uuid.toString());} catch (Exception x) {};
+				try {structure.setProperty(Property.getNameInstance(),record.getPublicName());} catch (Exception x) {};
+				try {structure.setProperty(Property.getTradeNameInstance("Name"),record.getCompanyName());} catch (Exception x) {};
+				
+			} else if ("CASRN".equals(lines[_lines.line5.ordinal()])) {
+				record.setPublicName(value.toString());
+				if (record.getRelatedStructures()!=null)
+					for (CompositionRelation rel : record.getRelatedStructures()) 
+						if (STRUCTURE_RELATION.HAS_CONSTITUENT.name().equals(rel.getRelation().getClass()))
+								try {rel.getSecondStructure().setProperty(Property.getCASInstance(),value.toString());} catch (Exception x) {};
+			}
 		} else if ("Core composition".equals(lines[_lines.endpoint.ordinal()])) {
-			if ("Element".equals(lines[_lines.medium.ordinal()])) {
+			record.setSubstancetype("nanoparticle");
+			if ("Element".equals(lines[_lines.line5.ordinal()])) {
 				//get the protocol to characterize composition from the paper!
 				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.technology.ordinal()]);
 				protocol.addGuideline(lines[_lines.technology.ordinal()]);
@@ -87,7 +107,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 
 			}
 		} else if ("Surface modifier".equals(lines[_lines.endpoint.ordinal()])) {
-			if ("Abbreviated".equals(lines[_lines.medium.ordinal()])) {
+			if ("Abbreviated".equals(lines[_lines.line5.ordinal()])) {
 				//get the protocol to characterize composition from the paper!
 				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.technology.ordinal()]);
 				protocol.addGuideline(lines[_lines.technology.ordinal()]);
@@ -144,6 +164,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 					|| "sd".equals(line)
 					|| "std".equals(line)
 					|| "sem".equals(line)
+					|| "interpretation".equals(line)
 					)
 					) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
@@ -157,17 +178,28 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				
 				experiment.getParameters().put("Type of method", lines[_lines.technology.ordinal()]);
 				EffectRecord<String,IParams,String> effect = getEffectRecord(category, experiment);
-				if ("mean".equals(line) || "".equals(line) ) {
+				if ("mean".equals(line) || "".equals(line) || "interpretation".equals(line)) {
 					String endpoint = lines[_lines.endpoint.ordinal()];
 					effect.setEndpoint(endpoint.length()>45?endpoint.substring(0,45):endpoint);
-					effect.getConditions().put(
-							header.get(0).getValue(_lines.medium.ordinal()),
-							getMedium(lines[_lines.medium.ordinal()]));
 					
-					if (endpoint.toLowerCase().indexOf("mean")<0)
-						effect.setLoQualifier(line);
-					effect.setLoValue(Double.parseDouble(value.toString()));
-					effect.setUnit(lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+					effect.getConditions().put(
+							header.get(0).getValue(_lines.line5.ordinal()),
+							getMedium(lines[_lines.line5.ordinal()]));
+					
+					effect.getConditions().put(
+							header.get(0).getValue(_lines.line4.ordinal()),
+							getMedium(lines[_lines.line4.ordinal()]));
+					
+					if (endpoint.toLowerCase().indexOf("mean")<0) effect.setLoQualifier(line);
+					if ("interpretation".equals(line)) 
+						experiment.setInterpretationResult(value.toString());
+
+					try {
+						effect.setLoValue(Double.parseDouble(value.toString()));
+						effect.setUnit(lines[_lines.units.ordinal()]==null?null:lines[_lines.units.ordinal()].trim());
+					} catch (Exception x) {
+						effect.setTextValue(value.toString());
+					}
 					experiment.addEffect(effect);
 
 				} else if ("sd".equals(line) || "std".equals(line)  || "sem".equals(line)) {
@@ -197,7 +229,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				lines[_lines.endpointcategory.ordinal()]+
 				lines[_lines.technology.ordinal()]+
 				lines[_lines.endpoint.ordinal()]+
-				lines[_lines.medium.ordinal()]
+				lines[_lines.line5.ordinal()]
 				      ).getBytes()
 		);		
 		if (experiment.getEffects()!=null)
@@ -235,18 +267,16 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		record.addMeasurement(experiment);
 		return experiment;
 	}
-	@Override
-	protected void setCitation(
-			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment) {
-		experiment.setReferenceYear("2014");
-		experiment.setReference("Protein Corona Fingerprinting Predicts the Cellular Interaction of Gold and Silver Nanoparticles");
-	}
+	
 	@Override
 	protected String getMedium(String cell) {
+		return cell;
+		/*
 		String medium = null;
 		if ((cell!=null) && cell.indexOf("serum")>0) {
 			medium = "Human serum";
 		} return medium;
+		*/
 	}
 	
 }
