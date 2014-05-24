@@ -164,13 +164,13 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			}
 		} else if ("PROTEOMICS".equals(lines[_lines.endpointcategory.ordinal()])) {
 			Double num = Double.parseDouble(value.toString());
-			if (num>0) {
+			//if (num>0) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
 					category = category.valueOf(lines[_lines.endpointcategory.ordinal()]);
 				} catch (Exception x) {}
-				Protocol protocol = category.getProtocol(lines[_lines.data_gathering_instruments.ordinal()]);
-				protocol.addGuideline("Solution-based digestion protocol for serum protein isolates");
+				Protocol protocol = category.getProtocol(lines[_lines.protocol.ordinal()]);
+				protocol.addGuideline(lines[_lines.guideline.ordinal()]);
 				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = null;
 				ReliabilityParams rel = new ReliabilityParams();
 				if (lines[_lines.type_of_method.ordinal()].contains("calculation") || lines[_lines.type_of_method.ordinal()].contains("simulation") ) {
@@ -179,8 +179,14 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 					rel.setStudyResultType("experimental result");
 				}
 				experiment = getExperiment(category,record,protocol,rel);
-				experiment.getParameters().put("Type of method", lines[_lines.data_gathering_instruments.ordinal()]);
-				experiment.getParameters().put(I5CONSTANTS.pDATA_GATHERING_INSTRUMENTS,"Orbitrap-Velos mass spectrometer (Thermo)");
+				if (!"".equals(lines[_lines.type_of_method.ordinal()]))
+					experiment.getParameters().put(I5CONSTANTS.cTypeMethod, lines[_lines.type_of_method.ordinal()]);
+				if (!"".equals(lines[_lines.type_of_study.ordinal()]))
+						experiment.getParameters().put(I5CONSTANTS.cTypeStudy, lines[_lines.type_of_study.ordinal()]);
+				if (!"".equals(lines[_lines.data_gathering_instruments.ordinal()]))
+					experiment.getParameters().put(I5CONSTANTS.pDATA_GATHERING_INSTRUMENTS, lines[_lines.data_gathering_instruments.ordinal()]);
+				
+				
 				EffectRecord<String,IParams,String> effect = null;
 				if (experiment.getEffects()==null || experiment.getEffects().size()==0) { 
 					effect = getEffectRecord(category, experiment);
@@ -195,7 +201,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 
 
 				
-			}
+			//}
 		} else {
 			String line = lines[_lines.result.ordinal()].toLowerCase();
 			if (value==null || "".equals(value.toString())) 
