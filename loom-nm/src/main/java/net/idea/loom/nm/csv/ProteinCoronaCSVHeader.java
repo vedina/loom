@@ -25,7 +25,24 @@ import ambit2.core.io.StringArrayHeader;
 
 public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	public enum _lines {
-		endpointcategory,
+		endpointcategory {
+			@Override
+			public String getDescription() {
+				StringBuilder b = new StringBuilder();
+				b.append(super.getDescription());
+				b.append(". One of :\n\n");
+				b.append("<table>\n");
+				for (I5_ROOT_OBJECTS root : I5_ROOT_OBJECTS.values()) if (root.isScientificPart()){
+					b.append("<tr>");
+					b.append("<td>");
+					b.append(root.name());
+					b.append("</td>");
+					b.append("</tr>");
+				}
+				b.append("</table>");
+				return b.toString();
+			}
+		},
 		protocol,
 		guideline,
 		type_of_study,
@@ -54,6 +71,9 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		units;
 		public boolean isCondition() {
 			return false;
+		}
+		public String getDescription() {
+			return String.format("####Row\t%d \n%s",ordinal()+1,name()); 
 		}
 	}
 	
