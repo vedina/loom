@@ -408,7 +408,6 @@ class ProcessMeasurement extends ProcessSolution {
 		
 		ProtocolApplication<Protocol,IParams,String,IParams,String> papp = category.createExperimentRecord(protocol);
 		//papp.setReliability(reliability)
-		papp.setParameters(new Params());
 		try {
 			if (method!=null)
 				papp.getParameters().put(I5CONSTANTS.methodType,method.asResource().getLocalName());
@@ -511,7 +510,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 			
 			EffectRecord effect = category.createEffectRecord();
 			effect.setEndpoint(endpoint);
-			effect.setConditions(new Params());
+			//effect.setConditions(new Params());
 			
 			try {
 				if (value!=null) effect.setLoValue(Double.parseDouble(value.asLiteral().getString()));
