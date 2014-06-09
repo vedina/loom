@@ -183,7 +183,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				try {coating.setProperty(Property.getI5UUIDInstance(),prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));} catch (Exception x) {};
 			}
 		} else if ("PROTEOMICS".equals(lines[_lines.endpointcategory.ordinal()])) {
-			Double num = Double.parseDouble(value.toString());
+			Integer num = Integer.parseInt(value.toString());
 			//if (num>0) {
 				I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY; 
 				try {
@@ -216,7 +216,7 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				} else  {
 					effect = experiment.getEffects().get(0);
 				}
-				((Params)effect.getTextValue()).put(lines[_lines.result.ordinal()],new Value<Integer>(Integer.parseInt(value.toString()),null));
+				((Params)effect.getTextValue()).put(lines[_lines.result.ordinal()],new Value<Integer>(num,null));
 				//effect.setTextValue(lines[4]);
 
 
