@@ -14,6 +14,7 @@
     <module>loom-tb-wiki</module>
     <module>loom-common</module>
     <module>loom-nm</module>
+    <module>loom-isa</module>
   </modules>
   <dependencies>
     <dependency>
@@ -165,6 +166,6 @@
     <!-- ambit.sf.net -->
     <ambit.version>2.5.7-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>0.0.6</i5.version>
+    <i5.version>0.0.7-SNAPSHOT</i5.version>
   </properties>
 </project>
