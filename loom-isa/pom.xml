@@ -7,6 +7,7 @@
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-isa</artifactId>
+  <name>loom-isatab</name>
   <version>1.0.2-SNAPSHOT</version>
   <repositories>
   	<!--  isa-tools -->
