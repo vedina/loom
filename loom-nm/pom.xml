@@ -40,5 +40,6 @@
   		<artifactId>iuclid_5_common</artifactId>
   		<version>${i5.version}</version>    
     </dependency>
+
   </dependencies>  
 </project>
