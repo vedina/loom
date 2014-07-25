@@ -3,12 +3,12 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-isa</artifactId>
   <name>loom-isatab</name>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <repositories>
   	<!--  isa-tools -->
     <repository>
