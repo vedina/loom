@@ -4,11 +4,11 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-tb-wiki</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <name>ToxBank Wiki SPARQL access</name>
   <dependencies>
     <dependency>
