@@ -61,6 +61,7 @@ public class Tox21SubstanceReader  extends RawIteratingWrapper<IteratingDelimite
 					
 					experiment.setSubstanceUUID(uuid);
 					r.setCompanyName(name() + " " + value);
+					r.setCompanyUUID(uuid);
 				} catch (Exception x) {
 					x.printStackTrace();
 				}
@@ -80,6 +81,7 @@ public class Tox21SubstanceReader  extends RawIteratingWrapper<IteratingDelimite
 					if (r.getExternalids()==null) r.setExternalids(new ArrayList<ExternalIdentifier>());
 					r.getExternalids().add(new ExternalIdentifier(name(),value));
 					r.setPublicName(name() + " " + value);
+					r.setReferenceSubstanceUUID(uuid);
 					experiment.setReferenceSubstanceUUID(uuid);
 				} catch (Exception x) {
 					x.printStackTrace();
