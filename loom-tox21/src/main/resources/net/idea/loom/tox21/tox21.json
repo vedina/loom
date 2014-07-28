@@ -1,0 +1,633 @@
+{
+    "metadata": {
+        "AID_743228_data": {
+        	"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",
+            "title" : "qHTS assay for small molecule activators of the heat shock response signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743228",
+            "aid" : "743228",
+            "target"  : "heat shock proteins"
+        },
+        "AID_743209_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+            "title" : "qHTS assay for small molecule activators of the heat shock response signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743209",
+            "aid" : "743209",
+            "target"  : "heat shock proteins"
+        },
+        "AID_743210_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",
+            "title" : "qHTS assay for small molecule activators of the heat shock response signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743210",
+            "aid" : "743210",
+            "target"  : "heat shock proteins"
+        },
+        "AID_743219_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+            "title" : "qHTS assay for small molecule agonists of the antioxidant response element (ARE) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743219",
+            "aid" : "743219",
+            "target"  : "antioxidant response element (ARE)"
+        },
+        "AID_743203_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+        	"aid" : "743203",
+			"target"  : "antioxidant response element (ARE)",
+            "title" : "qHTS assay for small molecule agonists of the antioxidant response element (ARE) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743203"
+        },
+        "AID_743202_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743202",
+			"target"  : "antioxidant response element (ARE)",
+            "title" : "qHTS assay for small molecule agonists of the antioxidant response element (ARE) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743202"
+        },
+        "AID_743053_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743053",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule agonists of the androgen receptor (AR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743053"
+        },
+        "AID_743054_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743054",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway using the MDA cell line: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743054"
+        },
+        "AID_743063_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743063",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743063"
+        },
+        "AID_743033_data": {
+	        "assay_type" : "CELL_VIABILITY_ASSAY",
+        	"aid" : "743033",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743033"
+        },
+        "AID_743041_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+        	"aid" : "743041",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway using the MDA cell line - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743041"
+        },
+        "AID_743036_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743036",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule agonists of the androgen receptor (AR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743036"
+        },
+        "AID_743040_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"cell" : "MDA",
+        	"aid" : "743040",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule agonists of the androgen receptor (AR) signaling pathway using the MDA cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743040"
+        },
+        "AID_743035_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"aid" : "743035",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743035"
+        },
+        "AID_743042_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"cell" : "MDA",
+        	"aid" : "743042",
+            "target"  : "androgen receptor (AR)",
+            "title" : "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway using the MDA cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743042"
+        },
+        "AID_743077_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+           	"aid" : "743077",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule agonists of the estrogen receptor alpha (ER-alpha) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743077"
+        },
+        "AID_743091_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+        	"cell" : "BG1",
+           	"aid" : "743091",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway using the BG1 cell line: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743091"
+        },
+        "AID_743078_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+           	"aid" : "743078",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743078"
+        },
+        "AID_743074_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+           	"aid" : "743074",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743074"
+        },
+        "AID_743081_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+            "cell" : "BG1",
+           	"aid" : "743081",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway using the BG1 cell line - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743081"
+        },
+        "AID_743075_data": {
+           	"aid" : "743075",
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",           	
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule agonists of the estrogen receptor alpha (ER-alpha) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743075"
+        },
+        "AID_743079_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+            "cell" : "BG1",
+           	"aid" : "743079",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule agonists of the estrogen receptor alpha (ER-alpha) signaling pathway using the BG1 cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743079"
+        },
+        "AID_743069_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+           	"aid" : "743069",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743069"
+        },
+        "AID_743080_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+            "cell" : "BG1",
+           	"aid" : "743080",
+            "target"  : "estrogen receptor alpha (ER-alpha)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway using the BG1 cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743080"
+        },
+        "AID_743239_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+           	"aid" : "743239",
+            "target"  : "farnesoid-X-receptor (FXR)",          
+            "title" : "qHTS assay to identify small molecule agonists of the farnesoid-X-receptor (FXR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743239"
+        },
+        "AID_743240_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743240",
+            "target"  : "farnesoid-X-receptor (FXR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the farnesoid-X-receptor (FXR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743240"
+        },
+        "AID_743218_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743218",
+            "target"  : "farnesoid-X-receptor (FXR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the farnesoid-X-receptor (FXR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743218"
+        },
+        "AID_743221_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743221",
+            "target"  : "farnesoid-X-receptor (FXR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the farnesoid-X-receptor (FXR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743221"
+        },
+        "AID_743220_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743220",
+            "target"  : "farnesoid-X-receptor (FXR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the farnesoid-X-receptor (FXR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743220"
+        },
+        "AID_743217_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743217",
+            "target"  : "farnesoid-X-receptor (FXR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the farnesoid-X-receptor (FXR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743217"
+        },
+        "AID_720719_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720719",
+            "target"  : "glucocorticoid receptor (GR)",              
+            "title" : "qHTS assay to identify small molecule agonists of the glucocorticoid receptor (GR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720719"
+        },
+        "AID_720725_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720725",
+            "target"  : "glucocorticoid receptor (GR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the glucocorticoid receptor (GR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720725"
+        },
+        "AID_720693_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "720693",
+            "target"  : "glucocorticoid receptor (GR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the glucocorticoid receptor (GR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720693"
+        },
+        "AID_720691_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720691",
+            "target"  : "glucocorticoid receptor (GR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the glucocorticoid receptor (GR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720691"
+        },
+        "AID_720692_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720692",
+            "target"  : "glucocorticoid receptor (GR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the glucocorticoid receptor (GR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720692"
+        },
+        "AID_743227_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720692",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule agonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743227"
+        },
+        "AID_743226_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720692",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743226"
+        },
+        "AID_743211_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743211",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule agonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743211"
+        },
+        "AID_743213_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743213",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743213"
+        },
+        "AID_743212_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743212",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule agonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743212"
+        },
+        "AID_743215_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743215",
+            "target"  : "peroxisome proliferator-activated receptor delta (PPARd)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor delta (PPARd) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743215"
+        },
+        "AID_743140_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743140",
+            "target"  : "peroxisome proliferator-activated receptor gamma (PPARg)",        
+            "title" : "qHTS assay to identify small molecule agonists of the peroxisome proliferator-activated receptor gamma (PPARg) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743140"
+        },
+        "AID_743199_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743199",
+            "target"  : "peroxisome proliferator-activated receptor gamma (PPARg)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor gamma (PPARg) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743199"
+        },
+        "AID_743194_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743194",
+            "target"  : "peroxisome proliferator-activated receptor gamma (PPARg)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor gamma (PPARg) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743194"
+        },
+        "AID_743094_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743094",
+            "target"  : "peroxisome proliferator-activated receptor gamma (PPARg)",        
+            "title" : "qHTS assay to identify small molecule agonists of the peroxisome proliferator-activated receptor gamma (PPARg) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743094"
+        },
+        "AID_743191_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743191",
+            "target"  : "peroxisome proliferator-activated receptor gamma (PPARg)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the peroxisome proliferator-activated receptor gamma (PPARg) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743191"
+        },
+        "AID_743067_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743067",
+            "target"  : "thyroid receptor (TR)",                
+            "title" : "qHTS assay to identify small molecule antagonists of the thyroid receptor (TR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743067"
+        },
+        "AID_743064_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743064",
+            "target"  : "thyroid receptor (TR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the thyroid receptor (TR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743064"
+        },
+        "AID_743066_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743066",
+            "target"  : "thyroid receptor (TR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the thyroid receptor (TR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743066"
+        },
+        "AID_743065_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743065",
+            "target"  : "thyroid receptor (TR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the thyroid receptor (TR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743065"
+        },
+        "AID_743122_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743122",
+            "target"  : "aryl hydrocarbon receptor (AhR)",                
+            "title" : "qHTS assay to identify small molecule that activate the aryl hydrocarbon receptor (AhR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743122"
+        },
+        "AID_743086_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "743086",
+            "target"  : "aryl hydrocarbon receptor (AhR)",        
+            "title" : "qHTS assay to identify small molecule that activate the aryl hydrocarbon receptor (AhR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743086"
+        },
+        "AID_743085_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743085",
+            "target"  : "aryl hydrocarbon receptor (AhR)",        
+            "title" : "qHTS assay to identify small molecule that activate the aryl hydrocarbon receptor (AhR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743085"
+        },
+        "AID_743241_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743241",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the vitamin D receptor (VDR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743241"
+        },
+        "AID_743242_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743242",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the vitamin D receptor (VDR) signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743242"
+        },
+        "AID_743224_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "743224",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the vitamin D receptor (VDR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743224"
+        },
+        "AID_743225_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "743225",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the vitamin D receptor (VDR) signaling pathway - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743225"
+        },
+        "AID_743222_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743222",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule agonists of the vitamin D receptor (VDR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743222"
+        },
+        "AID_743223_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743223",
+            "target"  : "vitamin D receptor (VDR)",        
+            "title" : "qHTS assay to identify small molecule antagonists of the vitamin D receptor (VDR) signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743223"
+        },
+        "AID_720552_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720552",
+            "target"  : "p53",         
+            "title" : "qHTS assay for small molecule agonists of the p53 signaling pathway: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720552"
+        },
+        "AID_651633_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "651633",
+            "target"  : "p53",        
+            "title" : "qHTS assay for small molecule agonists of the p53 signaling pathway - cell viability",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=651633"
+        },
+        "AID_651631_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "651631",
+            "target"  : "p53",        
+            "title" : "qHTS assay for small molecule agonists of the p53 signaling pathway",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=651631"
+        },
+        "AID_743292_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "743292",
+            "target"  : "p53RE-bla",        
+            "cell" : "HCT-116",
+            "title" : "qHTS assay for cell viability of the p53RE-bla HCT-116 cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743292"
+        },
+        "AID_743015_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743015",
+            "target"  : "DNA damage response pathways",        
+            "cell" : "DT40 Rad54/Ku70 mutant",
+            "title" : "qHTS assay for identifying genotoxic compounds that show differential cytotoxicity against isogenic chicken DT40 cell lines with known DNA damage response pathways - Rad54/Ku70 mutant cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743015"
+        },
+        "AID_743014_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743014",
+            "target"  : "DNA damage response pathways",        
+            "cell" : "DT40 Rev3 mutant",
+            "title" : "qHTS assay for identifying genotoxic compounds that show differential cytotoxicity against isogenic chicken DT40 cell lines with known DNA damage response pathways - Rev3 mutant cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743014"
+        },
+        "AID_743012_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743012",
+            "target"  : "DNA damage response pathways",        
+            "cell" : "DT40 wild type",
+            "title" : "qHTS assay for identifying genotoxic compounds that show differential cytotoxicity against isogenic chicken DT40 cell lines with known DNA damage response pathways - wild type cell line",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743012"
+        },
+        "AID_743139_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743139",
+            "target"  : "aromatase inhibitors",        
+            "title" : "qHTS assay to identify aromatase inhibitors: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743139"
+        },
+        "AID_743084_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "743084",
+            "target"  : "aromatase inhibitors",        
+            "title" : "qHTS assay to identify aromatase inhibitors - cell viability counter screen",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743084"
+        },
+        "AID_743083_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "743083",
+            "target"  : "aromatase inhibitors",          
+            "title" : "qHTS assay to identify aromatase inhibitors",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743083"
+        },
+        "AID_720637_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720637",
+            "target" : "mitochondrial membrane potential",        
+            "title" : "qHTS assay for small molecule disruptors of the mitochondrial membrane potential: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720637"
+        },
+        "AID_720634_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "720634",
+            "target" : "mitochondrial membrane potential",                
+            "title" : "qHTS assay for small molecule disruptors of the mitochondrial membrane potential - cell viability",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720634"
+        },
+        "AID_720635_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720635",
+            "target" : "mitochondrial membrane potential",                
+            "title" : "qHTS assay for small molecule disruptors of the mitochondrial membrane potential",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720635"
+        },
+        "AID_720516_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "720516",
+			"target" : "ATAD5",
+            "cell" : "embryonic kidney cells",    
+            "title" : "qHTS assay for small molecules that induce genotoxicity in human embryonic kidney cells expressing luciferase-tagged ATAD5: Summary",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720516"
+        },
+        "AID_651634_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",        
+			"aid" : "651634",
+			"target" : "ATAD5",
+			"cell" : "embryonic kidney cells",    
+            "title" : "qHTS assay for small molecules that induce genotoxicity in human embryonic kidney cells expressing luciferase-tagged ATAD5 - cell viability",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=651634"
+        },
+        "AID_651632_data": {
+			"assay_type" : "PROTEIN_SMALLMOLECULE_INTERACTION",        
+			"aid" : "651632",
+			"target" : "ATAD5",
+            "cell" : "embryonic kidney cells",         
+            "title" : "qHTS assay for small molecules that induce genotoxicity in human embryonic kidney cells expressing luciferase-tagged ATAD5",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=651632"
+        },
+        "AID_743288_data": {
+        	"assay_type" : "CELL_VIABILITY_ASSAY",
+			"aid" : "743288",
+            "cell" : "HEK293",         
+            "title" : "qHTS assay for cell viability of HEK293 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=743288"
+        },
+        "AID_720681_data": {
+			"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720681",
+            "cell" : "HEK293 cell free",         
+            "title" : "qHTS assay to test for compound auto fluorescence at 460 nm (blue) in HEK293 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720681"
+        },
+        "AID_720678_data": {
+			"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720681",
+            "cell" : "HEK293",         
+            "title" : "qHTS assay to test for compound auto fluorescence at 460 nm (blue) in HEK293 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720678"
+        },
+        "AID_720685_data": {
+			"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720681",
+            "cell" : "HepG2 cell free",          
+            "title" : "qHTS assay to test for compound auto fluorescence at 460 nm (blue) in HepG2 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720685"
+        },
+        "AID_720687_data": {
+			"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720687",
+            "cell" : "HepG2 cell free",        
+            "title" : "qHTS assay to test for compound auto fluorescence at 460 nm (blue) in HepG2 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720687"
+        },
+        "AID_720682_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE", 
+        	"aid" : "720682",
+            "cell" : "HEK293 cell free",  
+            "title" : "qHTS assay to test for compound auto fluorescence at 535 nm (green) in HEK293 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720682"
+        },
+        "AID_720680_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",
+			"aid" : "720680",
+            "cell" : "HEK293",          
+            "title" : "qHTS assay to test for compound auto fluorescence at 535 nm (green) in HEK293 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720680"
+        },
+        "AID_720675_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",        
+        	"aid" : "720675",
+            "cell" : "HepG2",          
+            "title" : "qHTS assay to test for compound auto fluorescence at 535 nm (green) in HepG2 cell",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720675"
+        },
+        "AID_720686_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720686",
+            "cell" : "HepG2 cell free",                  
+            "title" : "qHTS assay to test for compound auto fluorescence at 535 nm (green) in HepG2 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720686"
+        },
+        "AID_720683_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",
+			"aid" : "720683",
+            "cell" : "HEK293 cell free",                  
+            "title" : "qHTS assay to test for compound auto fluorescence at 590 nm (red) in HEK293 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720683"
+        },
+        "AID_720679_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",        
+			"aid" : "720679",
+            "cell" : "HEK293",                  
+            "title" : "qHTS assay to test for compound auto fluorescence at 590 nm (red) in HEK293 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720679"
+        },
+        "AID_720684_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",
+        	"aid" : "720684",
+            "cell" : "HepG2 cell free",     
+            "title" : "qHTS assay to test for compound auto fluorescence at 590 nm (red) in HepG2 cell free culture",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720684"
+        },
+        "AID_720674_data": {
+        	"assay_type" : "AUTO_FLUORESCENCE",
+			"aid" : "720674",
+            "cell" : "HepG2",             
+            "title" : "qHTS assay to test for compound auto fluorescence at 590 nm (red) in HepG2 cells",
+            "uri" : "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=720674"
+        }
+    }
+}
