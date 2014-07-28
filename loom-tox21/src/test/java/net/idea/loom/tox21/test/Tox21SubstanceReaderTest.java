@@ -15,11 +15,12 @@ public class Tox21SubstanceReaderTest  {
 	@Test
 	public void test() throws Exception {
 		File dir = new File("F:/Downloads/Chemical data/TOXCAST/Tox21/");
-		//File[] files = dir.listFiles();
-		
+		File[] files = dir.listFiles();
+		/*
 		File[] files = new File[] {
 				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720681_data.csv")
-		};	
+		};
+		*/	
 				/*
 				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720516_data.csv")
 				,new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_743292_data.csv")
@@ -61,11 +62,12 @@ public class Tox21SubstanceReaderTest  {
 				while (reader.hasNext()) {
 					IStructureRecord mol = reader.nextRecord();
 					Assert.assertTrue(mol instanceof SubstanceRecord);
-					//System.out.println(((SubstanceRecord)mol).getPublicName());
+					System.out.println(((SubstanceRecord)mol).getPublicName());
 					//System.out.println(((SubstanceRecord)mol).getCompanyName());
 					//System.out.println(((SubstanceRecord)mol).getMeasurements().get(0).getEffects().size());
-					System.out.println(((SubstanceRecord)mol).getMeasurements());
+					//System.out.println(((SubstanceRecord)mol).getMeasurements());
 					r++;
+					if (r>2) break;
 				}
 				Assert.assertTrue(r>0);
 			} finally {
