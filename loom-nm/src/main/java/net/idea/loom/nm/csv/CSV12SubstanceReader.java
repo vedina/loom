@@ -11,9 +11,9 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.RawIteratingWrapper;
 import ambit2.core.io.StringArrayHeader;
 
-public class ProteinCoronaSubstanceReader  extends RawIteratingWrapper<ProteinCoronaPaperReader> {
+public class CSV12SubstanceReader  extends RawIteratingWrapper<CSV12Reader> {
 
-	public ProteinCoronaSubstanceReader(ProteinCoronaPaperReader reader) {
+	public CSV12SubstanceReader(CSV12Reader reader) {
 		super(reader);
 	}
 	@Override

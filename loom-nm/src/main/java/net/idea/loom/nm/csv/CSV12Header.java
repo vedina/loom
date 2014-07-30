@@ -23,7 +23,7 @@ import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.StringArrayHeader;
 
-public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
+public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	public enum _lines {
 		endpointcategory {
 			@Override
@@ -77,10 +77,10 @@ public class ProteinCoronaCSVHeader extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		}
 	}
 	
-	public ProteinCoronaCSVHeader(String prefix,int nlines) {
+	public CSV12Header(String prefix,int nlines) {
 		super(prefix,nlines);
 	}
-	public ProteinCoronaCSVHeader(String prefix,int nlines,String value) {
+	public CSV12Header(String prefix,int nlines,String value) {
 		super(prefix,nlines,value);
 	}
 	@Override

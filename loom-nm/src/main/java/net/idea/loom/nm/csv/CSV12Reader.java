@@ -1,6 +1,9 @@
 package net.idea.loom.nm.csv;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -10,12 +13,11 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.StringUtils;
 import org.openscience.cdk.exception.CDKException;
 
-import ambit2.base.data.ILiteratureEntry._type;
 import ambit2.base.data.LiteratureEntry;
 import ambit2.core.io.IteratingDelimitedFileReaderComplexHeader;
 import ambit2.core.io.StringArrayHeader;
 
-public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComplexHeader<StringArrayHeader> {
+public class CSV12Reader extends IteratingDelimitedFileReaderComplexHeader<StringArrayHeader> {
 	protected LiteratureEntry citation;
 	protected String prefix;
 	public String getPrefix() {
@@ -24,20 +26,27 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
-	public ProteinCoronaPaperReader(InputStream in,LiteratureEntry citation,String prefix)
+	public CSV12Reader(InputStream in,LiteratureEntry citation,String prefix)
 			throws UnsupportedEncodingException, CDKException {
 		super(in);
-		setNumberOfHeaderLines(ProteinCoronaCSVHeader._lines.values().length);
+		setNumberOfHeaderLines(CSV12Header._lines.values().length);
 		this.citation = citation;
 		this.prefix = prefix;
 	}
+	
+	public CSV12Reader(File file)  throws CDKException, FileNotFoundException {
+		this(new FileReader(file),
+				new LiteratureEntry(file.getName().toLowerCase(),file.getName().toLowerCase()),"FCSV-");	
+	}
+	/* this is now generic CSV reader
 	public ProteinCoronaPaperReader(Reader reader)  throws CDKException {
 		this(reader,new LiteratureEntry("Protein Corona Fingerprinting Predicts the Cellular Interaction of Gold and Silver Nanoparticles",
 				"http://dx.doi.org/10.1021/nn406018q"),"PRCR-");
 	}
-	public ProteinCoronaPaperReader(Reader reader,LiteratureEntry citation,String prefix)  throws CDKException {
+	*/
+	public CSV12Reader(Reader reader,LiteratureEntry citation,String prefix)  throws CDKException {
 		super(reader);
-		setNumberOfHeaderLines(ProteinCoronaCSVHeader._lines.values().length);
+		setNumberOfHeaderLines(CSV12Header._lines.values().length);
 		this.citation = citation;
 		this.prefix = prefix;
 	}
@@ -84,8 +93,8 @@ public class ProteinCoronaPaperReader extends IteratingDelimitedFileReaderComple
 	}
 
 	@Override
-	protected ProteinCoronaCSVHeader createPropertyByColumnName(String name) {
-		ProteinCoronaCSVHeader column = new ProteinCoronaCSVHeader(prefix,getNumberOfHeaderLines(),name) {
+	protected CSV12Header createPropertyByColumnName(String name) {
+		CSV12Header column = new CSV12Header(prefix,getNumberOfHeaderLines(),name) {
 			protected void setCitation(ambit2.base.data.study.ProtocolApplication<ambit2.base.data.study.Protocol,ambit2.base.data.study.IParams,String,ambit2.base.data.study.IParams,String> experiment) {
 				experiment.setReferenceYear("2014");
 				experiment.setReference(citation.getName());
