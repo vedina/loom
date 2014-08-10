@@ -66,7 +66,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 	private enum _field_top {
 		PUBCHEM_SID {
 			@Override
-			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				try {
 					String value = mol.getProperty(name()).toString();
 					String uuid;
@@ -79,7 +80,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					r.getExternalids().add(new ExternalIdentifier(name(),value));
 					
 					experiment0.setSubstanceUUID(uuid);
-					experiment1.setSubstanceUUID(uuid);
 					r.setCompanyName(name() + " " + value);
 					r.setCompanyUUID(uuid);
 				} catch (Exception x) {
@@ -89,7 +89,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		},
 		PUBCHEM_CID {
 			@Override
-			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+						SubstanceRecord r, IAtomContainer mol) {
 				try {
 					String value = mol.getProperty(name()).toString();
 					String uuid;
@@ -106,7 +107,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					r.setPublicName(name() + " " + value);
 					r.setReferenceSubstanceUUID(uuid);
 					experiment0.setReferenceSubstanceUUID(uuid);
-					experiment1.setReferenceSubstanceUUID(uuid);
+
 				} catch (Exception x) {
 					x.printStackTrace();
 				}
@@ -114,9 +115,10 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		},
 		PUBCHEM_ACTIVITY_OUTCOME {
 			@Override
-			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+						SubstanceRecord r, IAtomContainer mol) {
 				experiment0.setInterpretationResult(mol.getProperty(name()).toString());
-				experiment1.setInterpretationResult(mol.getProperty(name()).toString());
+
 			}
 			@Override
 			public String toString() {
@@ -126,9 +128,9 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		},
 		PUBCHEM_ACTIVITY_SCORE {
 			@Override
-			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+					SubstanceRecord r, IAtomContainer mol) {
 				experiment0.setInterpretationCriteria(mol.getProperty(name()).toString());
-				experiment1.setInterpretationCriteria(mol.getProperty(name()).toString());
 			}			
 			@Override
 			public String toString() {
@@ -138,7 +140,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		},
 		PUBCHEM_ACTIVITY_URL {
 			@Override
-			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+					 SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString();
 				if (r.getExternalids()==null) r.setExternalids(new ArrayList<ExternalIdentifier>());
 				r.getExternalids().add(new ExternalIdentifier(name(),value));		
@@ -150,7 +153,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			public void parse(
 					String key,
 					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString();
 			}
 
@@ -158,29 +161,28 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Compound_QC {
 			@Override
 			public void parse(String key,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString().replace("QC'd by ", "").replace("\"", "");
 				String uuid = prefix+UUID.nameUUIDFromBytes(value.getBytes());
 				r.setOwnerName(value);
 				r.setOwnerUUID(uuid);
 				experiment0.setCompanyName(value);
 				experiment0.setCompanyUUID(uuid);
-				experiment1.setCompanyName(value);
-				experiment1.setCompanyUUID(uuid);				
+
 			}			
 		},
 		Sample_Source {
 			@Override
 			public void parse(String key,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					 SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString();
 				String uuid = prefix+UUID.nameUUIDFromBytes(value.getBytes());
 				r.setOwnerName(value);
 				r.setOwnerUUID(uuid);
 				experiment0.setCompanyName(value);
 				experiment0.setCompanyUUID(uuid);
-				experiment1.setCompanyName(value);
-				experiment1.setCompanyUUID(uuid);
 			}
 			@Override
 			public String toString() {
@@ -190,19 +192,19 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Compound_QC_Replicate_1 {
 			@Override
 			public void parse(String key,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					 SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString().replace("QC'd by ", "").replace("\"", "");
 				String uuid = prefix+UUID.nameUUIDFromBytes(value.getBytes());
 				r.setOwnerName(value);
 				r.setOwnerUUID(uuid);
 				experiment0.setCompanyName(value);
 				experiment0.setCompanyUUID(uuid);
-				experiment1.setCompanyName(value);
-				experiment1.setCompanyUUID(uuid);
 			}			
 		}		
 		;
-		public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+		public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+						SubstanceRecord r, IAtomContainer mol) {
 			
 		}
 		};
@@ -211,7 +213,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Activity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				try {
 					effect.setLoValue(Double.parseDouble(mol.getProperty(key.toString()).toString()));
@@ -231,7 +234,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Phenotype {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -248,7 +252,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Potency {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -266,7 +271,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Efficacy {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -282,7 +288,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Viability_Activity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				try {
 					effect.setLoValue(Double.parseDouble(mol.getProperty(key.toString()).toString()));
@@ -302,7 +309,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Viability_Potency {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -319,7 +327,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Viability_Efficacy {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -335,7 +344,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Activity_Score {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				try {
 					effect.setLoValue(Double.parseDouble(mol.getProperty(key.toString()).toString()));
@@ -355,7 +365,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Activity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				try {
 					effect.setLoValue(Double.parseDouble(mol.getProperty(key.toString()).toString()));
@@ -375,7 +386,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Potency {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -392,7 +404,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Efficacy {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -408,7 +421,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Analysis_Comment {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -420,7 +434,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Activity_Score {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}			
@@ -436,7 +451,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Curve_Description {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -448,7 +464,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Curve_Description {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -460,7 +477,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_LogAC50 {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}			
@@ -472,7 +490,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_LogAC50 {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}			
@@ -484,7 +503,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_HillSlope {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -492,7 +512,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_HillSlope {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -500,7 +521,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_R2 {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -512,7 +534,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_R2 {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -524,7 +547,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_InfiniteActivity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -536,7 +560,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_InfiniteActivity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}				
@@ -548,7 +573,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_ZeroActivity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}					
@@ -560,7 +586,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_ZeroActivity {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}					
@@ -572,7 +599,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Fit_CurveClass {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -584,7 +612,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Fit_CurveClass {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}
@@ -596,7 +625,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Excluded_Points {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -608,7 +638,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Excluded_Points {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -620,7 +651,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Max_Response {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}	
@@ -632,7 +664,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		Ratio_Max_Response {
 			@Override
 			public void parse(String key,EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					 SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setLoValue(Double.parseDouble(mol.getProperty(key).toString()));
 			}	
@@ -645,22 +678,22 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			@Override
 			public void parse(String key,
 					EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				String value = mol.getProperty(key).toString().replace("QC'd by ", "").replace("\"", "");
 				String uuid = prefix+UUID.nameUUIDFromBytes(value.getBytes());
 				r.setOwnerName(value);
 				r.setOwnerUUID(uuid);
 				experiment0.setCompanyName(value);
 				experiment0.setCompanyUUID(uuid);
-				experiment1.setCompanyName(value);
-				experiment1.setCompanyUUID(uuid);				
 			}			
 		},
 		Activity_Summary {
 			@Override
 			public void parse(String key,
 					EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -669,7 +702,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			@Override
 			public void parse(String key,
 					EffectRecord<String, IParams, String> effect,
-					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0, 
+					 SubstanceRecord r, IAtomContainer mol) {
 				effect.setEndpoint(name());
 				effect.setTextValue(mol.getProperty(key).toString());
 			}
@@ -684,7 +718,9 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		}
 		
 		;
-		public void parse(String key,EffectRecord<String,IParams,String> effect,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1, SubstanceRecord r, IAtomContainer mol) {
+		public void parse(String key,EffectRecord<String,IParams,String> effect,
+				ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+				SubstanceRecord r, IAtomContainer mol) {
 			
 		}
 		public int getLevel() {
@@ -696,14 +732,12 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			I5_ROOT_OBJECTS category,IAtomContainer mol, 
 			SubstanceRecord record,Protocol protocol,ReliabilityParams reliability,int level) {
 		
-		String experimentUUID = prefix+UUID.nameUUIDFromBytes(
-				(record.getCompanyUUID() +
-						category.name() +
-						getReference().getTitle() +
-						Integer.toString(level) + 						
-						mol.getProperty(_field_top.PUBCHEM_SID)
-						).getBytes()
-				);
+		String id = String.format("%d_%s",metadata.getAID(),mol.getProperty(_field_top.PUBCHEM_SID.name()));
+		
+		String experimentUUID = prefix+UUID.nameUUIDFromBytes(id.getBytes());
+		System.out.print(id);
+		System.out.print("\t");
+		System.out.println(experimentUUID);
 		
 		if (record.getMeasurements()!=null)
 			for (ProtocolApplication<Protocol, IParams, String, IParams, String> experiment : record.getMeasurements()) {
@@ -711,7 +745,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			}
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = category.createExperimentRecord(protocol);
 		experiment.setReferenceYear(metadata.getAIDSource_year());
-		experiment.setReference(metadata.getURI());
+		experiment.setReference(String.format("AID %d",metadata.getAID()));
 		experiment.setReliability(reliability);
 		experiment.setParameters(new Params());
 		experiment.setReferenceOwner(getReference().getName());
@@ -906,7 +940,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			java.util.Set<Object> keys = ((IAtomContainer)o).getProperties().keySet();
 			
 			I5_ROOT_OBJECTS category0 = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
-			I5_ROOT_OBJECTS category1 = I5_ROOT_OBJECTS.PUBCHEM_SUMMARY;
+			//I5_ROOT_OBJECTS category1 = I5_ROOT_OBJECTS.PUBCHEM_SUMMARY;
 
 			String title = metadata.getTitle();
 			String uri = metadata.getURI();
@@ -920,10 +954,10 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			} catch (Exception x) {}
 			
 			Protocol protocol0 = category0.getProtocol(metadata.getActivityOutcomeMethod());
-			Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
+			//Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
 			
 			protocol0.addGuideline(metadata.getProtocolAsText());
-			protocol1.addGuideline(metadata.getProtocolAsText());
+			//protocol1.addGuideline(metadata.getProtocolAsText());
 			
 			
 			ReliabilityParams rel = new ReliabilityParams();
@@ -933,16 +967,17 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0 =
 				getExperiment(category0,(IAtomContainer)o,(SubstanceRecord)r,protocol0,rel,0);
 			
+			/*
 			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1 =			
 				getExperiment(category1,(IAtomContainer)o,(SubstanceRecord)r,protocol1,rel,1);		
-			
+			*/
 			if (target!= null) {
 				experiment0.getParameters().put(I5CONSTANTS.cTargetGene,target);
-				experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target);
+				//experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target);
 			}
 			if (cell!= null) {
 				experiment0.getParameters().put("Cell",cell);
-				experiment1.getParameters().put("Cell",cell);
+				//experiment1.getParameters().put("Cell",cell);
 			}
 			
 			Iterator  i = keys.iterator();
@@ -959,7 +994,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					
 					try {
 						_field_top field =  _field_top.valueOf(thetag.trim().replace(" ", "_").replace("-","_").replace("%","_").replace("(","_").replace(")","_"));
-						field.parse(key.toString(),experiment0,experiment1,(SubstanceRecord)r, (IAtomContainer)o);
+						field.parse(key.toString(),experiment0,(SubstanceRecord)r, (IAtomContainer)o);
 						continue;
 					} catch (Exception x) {
 						//further processing
@@ -976,10 +1011,10 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 	
 					field =  _field.valueOf(thetag.trim().replace(" ", "_").replace("-","_").replace("%","_").replace("(","_").replace(")","_"));
 					
-					field.parse(key.toString(),effect,experiment0,experiment1,(SubstanceRecord)r, (IAtomContainer)o);
-					if (field.getLevel()==0)
+					field.parse(key.toString(),effect,experiment0,(SubstanceRecord)r, (IAtomContainer)o);
+					//if (field.getLevel()==0)
 						experiment0.addEffect(effect);
-					else experiment1.addEffect(effect);
+					//else experiment1.addEffect(effect);
 					
 					if (effect.getEndpoint()==null) {
 						throw new Exception("Null effect");
