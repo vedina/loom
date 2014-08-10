@@ -67,7 +67,7 @@ public class Tox21SubstanceReader  extends RawIteratingWrapper<IteratingDelimite
 					String value = mol.getProperty(name()).toString();
 					String uuid;
 					try {
-						uuid = "PSID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.getLong(value)).toByteArray());
+						uuid = "PSID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.parseLong(value)).toByteArray());
 					} catch (Exception x) {
 						uuid = "PSID-"+UUID.nameUUIDFromBytes(value.getBytes());	
 					}
@@ -90,7 +90,7 @@ public class Tox21SubstanceReader  extends RawIteratingWrapper<IteratingDelimite
 					String value = mol.getProperty(name()).toString();
 					String uuid;
 					try {
-						uuid = "PCID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.getLong(value)).toByteArray());
+						uuid = "PCID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.parseLong(value)).toByteArray());
 					} catch (Exception x) {
 						uuid = "PCID-"+UUID.nameUUIDFromBytes(value.getBytes());	
 					}

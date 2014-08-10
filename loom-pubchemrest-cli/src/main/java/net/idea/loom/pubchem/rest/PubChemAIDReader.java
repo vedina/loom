@@ -71,7 +71,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					String value = mol.getProperty(name()).toString();
 					String uuid;
 					try {
-						uuid = "PSID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.getLong(value)).toByteArray());
+						uuid = "PSID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.parseLong(value)).toByteArray());
 					} catch (Exception x) {
 						uuid = "PSID-"+UUID.nameUUIDFromBytes(value.getBytes());	
 					}
@@ -94,8 +94,11 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					String value = mol.getProperty(name()).toString();
 					String uuid;
 					try {
-						uuid = "PCID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.getLong(value)).toByteArray());
+						System.out.println(value);
+						System.out.println(Long.parseLong(value));
+						uuid = "PCID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.parseLong(value)).toByteArray());
 					} catch (Exception x) {
+						x.printStackTrace();
 						uuid = "PCID-"+UUID.nameUUIDFromBytes(value.getBytes());	
 					}
 					if (r.getExternalids()==null) r.setExternalids(new ArrayList<ExternalIdentifier>());
@@ -708,7 +711,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			}
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = category.createExperimentRecord(protocol);
 		experiment.setReferenceYear(metadata.getAIDSource_year());
-		experiment.setReference(metadata.getAIDSource_name());
+		experiment.setReference(metadata.getURI());
 		experiment.setReliability(reliability);
 		experiment.setParameters(new Params());
 		experiment.setReferenceOwner(getReference().getName());
@@ -918,10 +921,10 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			
 			Protocol protocol0 = category0.getProtocol(metadata.getActivityOutcomeMethod());
 			Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
-			Protocol protocol2 = category1.getProtocol(metadata.getActivityOutcomeMethod());
+			
 			protocol0.addGuideline(metadata.getProtocolAsText());
 			protocol1.addGuideline(metadata.getProtocolAsText());
-			protocol2.addGuideline(metadata.getProtocolAsText());
+			
 			
 			ReliabilityParams rel = new ReliabilityParams();
 			rel.setStudyResultType("experimental result");
