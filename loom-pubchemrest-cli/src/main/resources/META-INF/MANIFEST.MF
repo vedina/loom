@@ -1,14 +1,14 @@
 Manifest-version: 1.0
-Package: net.idea.loom.ops
-Main-Class: net.idea.loom.ops.cli.OPSClient
+Package: net.idea.loom.pubchem.rest
+Main-Class: 
 
-Name: net/idea/loom/ops
-Specification-Title: OpenPhacts client
+Name: net/idea/loom/pubchem/rest
+Specification-Title: PubChem REST client
 Specification-Version: ${project.version}
 Specification-Vendor: Ideaconsult LTD
-Implementation-Title: net.idea.loom.ops
+Implementation-Title: net.idea.loom.pubchem.rest
 Implementation-Version: ${project.version}-${buildNumber}-${timestamp}
 Implementation-Vendor: Ideaconsult Ltd.
-Package-Title: net.idea.loom.ops
+Package-Title: net.idea.loom.pubchem.rest
 Package-Version: ${project.version}
 Package-Vendor: Ideaconsult Ltd.

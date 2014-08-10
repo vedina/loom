@@ -1,14 +1,14 @@
 Manifest-version: 1.0
-Package: net.idea.loom.ops
-Main-Class: net.idea.loom.ops.cli.OPSClient
+Package: net.idea.loom.tbwiki
+Main-Class: net.idea.loom.tbwiki.CompoundInformation
 
-Name: net/idea/loom/ops
-Specification-Title: OpenPhacts client
+Name: net/idea/loom/tbwiki
+Specification-Title: ToxBank Wiki SPARQL client
 Specification-Version: ${project.version}
 Specification-Vendor: Ideaconsult LTD
-Implementation-Title: net.idea.loom.ops
+Implementation-Title: net.idea.loom.tbwiki
 Implementation-Version: ${project.version}-${buildNumber}-${timestamp}
 Implementation-Vendor: Ideaconsult Ltd.
-Package-Title: net.idea.loom.ops
+Package-Title: net.idea.loom.tbwiki
 Package-Version: ${project.version}
 Package-Vendor: Ideaconsult Ltd.
