@@ -1,0 +1,236 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743241,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "VDRA806"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule agonists of the vitamin D receptor (VDR) signaling pathway: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "The vitamin D receptor (VDR), a member of nuclear hormone receptor superfamily, plays a critical role in calcium homeostasis and bone metabolism. It is also involved in cell differentiation and growth, and thrombogenicity. To identify the compounds that activate VDR signaling, the VDR-UAS-bla HEK 293T cell line (Invitrogen, Carlsbad, CA, USA) containing a beta-lactamase reporter gene under the control of an upstream activator sequence (UAS) was used to screen the Tox21 10K compound library. The cytotoxicity of the Tox21 compound library against the VDR-bla cell line was tested in parallel by measuring the cell viability using CellTiter-Glo assay (Promega, Madison, WI) in the same wells. The compounds were also tested for auto fluorescence that may interfere with the biological target readout resulting in potential false positives and/or negatives."
+          ],
+          "protocol": [
+            "Please refer to other AIDs 743222, 743224, 720687, 720685, 720678 and 720681, for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the VDR agonist mode assay (AID 743222), cell viability counter screen (AID 743224), and auto fluorescence counter screens (AIDs 720687, 720685, 720678 and 720681). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/)."
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743222
+              },
+              "comment": "VDR agonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743224
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "aid": 720687
+              },
+              "comment": "Blue (460 nm) auto fluorescence counter screen in HepG2 cells"
+            },
+            {
+              "xref": {
+                "aid": 720685
+              },
+              "comment": "Blue (460 nm) auto fluorescence counter screen in HepG2 cell free culture"
+            },
+            {
+              "xref": {
+                "aid": 720678
+              },
+              "comment": "Blue (460 nm) auto fluorescence counter screen in HEK293 cells"
+            },
+            {
+              "xref": {
+                "aid": 720681
+              },
+              "comment": "Blue (460 nm) auto fluorescence counter screen in HEK293 cell free culture"
+            },
+            {
+              "xref": {
+                "gene": 7421
+              }
+            },
+            {
+              "xref": {
+                "pmid": 22551509
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the VDR agonist mode screen and the cell viability and auto fluorescence counter screens."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 2,
+              "name": "Ratio Activity",
+              "description": [
+                "Type of compound activity in the ratio readout of the VDR agonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 3,
+              "name": "Ratio Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal activation in the ratio readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "Ratio Efficacy (%)",
+              "description": [
+                "Percent activation in the ratio readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "530 nm Activity",
+              "description": [
+                "Type of compound activity in the 530 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 6,
+              "name": "530 nm Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal activation in the 530 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "530 nm Efficacy (%)",
+              "description": [
+                "Percent activation in the 530 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "460 nm Activity",
+              "description": [
+                "Type of compound activity in the 460 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 9,
+              "name": "460 nm Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal activation in the 460 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 10,
+              "name": "460 nm Efficacy (%)",
+              "description": [
+                "Percent activation in the 460 nm readout of the VDR agonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 11,
+              "name": "Viability Activity",
+              "description": [
+                "Type of activity in the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 12,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition in the cell viability screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 13,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition in the cell viability counter screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 14,
+              "name": "Blue (460 nm) auto fluorescence outcome",
+              "description": [
+                "Type of compound activity in the auto fluorescence counter screens."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 15,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "vitamin D (1,25- dihydroxyvitamin D3) receptor [Homo sapiens]",
+              "mol_id": 216409708,
+              "molecule_type": "protein"
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

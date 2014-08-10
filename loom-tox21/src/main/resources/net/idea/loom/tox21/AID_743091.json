@@ -1,0 +1,152 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743091,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "BG1N735"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway using the BG1 cell line: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "Estrogen receptor (ER), a nuclear hormone receptor, plays an important role in development, metabolic homeostasis and reproduction. Endocrine disrupting chemicals (EDCs) and their interactions with steroid hormone receptors like ER causes disruption of normal endocrine function. Therefore, it is important to understand the effect of environmental chemicals on the ER signaling pathway. To identify ER antagonists, BG1-Luc-4E2 cell line (provided by Dr. Michael Denison from University of California) has been used to screen the Tox21 10K compound library. BG1Luc4E2 cell line endogenously expresses full-length ER-alpha and is stably transfected with a plasmid containing four estrogen responsive elements (ERE) upstream of a luciferase reporter gene. The cytotoxicity of the Tox21 compound library against the BG1-Luc-4E2 cell line was tested in parallel by measuring the cell viability using CellTiter-Fluor assay (Promega, Madison, WI) in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs, 743080 and 743081, for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the ER antagonist mode assay (AID 743080) and cell viability counter screen (AID 743081). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/)."
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743080
+              },
+              "comment": "ER antagonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743081
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "pmid": 21543282
+              }
+            },
+            {
+              "xref": {
+                "gene": 2099
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the ER antagonist mode readout and the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 2,
+              "name": "ER Activity",
+              "description": [
+                "Type of compound activity in the ER antagonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 3,
+              "name": "ER Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of ER."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "ER Efficacy (%)",
+              "description": [
+                "Percent inhibition of ER."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "estrogen nuclear receptor alpha [Homo sapiens]",
+              "mol_id": 348019627,
+              "molecule_type": "protein"
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

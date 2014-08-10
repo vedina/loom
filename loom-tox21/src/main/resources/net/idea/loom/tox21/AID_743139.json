@@ -1,0 +1,146 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743139,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "AROS634"
+              }
+            }
+          },
+          "name": "qHTS assay to identify aromatase inhibitors: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "Endocrine disrupting chemicals (EDCs) interfere with the biosynthesis and normal functions of steroid hormones including estrogen and androgen in the body. Aromatase catalyzes the conversion of androgen to estrogen and plays a key role in maintaining the androgen and estrogen balance in many of the EDC-sensitive organs. MCF-7 aro ERE cell line (provided by Dr. Shiuan Chen at Beckman Research Institute of the City of Hope) was used to screen the Tox21 10K compound library collection for identification of aromatase inhibitors. MCF-7 aro ERE is human breast carcinoma cell line that was stably transfected with a promoter plasmid, pGL3-Luc, containing three repeats of estrogen responsive element (ERE). The cytotoxicity of the Tox21 compound library against the MCF-7 aro ERE cell line was tested in parallel by measuring the cell viability using CellTiter-Fluor assay (Promega, Madison, WI) in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs, 743083 and 743084, for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the aromatase antagonist mode assay (AID 743083) and cell viability counter screen (AID 743084). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/)."
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743083
+              },
+              "comment": "Aromatase antagonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743084
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "gene": 1588
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the aromatase antagonist mode readout and the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 2,
+              "name": "Antagonist Activity",
+              "description": [
+                "Type of compound activity in the aromatase antagonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 3,
+              "name": "Antagonist Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of aromatase."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 4,
+              "name": "Antagonist Efficacy (%)",
+              "description": [
+                "Percent inhibition of aromatase."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "cytochrome P450, family 19, subfamily A, polypeptide 1, isoform CRA_a [Homo sapiens]",
+              "mol_id": 119597822,
+              "molecule_type": "protein"
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

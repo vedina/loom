@@ -1,0 +1,172 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743067,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "TRN190"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule antagonists of the thyroid receptor (TR) signaling pathway: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "Thyroid receptor (TR), a nuclear hormone receptor, plays an important role in development, proliferation, differentiation, metabolism, brain function, and cardiovascular system. TR-interacting compounds have been shown to disrupt thyroid homeostasis. To profile the Tox21 10K compound library in TR signaling, a cell-based GH3-TRE-Luc assay (GH3.TRE-Luc cell line, developed by the laboratory of Dr. Albertinka J. Murk, Wageningen University) was used to measure the inhibition of TR. GH3 (rat pituitary tumor) cells stably expressing a TR activity sensor consisting of two TR response elements and a luciferase reporter gene. The cytotoxicity of the Tox21 compound library against the GH3.TRE-Luc cell line was tested in parallel by measuring the cell viability using CellTiter-Fluor assay (Promega, Madison, WI) in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs 743065 and 743064 for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the TR antagonist mode assay (AID 743065) and cell viability counter screen (AID 743064). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/).",
+            " "
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743065
+              },
+              "comment": "TR antagonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743064
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "pmid": 21543282
+              }
+            },
+            {
+              "xref": {
+                "gene": 24831
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the TR antagonist mode readout and the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 2,
+              "name": "TR Activity",
+              "description": [
+                "Type of compound activity in the TR antagonist mode screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 3,
+              "name": "TR Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of TR."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "TR Efficacy (%)",
+              "description": [
+                "Percent inhibition of TR."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string",
+              "unit": "none"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "thyroid hormone receptor beta isoform 2 [Rattus norvegicus]",
+              "mol_id": 399498506,
+              "molecule_type": "protein",
+              "organism": {
+                "org": {
+                  "taxname": "Rattus norvegicus",
+                  "common": "Norway rat",
+                  "db": [
+                    {
+                      "db": "taxon",
+                      "tag": {
+                        "id": 10116
+                      }
+                    }
+                  ]
+                }
+              },
+              "descr": "thyroid hormone receptor beta isoform 2 [Rattus norvegicus]"
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

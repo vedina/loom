@@ -1,0 +1,563 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743288,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "NCGC",
+              "source_id": {
+                "str": "NRV786"
+              }
+            }
+          },
+          "name": "qHTS assay for cell viability of HEK293 cells",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "The CellTiter-Glo Luminescent Cell Viability Assay (Promega, Madison, WI) is a homogeneous method to determine the number of viable cells in culture based on quantitation of the ATP present, which signals the presence of metabolically active cells. This cell viability assay was used to screen environmental chemicals in the Hek293 cell line."
+          ],
+          "protocol": [
+            "Tox21 Assay Protocol Summary:",
+            "",
+            "Cell viability after compound treatment was measured using a luciferase-coupled ATP quantitation assay (CellTiter-Glo viability assay, Promega, Madison, WI) in parental HEK293 cells. Total intracellular ATP content corresponds to the number of metabolically competent cells after compound treatment. The cells were dispensed at 2,000 cells/5 uL/well in 1,536-well white/solid bottom assay plates using a Flying Reagent Dispenser (Aurora Discovery, San Diego, CA). The cells were incubated a minimum of 5 h at 37 C, followed by the addition of 23 nL of compounds dissolved in DMSO, positive controls or DMSO only using a pintool work station (Kalypsys, San Diego, CA).  The assay plates were incubated for 18 h at 37 C, followed by the addition of 5 uL/well of CellTiter-Glo reagent. After 30 min incubation at room temperature, the luminescence intensity of the plates was measured using a ViewLux plate reader (PerkinElmer, Shelton, CT)."
+          ],
+          "comment": [
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/).",
+            "",
+            "Compound Ranking:",
+            "",
+            "1. Compounds are first classified as having full titration curves, partial modulation, partial curve (weaker actives), single point activity (at highest concentration only), or inactive. See data field \"Curve Description\". For this assay, apparent inhibitors are ranked higher than compounds that showed apparent activation.",
+            "2. For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. For all active compounds, a score range was given for each curve class type given above.  Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100.  Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 1 and 39.  Fit_LogAC50 was used for determining relative score and was scaled to each curve class' score range."
+          ],
+          "xref": [
+            {
+              "xref": {
+                "dburl": "http://www.ncgc.nih.gov"
+              }
+            },
+            {
+              "xref": {
+                "pmid": 21543282
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Phenotype",
+              "description": [
+                "Indicates type of activity observed: inhibitor, activator, fluorescent, cytotoxic, inactive, or inconclusive."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 2,
+              "name": "Potency",
+              "description": [
+                "Concentration at which compound exhibits half-maximal efficacy, AC50. Extrapolated AC50s also include the highest efficacy observed and the concentration of compound at which it was observed."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 3,
+              "name": "Efficacy",
+              "description": [
+                "Maximal efficacy of compound, reported as a percentage of control. These values are estimated based on fits of the Hill equation to the dose-response curves."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 4,
+              "name": "Analysis Comment",
+              "description": [
+                "Annotation/notes on a particular compound's data or its analysis."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 5,
+              "name": "Activity_Score",
+              "description": [
+                "Activity score."
+              ],
+              "type": "int",
+              "unit": "none"
+            },
+            {
+              "tid": 6,
+              "name": "Curve_Description",
+              "description": [
+                "A description of dose-response curve quality. A complete curve has two observed asymptotes; a partial curve may not have attained its second asymptote at the highest concentration tested. High efficacy curves exhibit efficacy greater than 80% of control. Partial efficacies are statistically significant, but below 80% of control."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 7,
+              "name": "Fit_LogAC50",
+              "description": [
+                "The logarithm of the AC50 from a fit of the data to the Hill equation (calculated based on Molar Units)."
+              ],
+              "type": "float",
+              "unit": "none"
+            },
+            {
+              "tid": 8,
+              "name": "Fit_HillSlope",
+              "description": [
+                "The Hill slope from a fit of the data to the Hill equation."
+              ],
+              "type": "float",
+              "unit": "none"
+            },
+            {
+              "tid": 9,
+              "name": "Fit_R2",
+              "description": [
+                "R^2 fit value of the curve. Closer to 1.0 equates to better Hill equation fit."
+              ],
+              "type": "float",
+              "unit": "none"
+            },
+            {
+              "tid": 10,
+              "name": "Fit_InfiniteActivity",
+              "description": [
+                "The asymptotic efficacy from a fit of the data to the Hill equation."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 11,
+              "name": "Fit_ZeroActivity",
+              "description": [
+                "Efficacy at zero concentration of compound from a fit of the data to the Hill equation."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 12,
+              "name": "Fit_CurveClass",
+              "description": [
+                "Numerical encoding of curve description for the fitted Hill equation."
+              ],
+              "type": "float",
+              "unit": "none"
+            },
+            {
+              "tid": 13,
+              "name": "Excluded_Points",
+              "description": [
+                "Which dose-response titration points were excluded from analysis based on outlier analysis. Each number represents whether a titration point was (1) or was not (0) excluded, for the titration series going from smallest to highest compound concentrations."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 14,
+              "name": "Max_Response",
+              "description": [
+                "Maximum activity observed for compound (usually at highest concentration tested)."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 15,
+              "name": "Activity at 0.0005219188 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.000521918991580606,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 16,
+              "name": "Activity at 0.00155 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.00155427004210651,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 17,
+              "name": "Activity at 0.00461 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.00461369985714555,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 18,
+              "name": "Activity at 0.00590 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.00589862000197172,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 19,
+              "name": "Activity at 0.014 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.0140514997765422,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 20,
+              "name": "Activity at 0.041 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.0414187014102936,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 21,
+              "name": "Activity at 0.068 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.0684607028961182,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 22,
+              "name": "Activity at 0.128 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.127553999423981,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 23,
+              "name": "Activity at 0.377 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.377222001552582,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 24,
+              "name": "Activity at 0.782 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 0.78150600194931,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 25,
+              "name": "Activity at 1.172 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 1.17239999771118,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 26,
+              "name": "Activity at 3.424 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 3.42412996292114,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 27,
+              "name": "Activity at 5.843 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 5.84271001815796,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 28,
+              "name": "Activity at 10.19 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 10.1941003799438,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 29,
+              "name": "Activity at 29.79 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 29.7915000915527,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 30,
+              "name": "Activity at 43.68 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 43.6833000183105,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 31,
+              "name": "Activity at 92.36 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 92.3582000732422,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 32,
+              "name": "Activity at 218.9 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 218.934005737305,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 33,
+              "name": "Activity at 489.4 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 489.434997558594,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 34,
+              "name": "Activity at 1094.5 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 1094.55004882813,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 35,
+              "name": "Activity at 2447.4 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 2447.38989257813,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 36,
+              "name": "Activity at 5811.1 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 5811.06005859375,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 37,
+              "name": "Activity at 12995.4 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 12995.400390625,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 38,
+              "name": "Activity at 29059.9 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 29059.900390625,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 39,
+              "name": "Activity at 64977.0 uM",
+              "description": [
+                "% Activity at given concentration."
+              ],
+              "type": "float",
+              "unit": "percent",
+              "tc": {
+                "concentration": 64977,
+                "unit": "um",
+                "dr_id": 1
+              }
+            },
+            {
+              "tid": 40,
+              "name": "Compound QC",
+              "description": [
+                "NCGC designation for data stage: &apos;qHTS&apos;, &apos;qHTS Verification&apos;, &apos;Secondary Profiling&apos;"
+              ],
+              "type": "string"
+            }
+          ],
+          "revision": 1,
+          "target": [
+          ],
+          "activity_outcome_method": "confirmatory",
+          "dr": [
+            {
+              "id": 1,
+              "descr": "CR Plot label 1",
+              "dn": "Concentration",
+              "rn": "Response"
+            }
+          ],
+          "grant_number": [
+            "None"
+          ],
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

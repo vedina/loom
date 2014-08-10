@@ -1,0 +1,171 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743054,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "MDAN535"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule antagonists of the androgen receptor (AR) signaling pathway using the MDA cell line: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "Androgen receptor (AR), a nuclear hormone receptor, plays a critical role in AR-dependent prostate cancer and other androgen related diseases. Endocrine disrupting chemicals (EDCs) and their interactions with steroid hormone receptors like AR may cause disruption of normal endocrine function as well as interfere with metabolic homeostasis, reproduction, developmental and behavioral functions. To identify the compounds that inhibit AR signaling, MDA-kb2 AR-luc cell line (from ATCC, deposited by Wilson et al.) was used to screen the Tox21 10K compound library. MDA-kb2 AR-luc cell line is human breast carcinoma cell line that was stably transfected with a luciferase reporter gene under control of the MMTV promoter containing response elements for both androgen receptor (AR) and glucocorticoid receptor (GR). The cytotoxicity of the Tox21 compound library against the MDA-kb2 AR-luc cell line was tested in parallel by measuring the cell viability using CellTiter-Fluor assay (Promega, Madison, WI) in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs 743042 and 743041 for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the AR antagonist mode assay (AID 743042) and cell viability counter screen (AID 743041). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/).",
+            " "
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743042
+              },
+              "comment": "AR antagonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743041
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "pmid": 21543282
+              }
+            },
+            {
+              "xref": {
+                "gene": 367
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the AR antagonist mode readout and the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 2,
+              "name": "AR Activity",
+              "description": [
+                "Type of compound activity in the AR antagonist mode screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 3,
+              "name": "AR Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of AR."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "AR Efficacy (%)",
+              "description": [
+                "Percent inhibition of AR."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string",
+              "unit": "none"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "AR protein [Homo sapiens]",
+              "mol_id": 124375976,
+              "molecule_type": "protein",
+              "organism": {
+                "org": {
+                  "taxname": "Homo sapiens",
+                  "common": "human",
+                  "db": [
+                    {
+                      "db": "taxon",
+                      "tag": {
+                        "id": 9606
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

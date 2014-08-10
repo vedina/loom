@@ -1,0 +1,173 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 720516,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "ELG271"
+              }
+            }
+          },
+          "name": "qHTS assay for small molecules that induce genotoxicity in human embryonic kidney cells expressing luciferase-tagged ATAD5: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "As cancer cells divide rapidly and during every cell division they need to duplicate their genome by DNA replication. The failure to do so results in the cancer cell death. Based on this concept, many chemotherapeutic agents were developed but have limitations such as low efficacy and severe side effects etc. A new cell based assay was developed to find the compounds that effectively block DNA replication either by directly damaging DNA or by inhibiting other cellular mechanisms.",
+            "",
+            "Enhanced Level of Genome Instability Gene 1 (ELG1; human ATAD5) protein levels increase in response to various types of DNA damage. Using a luciferase reporter-gene tagged with ATAD5, a cell-based assay [developed by Kyungjae Myung, NHGRI, NIH] was used to measure the induction of ATAD5 in human embryonic kidney cells (HEK293T). So, increase in luciferase activity can be used to identify the compounds that cause genetic stress. In addition to genotoxicity, these cells were also used to test for cytotoxicity by measuring the protease activity within live cells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs 651632 and 651634 for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the ATAD5 assay (AID 651632) and cell viability counter screen (AID 651634). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/).",
+            " "
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 651632
+              },
+              "comment": "ATAD5 activation screen"
+            },
+            {
+              "xref": {
+                "aid": 651634
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "pmid": 22431602
+              }
+            },
+            {
+              "xref": {
+                "gene": 79915
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the ATAD5 readout and the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 2,
+              "name": "ATAD5 Activity",
+              "description": [
+                "Type of compound activity in the ATAD5 screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 3,
+              "name": "ATAD5 Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal activation of ATAD5."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "ATAD5 Efficacy (%)",
+              "description": [
+                "Percent activation of ATAD5."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string",
+              "unit": "none"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "RecName: Full=ATPase family AAA domain-containing protein 5; AltName: Full=Chromosome fragility-associated gene 1 protein",
+              "mol_id": 296439460,
+              "molecule_type": "protein",
+              "organism": {
+                "org": {
+                  "taxname": "Homo sapiens",
+                  "common": "human",
+                  "db": [
+                    {
+                      "db": "taxon",
+                      "tag": {
+                        "id": 9606
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

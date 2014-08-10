@@ -1,0 +1,149 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 743122,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "AHR641"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule that activate the aryl hydrocarbon receptor (AhR) signaling pathway: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "The Aryl hydrocarbon Receptor (AhR), a member of the family of basic helix-loop-helix transcription factors, is crucial to adaptive responses to environmental changes. AhR mediates cellular responses to environmental pollutants such as aromatic hydrocarbons through induction of phase I and II enzymes but also interacts with other nuclear receptor signaling pathways",
+            "",
+            "A cell based HepG2-AhR-luc assay (HG2L7.5c1 cell line, developed by Dr. Michael S. Denison, University of California at Davis) was used to assess the activation of AhR. HepG2 (human hepatocellular carcinoma) cells were stably transfected with an Ah receptor-responsive firefly luciferase reporter gene plasmid containing 20 dioxin responsive elements and luciferase reporter gene. Increased luciferase activity can be used to identify the compounds that induce AhR activation. The cytotoxicity of the compounds screened against the HepG2-AhR-luc cell line was tested in parallel by measuring the cell viability using CellTiter-Fluor assay in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs, 743085 and 743086, for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the AhR agonist mode assay (AID 743085) and cell viability counter screen (AID 743086). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/)."
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 743085
+              },
+              "comment": "AhR agonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 743086
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "gene": 196
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the AhR agonist mode readout and the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 2,
+              "name": "AhR Activity",
+              "description": [
+                "Type of compound activity in the AhR agonist mode screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 3,
+              "name": "AhR Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal activation of AhR."
+              ],
+              "type": "float",
+              "unit": "um",
+              "ac": true
+            },
+            {
+              "tid": 4,
+              "name": "AhR Efficacy (%)",
+              "description": [
+                "Percent activation of AhR."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screen."
+              ],
+              "type": "string"
+            },
+            {
+              "tid": 6,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition of cell viability."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string"
+            }
+          ],
+          "revision": 1,
+          "target": [
+            {
+              "name": "aryl hydrocarbon receptor [Homo sapiens]",
+              "mol_id": 51095037,
+              "molecule_type": "protein"
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}

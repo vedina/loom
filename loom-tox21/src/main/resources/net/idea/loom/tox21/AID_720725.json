@@ -1,0 +1,224 @@
+{
+  "PC_AssayContainer": [
+    {
+      "assay": {
+        "descr": {
+          "aid": {
+            "id": 720725,
+            "version": 1
+          },
+          "aid_source": {
+            "db": {
+              "name": "824",
+              "source_id": {
+                "str": "GRN811"
+              }
+            }
+          },
+          "name": "qHTS assay to identify small molecule antagonists of the glucocorticoid receptor (GR) signaling pathway: Summary",
+          "description": [
+            "U.S. Tox21 Program",
+            "",
+            "National Center for Advancing Translational Sciences [NCATS]",
+            "NIH Chemical Genomics Center [NCGC]",
+            "U.S. Environmental Protection Agency [EPA]",
+            "National Institutes of Environmental Health Sciences [NIEHS]",
+            "National Toxicology Program [NTP]",
+            "U.S. Food and Drug Administration [FDA]",
+            "",
+            "Tox21 Assay Overview:",
+            "",
+            "The Glucocorticoid receptor (GR) is one of the members of the nuclear receptor family of ligand-dependent transcription factors.  GR plays a critical role in carbohydrate, protein and lipid metabolisms and programmed cell death. CellSensor GR-bla HeLa cell line (Invitrogen) contains a beta-lactamase reporter gene under the control of the glucocorticoid response element stably integrated into HeLa cells, a cervical cancer cell line that expresses glucocorticoid receptor.  The activation of the reporter gene under culture conditions can be detected by fluorescence intensity. This cell line has been used to screen the Tox21 10K compound library and to identify the compounds that inhibit the GR signaling.  The cytotoxicity of the Tox21 10K compound library against the GR-bla HeLa cell line was tested in parallel by measuring the cell viability using CellTiter-Glo assay in the same wells."
+          ],
+          "protocol": [
+            "Please refer to other AIDs, 720692 and 720693, for detailed assay protocols."
+          ],
+          "comment": [
+            "This summary is written for the purposes of summarizing the compound activities from the project combining the results from both the GR antagonist mode assay (AID 720692) and cell viability counter screen (AID 720693). For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100. Potency and efficacy were used for determining relative score. Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 5 and 30 determined by phenotype.",
+            "",
+            "Disclaimer:",
+            "",
+            "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/).",
+            " "
+          ],
+          "xref": [
+            {
+              "xref": {
+                "aid": 720692
+              },
+              "comment": "GR antagonist mode screen"
+            },
+            {
+              "xref": {
+                "aid": 720693
+              },
+              "comment": "Cell viability counter screen"
+            },
+            {
+              "xref": {
+                "gene": 2908
+              }
+            },
+            {
+              "xref": {
+                "pmid": 21543282
+              }
+            }
+          ],
+          "results": [
+            {
+              "tid": 1,
+              "name": "Activity Summary",
+              "description": [
+                "Type of compound activity based on both the GR antagonist mode screen and the cell viability counter screens."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 2,
+              "name": "Ratio Activity",
+              "description": [
+                "Type of compound activity in the ratio readout of the GR antagonist mode screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 3,
+              "name": "Ratio Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition in the ratio readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 4,
+              "name": "Ratio Efficacy (%)",
+              "description": [
+                "Percent inhibition in the ratio readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 5,
+              "name": "530 nm Activity",
+              "description": [
+                "Type of compound activity in the 530 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 6,
+              "name": "530 nm Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition in the 530 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 7,
+              "name": "530 nm Efficacy (%)",
+              "description": [
+                "Percent inhibition in the 530 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 8,
+              "name": "460 nm Activity",
+              "description": [
+                "Type of compound activity in the 460 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 9,
+              "name": "460 nm Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition in the 460 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 10,
+              "name": "460 nm Efficacy (%)",
+              "description": [
+                "Percent inhibition in the 460 nm readout of the GR antagonist mode screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 11,
+              "name": "Viability Activity",
+              "description": [
+                "Type of compound activity in the cell viability counter screens."
+              ],
+              "type": "string",
+              "unit": "none"
+            },
+            {
+              "tid": 12,
+              "name": "Viability Potency (uM)",
+              "description": [
+                "The concentration of sample yielding half-maximal inhibition in the cell viability counter screen."
+              ],
+              "type": "float",
+              "unit": "um"
+            },
+            {
+              "tid": 13,
+              "name": "Viability Efficacy (%)",
+              "description": [
+                "Percent inhibition in the cell viability counter screen."
+              ],
+              "type": "float",
+              "unit": "percent"
+            },
+            {
+              "tid": 14,
+              "name": "Sample Source",
+              "description": [
+                "Where sample was obtained."
+              ],
+              "type": "string",
+              "unit": "none"
+            }
+          ],
+          "revision": 2,
+          "target": [
+            {
+              "name": "glucocorticoid receptor [Homo sapiens]",
+              "mol_id": 311348376,
+              "molecule_type": "protein",
+              "organism": {
+                "org": {
+                  "taxname": "Homo sapiens",
+                  "common": "human",
+                  "db": [
+                    {
+                      "db": "taxon",
+                      "tag": {
+                        "id": 9606
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "activity_outcome_method": "summary",
+          "project_category": "other"
+        }
+      }
+    }
+  ]
+}
