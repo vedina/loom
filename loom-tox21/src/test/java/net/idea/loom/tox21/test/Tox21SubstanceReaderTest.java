@@ -11,16 +11,19 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.RawIteratingWrapper;
 
+/*
+ * http://pubchem.ncbi.nlm.nih.gov/rest/pug/assay/aid/720685/description/json
+ */
 public class Tox21SubstanceReaderTest  {
 	@Test
 	public void test() throws Exception {
 		File dir = new File("F:/Downloads/Chemical data/TOXCAST/Tox21/");
-		File[] files = dir.listFiles();
-		/*
+		//File[] files = dir.listFiles();
+		
 		File[] files = new File[] {
 				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720681_data.csv")
 		};
-		*/	
+			
 				/*
 				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720516_data.csv")
 				,new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_743292_data.csv")

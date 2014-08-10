@@ -44,7 +44,7 @@ public class Tox21SubstanceReader  extends RawIteratingWrapper<IteratingDelimite
 	}
 		
 	protected JsonNode initMetadata(String key)  throws Exception {
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream("net/idea/loom/tox21/tox21.json");
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(String.format("net/idea/loom/tox21/%s.json",key));
 		ObjectMapper om = new ObjectMapper();
 		try {
 			return om.readTree(new InputStreamReader(in)).get("metadata").get(key);
