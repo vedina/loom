@@ -32,6 +32,9 @@ public class PubChemAIDMetadata {
 	public String getTitle() {
 		return metadata.get("assay").get("descr").get("name").getTextValue();
 	}
+	public JsonNode getDoseResponse() {
+		return metadata.get("assay").get("descr").get("dr");
+	}
 	public int getAID() {
 		return metadata.get("assay").get("descr").get("aid").get("id").getIntValue();
 	}

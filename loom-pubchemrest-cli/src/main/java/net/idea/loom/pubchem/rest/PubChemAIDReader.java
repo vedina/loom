@@ -733,7 +733,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			I5_ROOT_OBJECTS category,IAtomContainer mol, 
 			SubstanceRecord record,Protocol protocol,ReliabilityParams reliability,int level) {
 		
-		String id = String.format("%d_%s",metadata.getAID(),mol.getProperty(_field_top.PUBCHEM_SID.name()));
+		String id = String.format("%s_%d_%s",category.name(),metadata.getAID(),mol.getProperty(_field_top.PUBCHEM_SID.name()));
 		
 		String experimentUUID = prefix+UUID.nameUUIDFromBytes(id.getBytes());
 		
@@ -952,7 +952,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			java.util.Set<Object> keys = ((IAtomContainer)o).getProperties().keySet();
 			
 			I5_ROOT_OBJECTS category0 = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
-			//I5_ROOT_OBJECTS category1 = I5_ROOT_OBJECTS.PUBCHEM_SUMMARY;
+			I5_ROOT_OBJECTS category1 = I5_ROOT_OBJECTS.PUBCHEM_DOSERESPONSE;
 
 			String title = metadata.getTitle();
 			String uri = metadata.getURI();
@@ -966,7 +966,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			} catch (Exception x) {}
 			
 			Protocol protocol0 = category0.getProtocol(metadata.getActivityOutcomeMethod());
-			//Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
+			Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
 			
 			protocol0.addGuideline(metadata.getProtocolAsText());
 			//protocol1.addGuideline(metadata.getProtocolAsText());
@@ -979,17 +979,18 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0 =
 				getExperiment(category0,(IAtomContainer)o,(SubstanceRecord)r,protocol0,rel,0);
 			
-			/*
-			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1 =			
-				getExperiment(category1,(IAtomContainer)o,(SubstanceRecord)r,protocol1,rel,1);		
-			*/
+			ProtocolApplication<Protocol, IParams, String, IParams, String> experiment1 = null;
+			if (metadata.getDoseResponse()!= null) {
+				experiment1 = getExperiment(category1,(IAtomContainer)o,(SubstanceRecord)r,protocol1,rel,1);
+			}	
+			
 			if (target!= null) {
 				experiment0.getParameters().put(I5CONSTANTS.cTargetGene,target);
-				//experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target);
+				if (experiment1!=null) experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target);
 			}
 			if (cell!= null) {
 				experiment0.getParameters().put("Cell",cell);
-				//experiment1.getParameters().put("Cell",cell);
+				if (experiment1!=null) experiment1.getParameters().put("Cell",cell);
 			}
 			
 			Iterator  i = keys.iterator();
@@ -1024,9 +1025,11 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					field =  _field.valueOf(thetag.trim().replace(" ", "_").replace("-","_").replace("%","_").replace("(","_").replace(")","_"));
 					
 					field.parse(key.toString(),effect,experiment0,(SubstanceRecord)r, (IAtomContainer)o);
-					//if (field.getLevel()==0)
+					
+					if ((experiment1!=null) && (effect.getConditions().get(I5CONSTANTS.cDoses)!=null))
+						experiment1.addEffect(effect);
+					else
 						experiment0.addEffect(effect);
-					//else experiment1.addEffect(effect);
 					
 					if (effect.getEndpoint()==null) {
 						throw new Exception("Null effect");
