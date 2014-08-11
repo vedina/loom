@@ -9,7 +9,9 @@
   <artifactId>loom-tox21</artifactId>
   <version>1.0.3-SNAPSHOT</version>
   <name>loom-tox21</name>
-  <description>Tox21 data parser</description>
+  <description>Tox21 data parser
+http://pubchem.ncbi.nlm.nih.gov/sources/sources.cgi?mode=contact&amp;dsn=824
+http://pubchem.ncbi.nlm.nih.gov/rest/pug/assay/sourceall/Tox21/aids/JSON</description>
 <dependencies>
     <dependency>
       <groupId>ambit</groupId>
@@ -21,6 +23,11 @@
   		<artifactId>iuclid_5_common</artifactId>
   		<version>${i5.version}</version>    
     </dependency>
-    
+        <dependency>
+    	<groupId>net.ideaconsult</groupId>
+    	<artifactId>loom-pubchemrest-cli</artifactId>
+    	<version>${project.version}</version>
+    	<type>jar</type>
+    </dependency>
 </dependencies>  
 </project>

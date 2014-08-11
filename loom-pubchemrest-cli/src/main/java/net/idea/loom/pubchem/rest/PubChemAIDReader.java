@@ -44,6 +44,9 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		this(new IteratingDelimitedFileReader(new FileReader(file)));
 		metadata = initMetadata(json_meta);
 		setReference(new LiteratureEntry(metadata.getAIDSource_name(),metadata.getDescriptionAsText()));
+		try {
+			json_meta.close();
+		} catch (Exception x) {}
 	}
 		
 	protected PubChemAIDMetadata initMetadata(InputStream in)  throws Exception {
@@ -95,8 +98,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					String value = mol.getProperty(name()).toString();
 					String uuid;
 					try {
-						System.out.println(value);
-						System.out.println(Long.parseLong(value));
 						uuid = "PCID-"+UUID.nameUUIDFromBytes(BigInteger.valueOf(Long.parseLong(value)).toByteArray());
 					} catch (Exception x) {
 						x.printStackTrace();
@@ -130,7 +131,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			@Override
 			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
 					SubstanceRecord r, IAtomContainer mol) {
-				experiment0.setInterpretationCriteria(mol.getProperty(name()).toString());
+				experiment0.setInterpretationCriteria(name().replace("_", " ")+ "=" + mol.getProperty(name()).toString());
 			}			
 			@Override
 			public String toString() {
@@ -735,9 +736,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		String id = String.format("%d_%s",metadata.getAID(),mol.getProperty(_field_top.PUBCHEM_SID.name()));
 		
 		String experimentUUID = prefix+UUID.nameUUIDFromBytes(id.getBytes());
-		System.out.print(id);
-		System.out.print("\t");
-		System.out.println(experimentUUID);
 		
 		if (record.getMeasurements()!=null)
 			for (ProtocolApplication<Protocol, IParams, String, IParams, String> experiment : record.getMeasurements()) {
