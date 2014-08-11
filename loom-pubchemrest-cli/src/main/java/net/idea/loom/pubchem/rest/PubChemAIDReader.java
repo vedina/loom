@@ -902,15 +902,29 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			else if ("percent".equals(unitNode.getTextValue())) effect.setUnit(null);
 			else effect.setUnit(unitNode.getTextValue());
 		}
+		//tested concentration
+		JsonNode tcNode = tagNode==null?null:tagNode.get("tc");
+		if (tcNode!=null && tcNode.get("concentration")!=null) {
+			Value val = new Value(tcNode.get("concentration").getDoubleValue());
+			try {val.setUnits(tcNode.get("unit").getTextValue());} catch (Exception x) {val.setUnits(null); }
+			val.setLoQualifier("=");
+			if (tcNode.get("dr_id")!=null) {
+				val.setAnnotation(tcNode.get("dr_id").getTextValue());
+				effect.setTextValue(tcNode.get("dr_id").getTextValue());
+			}
+			effect.getConditions().put(I5CONSTANTS.cDoses, val);
+		}
 		
 		int ix  = thetag.indexOf("Activity at");
 		if (ix>=0) {
+			/*
 			String concentration = thetag.substring(ix+12);
 			String[] c = concentration.split(" ");
 			Value val = new Value(Double.parseDouble(c[0]));
 			val.setUnits(c[1]);
 			val.setLoQualifier("=");
 			effect.getConditions().put(I5CONSTANTS.cDoses, val);
+			*/
 			
 			if (thetag.startsWith("Ratio-Activity at"))
 				return _field.Ratio_Activity.name();
