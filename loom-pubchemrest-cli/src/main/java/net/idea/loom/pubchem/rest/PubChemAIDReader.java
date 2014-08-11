@@ -899,7 +899,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		JsonNode unitNode = tagNode==null?null:tagNode.get("unit");
 		if (unitNode!=null) {
 			if ("none".equals(unitNode.getTextValue())) effect.setUnit(null);
-			else if ("percent".equals(unitNode.getTextValue())) effect.setUnit(null);
+			else if ("percent".equals(unitNode.getTextValue())) effect.setUnit("%");
 			else effect.setUnit(unitNode.getTextValue());
 		}
 		//tested concentration
