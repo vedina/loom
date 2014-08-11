@@ -18,12 +18,18 @@ public class Tox21SubstanceReaderTest  {
 	@Test
 	public void test() throws Exception {
 		File dir = new File("F:/Downloads/Chemical data/TOXCAST/Tox21/");
-		File[] files = dir.listFiles();
-		/*
+		//File[] files = dir.listFiles();
+		//"Please refer to other AIDs 743210, 743209, 720687, 720685, 720678 and 720681, for detailed assay protocols."
 		File[] files = new File[] {
-				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720681_data.csv")
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720681_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_743228_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_743210_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_743209_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720687_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720685_data.csv"),
+				new File("F:/Downloads/Chemical data/TOXCAST/Tox21/AID_720678_data.csv")
 		};
-		*/
+		
 			
 		for (int i=0; i < files.length; i++) if (files[i].getName().endsWith(".csv")) {
 			long now = System.currentTimeMillis();
@@ -32,9 +38,9 @@ public class Tox21SubstanceReaderTest  {
 			System.out.print(files[i].getPath());
 			RawIteratingWrapper reader = null;
 			long values = 0;
+			int r = 0;			
 			try {
 				reader = new Tox21SubstanceReader(files[i]);
-				int r = 0;
 				while (reader.hasNext()) {
 					IStructureRecord mol = reader.nextRecord();
 					Assert.assertTrue(mol instanceof SubstanceRecord);
@@ -49,6 +55,8 @@ public class Tox21SubstanceReaderTest  {
 			} finally {
 				reader.close();
 			}
+			System.out.print("\t");
+			System.out.print(r);
 			System.out.print("\t");
 			System.out.print(values);
 			System.out.print("\t");
