@@ -43,7 +43,9 @@ import ambit2.core.io.IRawReader;
 public class ISAReader extends DefaultIteratingChemObjectReader implements IRawReader<IStructureRecord>, ICiteable {
 	protected SubstanceRecord record;
 	protected BIIObjectStore store;
-	
+	protected Iterator<Identifiable> studyIterator;
+	protected Iterator<AssayResult> assayResultIterator;
+	protected Collection<Identifiable> studies;
 	
 	public ISAReader(File directory) throws Exception {
 		try {
@@ -56,7 +58,11 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		         //vlog.warn("ISA-Configurator Validation reported problems, see the messages above or the log file");
 		    }
 		    store = validator.getStore();
-		    parse();
+		    studies = new ArrayList<Identifiable>();
+		    studies.addAll(store.values(Study.class));
+		    studyIterator = studies.iterator();
+		    assayResultIterator = null;
+		    //parse();
 		} catch (Exception x) {
 			throw x;
 		} finally {
@@ -64,9 +70,88 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		}
 	}
 	
-	protected void parse() throws Exception {
+
+	@Override
+	public boolean hasNext() {
+		boolean hasNext = false;
+		if (assayResultIterator == null) {
+			if (studyIterator.hasNext()) {
+				Identifiable object = studyIterator.next();
+				assayResultIterator = ((Study) object).getAssayResults().iterator();
+				hasNext = assayResultIterator.hasNext();
+			}  
+		} else {
+			hasNext = assayResultIterator.hasNext();
+			if (!hasNext) { //go to outer loop
+				if (studyIterator.hasNext()) {
+					Identifiable object = studyIterator.next();
+					assayResultIterator = ((Study) object).getAssayResults().iterator();
+					hasNext = assayResultIterator.hasNext();
+				}
+			}
+		}
+		return hasNext;
+	}
+
+	@Override
+	public Object next() {
+		return  (assayResultIterator==null)?null:assayResultIterator.next();
+	}
+	
+	@Override
+	public IStructureRecord nextRecord() {
+		AssayResult result = (AssayResult) next();
+		return parseAssayResult(result);
+	}
+
+	protected SubstanceRecord parseAssayResult(AssayResult result) {
+		if (result==null) return null;
+		SubstanceRecord record = new SubstanceRecord();
+		Protocol a_protocol = null; 
+		for (Assay assay : result.getAssays()) {
+			/*
+			System.out.println(assay.getAcc());
+			System.out.println(assay.getTechnologyName());
+			System.out.println(assay.getTechnology());
+			System.out.println(assay.getMeasurement());
+			*/
+			a_protocol = new Protocol(assay.getMeasurement().getName());
+			a_protocol.setTopCategory("TOX");
+			a_protocol.setCategory(assay.getTechnology().getName());
+
+		}
+		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
+		a_papp.setReference(result.getStudy().getTitle());
+		try {
+			Calendar calendar = Calendar.getInstance();  
+	        calendar.setTime(result.getStudy().getReleaseDate());  
+			a_papp.setReferenceYear(Integer.toString(calendar.get(Calendar.YEAR)));
+		} catch (Exception x) {}
+
+		for (Contact contact : result.getStudy().getContacts()) {
+			a_papp.setReferenceOwner(contact.getUrl());
+		}
+		Params params = new Params();
+		a_papp.setParameters(params);
 		
-		Collection<Identifiable> objects = new ArrayList<Identifiable>();
+		Params conditions = new Params();
+		trackAssayResult(result.getData().getProcessingNode(),a_protocol,params,conditions);		
+		
+		
+		EffectRecord effect = new EffectRecord();
+		effect.setEndpoint(result.getData().getName());
+		effect.setTextValue(result.getData().getUrl());
+		
+		effect.setConditions(conditions);
+		//System.out.println(result.getStudy());
+		a_papp.addEffect(effect);
+
+		record.addMeasurement(a_papp);
+		return record;
+	}
+	
+	protected int parse() throws Exception {
+		
 		/*
 		Iterator<Class<? extends Identifiable>> i = store.types().iterator();
 		while (i.hasNext()) {
@@ -82,59 +167,16 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 	        objects.clear();
 		}
 		*/
-		objects.addAll(store.values(Study.class));
-		Iterator<Identifiable> studyIterator = objects.iterator();
-		while (studyIterator.hasNext()) {
-			Identifiable object = studyIterator.next();
-			Iterator<AssayResult> assayResultIterator = ((Study) object).getAssayResults().iterator();
-			while (assayResultIterator.hasNext()) {
-				AssayResult result = assayResultIterator.next();
-				
-				
-				Protocol a_protocol = null; 
-				for (Assay assay : result.getAssays()) {
-					/*
-					System.out.println(assay.getAcc());
-					System.out.println(assay.getTechnologyName());
-					System.out.println(assay.getTechnology());
-					System.out.println(assay.getMeasurement());
-					*/
-					a_protocol = new Protocol(assay.getMeasurement().getName());
-					a_protocol.setTopCategory("TOX");
-					a_protocol.setCategory(assay.getTechnology().getName());
-
-				}
-				ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
-				a_papp.setReference(result.getStudy().getTitle());
-				try {
-					Calendar calendar = Calendar.getInstance();  
-			        calendar.setTime(result.getStudy().getReleaseDate());  
-					a_papp.setReferenceYear(Integer.toString(calendar.get(Calendar.YEAR)));
-				} catch (Exception x) {}
-
-				for (Contact contact : result.getStudy().getContacts()) {
-					a_papp.setReferenceOwner(contact.getUrl());
-				}
-				Params params = new Params();
-				a_papp.setParameters(params);
-				
-				Params conditions = new Params();
-				trackAssayResult(result.getData().getProcessingNode(),a_protocol,params,conditions);		
-				
-				
-				EffectRecord effect = new EffectRecord();
-				effect.setEndpoint(result.getData().getName());
-				effect.setTextValue(result.getData().getUrl());
-				
-				effect.setConditions(conditions);
-				//System.out.println(result.getStudy());
-				a_papp.addEffect(effect);
-				System.out.println(a_papp);
-			}
+		int r = 0;
+		while (hasNext()) {
+				parseAssayResult((AssayResult)next());
+				r++;
 		}
-
+		return r;
 		
 	}
+	
+	
 	
 	protected void processFactorValues(Collection<FactorValue> factorvalues, Params params) {
 		for (FactorValue pv : factorvalues) {
@@ -218,9 +260,20 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 				}
 			}
 	}
-	protected void getResource(Identifiable node)  throws Exception {
+	
+	@Override
+	public ILiteratureEntry getReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setReference(ILiteratureEntry arg0) {
+		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void setReader(InputStream reader) throws CDKException {
 		throw new CDKException("Not supported");
@@ -233,36 +286,6 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 
 	@Override
 	public void close() throws IOException {
-	}
-
-	@Override
-	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Object next() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ILiteratureEntry getReference() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setReference(ILiteratureEntry arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public IStructureRecord nextRecord() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
