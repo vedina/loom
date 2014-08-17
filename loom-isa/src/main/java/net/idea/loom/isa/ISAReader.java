@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 import org.isatools.isatab.ISATABValidator;
 import org.isatools.isatab.gui_invokers.GUIInvokerResult;
@@ -28,7 +30,9 @@ import uk.ac.ebi.bioinvindex.model.processing.MaterialNode;
 import uk.ac.ebi.bioinvindex.model.processing.Processing;
 import uk.ac.ebi.bioinvindex.model.processing.ProtocolApplication;
 import uk.ac.ebi.bioinvindex.model.term.CharacteristicValue;
+import uk.ac.ebi.bioinvindex.model.term.Factor;
 import uk.ac.ebi.bioinvindex.model.term.FactorValue;
+import uk.ac.ebi.bioinvindex.model.term.OntologyTerm;
 import uk.ac.ebi.bioinvindex.model.term.ParameterValue;
 import ambit2.base.data.ILiteratureEntry;
 import ambit2.base.data.SubstanceRecord;
@@ -36,6 +40,7 @@ import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.Value;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
@@ -135,8 +140,11 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		a_papp.setParameters(params);
 		
 		Params conditions = new Params();
-		trackAssayResult(result.getData().getProcessingNode(),a_protocol,params,conditions);		
+		trackAssayResult(result.getData().getProcessingNode(),record,a_protocol,params,conditions);		
 		
+		a_papp.setCompanyName(record.getOwnerName());
+		a_papp.setCompanyUUID(record.getOwnerUUID());
+		a_papp.setSubstanceUUID(record.getCompanyUUID());
 		
 		EffectRecord effect = new EffectRecord();
 		effect.setEndpoint(result.getData().getName());
@@ -178,23 +186,42 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 	
 	
 	
-	protected void processFactorValues(Collection<FactorValue> factorvalues, Params params) {
+	protected void processFactorValues(Collection<FactorValue> factorvalues, Params params, SubstanceRecord record) {
 		for (FactorValue pv : factorvalues) {
-			Value factor = new Value();
-			try {
-				if (pv.getUnit()!=null)
-					factor.setUnits(pv.getUnit().getValue());
-			} catch (Exception x) {}
-			try {
-				factor.setLoValue(Double.parseDouble(pv.getValue()));
-			} catch (Exception x) {
-				factor.setLoValue(pv.getValue());
+			Factor f = pv.getType();
+			if ("compound".equals(f.getValue())) {
+				OntologyTerm term = pv.getSingleOntologyTerm();
+				record.setPublicName(pv.getValue());
+				if (term!=null) {
+					record.setCompanyName(term.getAcc());
+					record.setCompanyUUID("ISTB-"+UUID.nameUUIDFromBytes(term.getAcc().getBytes()));
+					record.setOwnerName(term.getSource().getUrl());
+					record.setOwnerUUID("ISTB-"+UUID.nameUUIDFromBytes(term.getSource().getName().getBytes()));
+					record.setFormat("ISATAB");
+					List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
+					record.setExternalids(ids);
+					record.setSubstancetype("compound");
+					ids.add(new ExternalIdentifier(term.getSource().getUrl(),term.getAcc()));
+				}
+			} else {
+				Value factor = new Value();
+				try {
+					if (pv.getUnit()!=null)
+						factor.setUnits(pv.getUnit().getValue());
+				} catch (Exception x) {}
+				try {
+					factor.setLoValue(Double.parseDouble(pv.getValue()));
+				} catch (Exception x) {
+					factor.setLoValue(pv.getValue());
+				}
+				params.put(pv.getType().getValue(),factor);
 			}
-			params.put(pv.getType().getValue(),factor);				
 		}
 	}
 	protected void processCharacteristicValues(Collection<CharacteristicValue> characteristicValues, Params params) {
 		for (CharacteristicValue pv : characteristicValues) {
+			if ("Date".equals(pv.getType())) continue;
+			if ("Performer".equals(pv.getType())) continue;
 			Value value = new Value();
 			try {
 				if (pv.getUnit()!=null)
@@ -210,6 +237,8 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 	}	
 	protected void processParamValues(Collection<ParameterValue> paramValues, Params params) {
 		for (ParameterValue pv : paramValues) {
+			if ("Date".equals(pv.getType())) continue;
+			if ("Performer".equals(pv.getType())) continue;
 			Value value = new Value();
 			try {
 				if (pv.getUnit()!=null)
@@ -223,12 +252,12 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			params.put(pv.getType().getValue(),value);					
 		}
 	}		
-	protected void trackAssayResult(uk.ac.ebi.bioinvindex.model.processing.Node node,Protocol a_protocol,Params protocolParams,Params conditions) {
+	protected void trackAssayResult(uk.ac.ebi.bioinvindex.model.processing.Node node,SubstanceRecord record, Protocol a_protocol,Params protocolParams,Params conditions) {
 		if (node instanceof MaterialNode) {
-			processFactorValues(((MaterialNode)node).getMaterial().getFactorValues(),conditions);
+			processFactorValues(((MaterialNode)node).getMaterial().getFactorValues(),conditions,record);
 			processCharacteristicValues(((MaterialNode)node).getMaterial().getCharacteristicValues(),protocolParams);
 		} else if (node instanceof DataNode) {
-			processFactorValues(((DataNode)node).getData().getFactorValues(),conditions);
+			processFactorValues(((DataNode)node).getData().getFactorValues(),conditions,record);
 		} 		
 			
 		if (node.getDownstreamProcessings()==null) return;
@@ -256,7 +285,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 						
 					}
 				for (Object in : ((Processing)processing).getInputNodes()) {
-					trackAssayResult((uk.ac.ebi.bioinvindex.model.processing.Node)in,a_protocol,protocolParams,conditions);
+					trackAssayResult((uk.ac.ebi.bioinvindex.model.processing.Node)in,record,a_protocol,protocolParams,conditions);
 				}
 			}
 	}

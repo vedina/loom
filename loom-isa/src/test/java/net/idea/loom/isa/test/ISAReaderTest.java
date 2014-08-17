@@ -26,7 +26,10 @@ public class ISAReaderTest {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				
-				//if (((SubstanceRecord)record).getMeasurements()!=null) System.out.println(((SubstanceRecord)record).getMeasurements());
+				if (((SubstanceRecord)record).getMeasurements()!=null) {
+					System.out.println(((SubstanceRecord)record).toJSON(""));
+					System.out.println(((SubstanceRecord)record).getMeasurements());
+				}
 				/*
 				SubstanceRecord material = (SubstanceRecord)record;
 				System.out.print(material.getCompanyName());
