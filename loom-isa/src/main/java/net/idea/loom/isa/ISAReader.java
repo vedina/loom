@@ -49,7 +49,7 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
 
 public class ISAReader extends DefaultIteratingChemObjectReader implements IRawReader<IStructureRecord>, ICiteable {
-	protected SubstanceRecord record;
+	
 	protected BIIObjectStore store;
 	protected Iterator<Identifiable> studyIterator;
 	protected Iterator<AssayResult> assayResultIterator;
@@ -114,7 +114,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 
 	protected SubstanceRecord parseAssayResult(AssayResult result) {
 		if (result==null) return null;
-		SubstanceRecord record = new SubstanceRecord();
+		
 		Protocol a_protocol = null; 
 		for (Assay assay : result.getAssays()) {
 			/*
@@ -134,7 +134,20 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		
 		Params params = new Params();
 		Params conditions = new Params();
+		SubstanceRecord record = new SubstanceRecord();
 		trackAssayResult(result.getData().getProcessingNode(),record,a_protocol,params,conditions);		
+		
+		
+		if (record.getCompanyUUID()==null) {
+			record.setPublicName("Dummy substance");
+			record.setCompanyName("Dummy substance");
+			record.setCompanyUUID("ISTB-"+UUID.nameUUIDFromBytes("Dummy substance".getBytes()));
+			record.setOwnerName("Unknown");
+			record.setOwnerUUID("ISTB-"+UUID.nameUUIDFromBytes("Unknown".getBytes()));
+			record.setFormat("ISATAB");
+			record.setSubstancetype("dummy");
+			record.setExternalids(null);
+		}
 		/*
 		UUID docuuid = UUID.nameUUIDFromBytes(
 				(a_protocol + 
@@ -219,7 +232,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 					List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
 					record.setExternalids(ids);
 					record.setSubstancetype("compound");
-					ids.add(new ExternalIdentifier(term.getSource().getUrl(),term.getAcc()));
+					ids.add(new ExternalIdentifier(term.getSource().getUrl()==null?"ISA-TAB":term.getSource().getUrl(),term.getAcc()));
 				}
 			} else {
 				Value factor = new Value();
