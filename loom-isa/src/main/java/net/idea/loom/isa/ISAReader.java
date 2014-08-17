@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import net.idea.i5.io.I5_ROOT_OBJECTS;
+
 import org.isatools.isatab.ISATABValidator;
 import org.isatools.isatab.gui_invokers.GUIInvokerResult;
 import org.isatools.isatab_v1.ISATABLoader;
@@ -39,6 +41,7 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
+import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.ICiteable;
@@ -122,11 +125,28 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			*/
 			a_protocol = new Protocol(assay.getMeasurement().getName());
 			a_protocol.setTopCategory("TOX");
-			a_protocol.setCategory(assay.getTechnology().getName());
+			//a_protocol.setCategory(assay.getTechnology().getName());
+			a_protocol.setCategory(assay.getMeasurement().getName());//I5_ROOT_OBJECTS.UNKNOWN_TOXICITY.name());
+			
+
 
 		}
+		
+		Params params = new Params();
+		Params conditions = new Params();
+		trackAssayResult(result.getData().getProcessingNode(),record,a_protocol,params,conditions);		
+		/*
+		UUID docuuid = UUID.nameUUIDFromBytes(
+				(a_protocol + 
+				params.toString())
+				.getBytes()
+				);
+		*/
+		UUID docuuid = UUID.randomUUID();
 		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
+		a_papp.setDocumentUUID("ISTB-"+docuuid);
 		a_papp.setReference(result.getStudy().getTitle());
+		a_papp.setReferenceOwner("test");
 		try {
 			Calendar calendar = Calendar.getInstance();  
 	        calendar.setTime(result.getStudy().getReleaseDate());  
@@ -136,11 +156,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		for (Contact contact : result.getStudy().getContacts()) {
 			a_papp.setReferenceOwner(contact.getUrl());
 		}
-		Params params = new Params();
 		a_papp.setParameters(params);
-		
-		Params conditions = new Params();
-		trackAssayResult(result.getData().getProcessingNode(),record,a_protocol,params,conditions);		
 		
 		a_papp.setCompanyName(record.getOwnerName());
 		a_papp.setCompanyUUID(record.getOwnerUUID());
@@ -149,10 +165,12 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		EffectRecord effect = new EffectRecord();
 		effect.setEndpoint(result.getData().getName());
 		effect.setTextValue(result.getData().getUrl());
-		
 		effect.setConditions(conditions);
-		//System.out.println(result.getStudy());
+
 		a_papp.addEffect(effect);
+		ReliabilityParams reliability = new ReliabilityParams();
+		reliability.setStudyResultType("experimental result");
+		a_papp.setReliability(reliability);
 
 		record.addMeasurement(a_papp);
 		return record;
@@ -191,7 +209,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			Factor f = pv.getType();
 			if ("compound".equals(f.getValue())) {
 				OntologyTerm term = pv.getSingleOntologyTerm();
-				record.setPublicName(pv.getValue());
+				record.setPublicName(pv.getValue().toLowerCase());
 				if (term!=null) {
 					record.setCompanyName(term.getAcc());
 					record.setCompanyUUID("ISTB-"+UUID.nameUUIDFromBytes(term.getAcc().getBytes()));
@@ -214,14 +232,16 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 				} catch (Exception x) {
 					factor.setLoValue(pv.getValue());
 				}
+				factor.setLoQualifier(" ");
 				params.put(pv.getType().getValue(),factor);
 			}
 		}
 	}
 	protected void processCharacteristicValues(Collection<CharacteristicValue> characteristicValues, Params params) {
 		for (CharacteristicValue pv : characteristicValues) {
-			if ("Date".equals(pv.getType())) continue;
-			if ("Performer".equals(pv.getType())) continue;
+			if ("Date".equals(pv.getType().getValue())) continue;
+			if ("Performer".equals(pv.getType().getValue())) continue;
+
 			Value value = new Value();
 			try {
 				if (pv.getUnit()!=null)
@@ -232,13 +252,14 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			} catch (Exception x) {
 				value.setLoValue(pv.getValue());
 			}
+			value.setLoQualifier(" ");
 			params.put(pv.getType().getValue(),value);					
 		}
 	}	
 	protected void processParamValues(Collection<ParameterValue> paramValues, Params params) {
 		for (ParameterValue pv : paramValues) {
-			if ("Date".equals(pv.getType())) continue;
-			if ("Performer".equals(pv.getType())) continue;
+			if ("Date".equals(pv.getType().getValue())) continue;
+			if ("Performer".equals(pv.getType().getValue())) continue;
 			Value value = new Value();
 			try {
 				if (pv.getUnit()!=null)
@@ -249,6 +270,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			} catch (Exception x) {
 				value.setLoValue(pv.getValue());
 			}
+			value.setLoQualifier(" ");
 			params.put(pv.getType().getValue(),value);					
 		}
 	}		
