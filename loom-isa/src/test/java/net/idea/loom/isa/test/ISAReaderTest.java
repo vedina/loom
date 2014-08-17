@@ -19,16 +19,19 @@ public class ISAReaderTest {
 		ISAConfigurationSet.setConfigPath("C://ToxBank//ISAcreator.SEURAT-v1.7.2//ISAcreator.SEURAT//Configurations//toxbank-config");
 		int records = 0;
 		try {
-			reader = new ISAReader(new File("C://ToxBank//ISAcreator.SEURAT-v1.7.2//ISAcreator.SEURAT//isatab files//qHTSexample"));
-			//reader = new ISAReader(new File("C://ToxBank//ISAcreator.SEURAT-v1.7.2//ISAcreator.SEURAT//isatab files//BII-I-1"));
+			//String file = "C://ToxBank//ISAcreator.SEURAT-v1.7.2//ISAcreator.SEURAT//isatab files//qHTSexample";
+			//String file = "C://ToxBank//ISAcreator.SEURAT-v1.7.2//ISAcreator.SEURAT//isatab files//BII-I-1";
+			String file = "D:/src-toxbank/isa-tab-files/NOTOX-APAP-Tx 12-nov-2013/NOTOX-APAP-Tx";
+			
+			reader = new ISAReader(new File(file));
 			
 			while (reader.hasNext()) {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				
 				if (((SubstanceRecord)record).getMeasurements()!=null) {
-					System.out.println(((SubstanceRecord)record).toJSON(""));
-					System.out.println(((SubstanceRecord)record).getMeasurements());
+					//System.out.println(((SubstanceRecord)record).toJSON(""));
+					//System.out.println(((SubstanceRecord)record).getMeasurements());
 				}
 				/*
 				SubstanceRecord material = (SubstanceRecord)record;
