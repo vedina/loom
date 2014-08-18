@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import net.idea.i5.io.I5_ROOT_OBJECTS;
-
 import org.isatools.isatab.ISATABValidator;
 import org.isatools.isatab.gui_invokers.GUIInvokerResult;
 import org.isatools.isatab_v1.ISATABLoader;
@@ -111,7 +109,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 	@Override
 	public IStructureRecord nextRecord() {
 		AssayResult result = (AssayResult) next();
-		System.out.println(result);
+		//System.out.println(result);
 		return parseAssayResult(result);
 	}
 
@@ -120,6 +118,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 			return null;
 
 		Protocol a_protocol = null;
+		System.out.println("Assay result\t"+result.getId());
 		for (Assay assay : result.getAssays()) {
 			/*
 			 * System.out.println(assay.getAcc());
@@ -132,14 +131,17 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 			// a_protocol.setCategory(assay.getTechnology().getName());
 			a_protocol.setCategory(assay.getMeasurement().getName()
 					.toUpperCase().replace(" ", "_"));// I5_ROOT_OBJECTS.UNKNOWN_TOXICITY.name());
-			System.out.println(assay.getAcc());
+			System.out.println("Assay\t"+assay.getAcc());
+			System.out.println("\t"+assay.getMeasurement().getName());
+			System.out.println("\t"+assay.getTechnology().getName());
+			
+
 		}
 
 		Params params = new Params();
 		Params conditions = new Params();
 		SubstanceRecord record = new SubstanceRecord();
-		trackAssayResult(result.getData().getProcessingNode(), record,
-				a_protocol, params, conditions);
+		trackAssay(result.getData().getProcessingNode(), record,a_protocol, params, conditions,0);
 
 		if (record.getCompanyUUID() == null) {
 			record.setPublicName("Dummy substance");
@@ -156,8 +158,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 		 * params.toString()) .getBytes() );
 		 */
 		UUID docuuid = UUID.randomUUID();
-		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(
-				a_protocol);
+		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
 		a_papp.setDocumentUUID("ISTB-" + docuuid);
 		a_papp.setReference(result.getStudy().getTitle());
 		a_papp.setReferenceOwner("test");
@@ -223,8 +224,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 			Params params, SubstanceRecord record) {
 		for (FactorValue pv : factorvalues) {
 			Factor f = pv.getType();
-			if ("compound".equals(f.getValue())
-					|| "limiting nutrient".equals(f.getValue())) {
+			if ("compound".equals(f.getValue())	|| "limiting nutrient".equals(f.getValue())) {
 				OntologyTerm term = pv.getSingleOntologyTerm();
 				record.setPublicName(pv.getValue().toLowerCase());
 				if (term != null) {
@@ -266,6 +266,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 					factor.setLoValue(pv.getValue());
 				}
 				params.put(pv.getType().getValue(), factor);
+				System.out.println(String.format("\t\tFactor\t%s = %s",pv.getType().getValue(), factor.getLoValue()));
 			}
 		}
 	}
@@ -290,6 +291,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 				value.setLoValue(pv.getValue());
 			}
 			params.put(pv.getType().getValue(), value);
+			System.out.println(String.format("\t\tCharacteristics\t%s = %s",pv.getType().getValue(), value.getLoValue()));
 		}
 	}
 
@@ -312,19 +314,26 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 				value.setLoValue(pv.getValue());
 			}
 			params.put(pv.getType().getValue(), value);
+			System.out.println(String.format("\t\tParam\t%s = %s",pv.getType().getValue(), value.getLoValue()));
 		}
 	}
 
-	protected void trackAssayResult(
+	protected void trackAssay(
 			uk.ac.ebi.bioinvindex.model.processing.Node node,
 			SubstanceRecord record, Protocol a_protocol, Params protocolParams,
-			Params conditions) {
+			Params conditions,int level) {
 		if (node instanceof MaterialNode) {
+			System.out.print("\tMaterial node\tLevel "+level + " ");
+			System.out.println(node.getAcc());			
 			processFactorValues(((MaterialNode) node).getMaterial()
 					.getFactorValues(), conditions, record);
 			processCharacteristicValues(((MaterialNode) node).getMaterial()
 					.getCharacteristicValues(), protocolParams);
 		} else if (node instanceof DataNode) {
+			System.out.print("\tData node\tLevel "+level + "\t");
+			System.out.print("File "+((DataNode)node).getData().getUrl() + "\t");
+			System.out.print("Data matrix "+((DataNode)node).getData().getDataMatrixUrl() + "\t");
+			System.out.println(node.getAcc());
 			processFactorValues(((DataNode) node).getData().getFactorValues(),
 					conditions, record);
 		}
@@ -333,8 +342,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 			return;
 		for (Object processing : node.getDownstreamProcessings())
 			if (processing instanceof Processing) {
-				Collection papps = ((Processing) processing)
-						.getProtocolApplications();
+				Collection papps = ((Processing) processing).getProtocolApplications();
 				if (papps != null)
 					for (Object p : papps)
 						if (p instanceof ProtocolApplication) {
@@ -360,13 +368,19 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 							uk.ac.ebi.bioinvindex.model.Protocol protocol = ((ProtocolApplication) p)
 									.getProtocol();
 							a_protocol.addGuideline(protocol.getName());
-							// System.out.println(protocol);
+							System.out.println(protocol.getName());
 
 						}
+				/*
+				for (Object out : ((Processing) processing).getOutputNodes()) {
+					System.out.println(out);
+				}
+				*/
+				System.out.println("-------------");
 				for (Object in : ((Processing) processing).getInputNodes()) {
-					trackAssayResult(
+					trackAssay(
 							(uk.ac.ebi.bioinvindex.model.processing.Node) in,
-							record, a_protocol, protocolParams, conditions);
+							record, a_protocol, protocolParams, conditions,level-1);
 				}
 			}
 	}
