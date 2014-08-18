@@ -141,7 +141,16 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 		Params params = new Params();
 		Params conditions = new Params();
 		SubstanceRecord record = new SubstanceRecord();
-		trackAssay(result.getData().getProcessingNode(), record,a_protocol, params, conditions,0);
+		
+		EffectRecord effect = new EffectRecord();
+		effect.setEndpoint(result.getData().getName());
+		if (result.getData().getDataMatrixUrl()!=null)
+			effect.setTextValue(result.getData().getDataMatrixUrl());
+		else	
+			effect.setTextValue(result.getData().getUrl());
+		effect.setConditions(conditions);
+		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
+		trackAssay(a_papp,result.getData().getProcessingNode(), record, params, effect,0);
 
 		if (record.getCompanyUUID() == null) {
 			record.setPublicName("Dummy substance");
@@ -158,7 +167,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 		 * params.toString()) .getBytes() );
 		 */
 		UUID docuuid = UUID.randomUUID();
-		ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
+		
 		a_papp.setDocumentUUID("ISTB-" + docuuid);
 		a_papp.setReference(result.getStudy().getTitle());
 		a_papp.setReferenceOwner("test");
@@ -178,14 +187,6 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 		a_papp.setCompanyName(record.getOwnerName());
 		a_papp.setCompanyUUID(record.getOwnerUUID());
 		a_papp.setSubstanceUUID(record.getCompanyUUID());
-
-		EffectRecord effect = new EffectRecord();
-		effect.setEndpoint(result.getData().getName());
-		if (result.getData().getDataMatrixUrl()!=null)
-			effect.setTextValue(result.getData().getDataMatrixUrl());
-		else	
-			effect.setTextValue(result.getData().getUrl());
-		effect.setConditions(conditions);
 
 		a_papp.addEffect(effect);
 		ReliabilityParams reliability = new ReliabilityParams();
@@ -220,8 +221,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 
 	}
 
-	protected void processFactorValues(Collection<FactorValue> factorvalues,
-			Params params, SubstanceRecord record) {
+	protected void processFactorValues(Collection<FactorValue> factorvalues,Params params, SubstanceRecord record) {
 		for (FactorValue pv : factorvalues) {
 			Factor f = pv.getType();
 			if ("compound".equals(f.getValue())	|| "limiting nutrient".equals(f.getValue())) {
@@ -319,14 +319,17 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 	}
 
 	protected void trackAssay(
+			ambit2.base.data.study.ProtocolApplication a_papp,
 			uk.ac.ebi.bioinvindex.model.processing.Node node,
-			SubstanceRecord record, Protocol a_protocol, Params protocolParams,
-			Params conditions,int level) {
+			SubstanceRecord record, 
+			Params protocolParams,
+			EffectRecord effect,
+			int level) {
 		if (node instanceof MaterialNode) {
 			System.out.print("\tMaterial node\tLevel "+level + " ");
 			System.out.println(node.getAcc());			
 			processFactorValues(((MaterialNode) node).getMaterial()
-					.getFactorValues(), conditions, record);
+					.getFactorValues(),(Params) effect.getConditions(), record);
 			processCharacteristicValues(((MaterialNode) node).getMaterial()
 					.getCharacteristicValues(), protocolParams);
 		} else if (node instanceof DataNode) {
@@ -335,7 +338,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 			System.out.print("Data matrix "+((DataNode)node).getData().getDataMatrixUrl() + "\t");
 			System.out.println(node.getAcc());
 			processFactorValues(((DataNode) node).getData().getFactorValues(),
-					conditions, record);
+					(Params) effect.getConditions(), record);
 		}
 
 		if (node.getDownstreamProcessings() == null)
@@ -360,14 +363,14 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 							}
 							if (assayField)
 								processParamValues(pa.getParameterValues(),
-										conditions);
+										(Params) effect.getConditions());
 							else
 								processParamValues(pa.getParameterValues(),
 										protocolParams);
 
 							uk.ac.ebi.bioinvindex.model.Protocol protocol = ((ProtocolApplication) p)
 									.getProtocol();
-							a_protocol.addGuideline(protocol.getName());
+							((Protocol)a_papp.getProtocol()).addGuideline(protocol.getName());
 							System.out.println(protocol.getName());
 
 						}
@@ -378,9 +381,9 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 				*/
 				System.out.println("-------------");
 				for (Object in : ((Processing) processing).getInputNodes()) {
-					trackAssay(
+					trackAssay(a_papp,
 							(uk.ac.ebi.bioinvindex.model.processing.Node) in,
-							record, a_protocol, protocolParams, conditions,level-1);
+							record,  protocolParams, effect,level-1);
 				}
 			}
 	}
