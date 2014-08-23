@@ -22,6 +22,7 @@ import org.openscience.cdk.io.iterator.DefaultIteratingChemObjectReader;
 
 import uk.ac.ebi.bioinvindex.model.AssayResult;
 import uk.ac.ebi.bioinvindex.model.Contact;
+import uk.ac.ebi.bioinvindex.model.Data;
 import uk.ac.ebi.bioinvindex.model.Identifiable;
 import uk.ac.ebi.bioinvindex.model.Study;
 import uk.ac.ebi.bioinvindex.model.processing.Assay;
@@ -381,9 +382,23 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements
 				*/
 				System.out.println("-------------");
 				for (Object in : ((Processing) processing).getInputNodes()) {
-					trackAssay(a_papp,
-							(uk.ac.ebi.bioinvindex.model.processing.Node) in,
-							record,  protocolParams, effect,level-1);
+					EffectRecord effect1 = effect;
+					if (in instanceof DataNode) {
+						effect1 = new EffectRecord();
+						effect1.setConditions(new Params());
+						Data data = ((DataNode) in).getData();
+						
+						if (data.getDataMatrixUrl()!=null) {
+							effect1.setTextValue(data.getDataMatrixUrl());
+							effect1.setEndpoint(data.getName());
+						} else {	
+							effect1.setTextValue(data.getUrl());
+							effect1.setEndpoint(data.getName());
+						}	
+						a_papp.addEffect(effect1);
+					}
+					trackAssay(a_papp,(uk.ac.ebi.bioinvindex.model.processing.Node) in,
+							record,  protocolParams, effect1,level-1);
 				}
 			}
 	}
