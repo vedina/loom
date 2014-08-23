@@ -35,7 +35,19 @@ import ambit2.core.io.RawIteratingWrapper;
 
 public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFileReader> {
 	private static String prefix = "PCHM-";
-	protected PubChemAIDMetadata metadata; 
+	protected PubChemAIDMetadata metadata;
+	
+	protected boolean readPubchemScoreOnly = false;
+	
+
+	public boolean isReadPubchemScoreOnly() {
+		return readPubchemScoreOnly;
+	}
+
+	public void setReadPubchemScoreOnly(boolean readPubchemScoreOnly) {
+		this.readPubchemScoreOnly = readPubchemScoreOnly;
+	}
+
 	public PubChemAIDReader(IteratingDelimitedFileReader reader) {
 		super(reader);
 	}
@@ -137,7 +149,19 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			public String toString() {
 				return "The BioAssay activity ranking score";
 			}
-
+			@Override
+			public void addEffectRecord(
+					String key,
+					ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+					EffectRecord effect, SubstanceRecord r, IAtomContainer mol) {
+				effect.setEndpoint(name().replace("_"," "));
+				experiment0.addEffect(effect);
+				try {
+					effect.setLoValue(Double.parseDouble(mol.getProperty(name()).toString()));
+				} catch (Exception x) {
+					effect.setTextValue(mol.getProperty(name()).toString());
+				}
+			}
 		},
 		PUBCHEM_ACTIVITY_URL {
 			@Override
@@ -208,6 +232,10 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 						SubstanceRecord r, IAtomContainer mol) {
 			
 		}
+		public void addEffectRecord(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
+				EffectRecord effect,SubstanceRecord r, IAtomContainer mol) {
+	
+		}		
 		};
 		
 		private enum _field {
@@ -1008,11 +1036,20 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					try {
 						_field_top field =  _field_top.valueOf(thetag.trim().replace(" ", "_").replace("-","_").replace("%","_").replace("(","_").replace(")","_"));
 						field.parse(key.toString(),experiment0,(SubstanceRecord)r, (IAtomContainer)o);
+						
+						if (isReadPubchemScoreOnly()) {
+							field.addEffectRecord(key.toString(),experiment0,category0.createEffectRecord(),(SubstanceRecord)r, (IAtomContainer)o);
+							continue;
+						}
 						continue;
 					} catch (Exception x) {
 						//further processing
 					}
 							
+					if (isReadPubchemScoreOnly()) {
+						continue;
+					}
+					
 					EffectRecord<String,IParams,String> effect =  category0.createEffectRecord();
 					thetag = parseReplicate(thetag,effect, experiment0);
 					

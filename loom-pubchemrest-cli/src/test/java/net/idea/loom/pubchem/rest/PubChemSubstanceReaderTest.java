@@ -71,6 +71,7 @@ public class PubChemSubstanceReaderTest  {
 	    		if (jsonmeta==null) throw new FileNotFoundException(meta.getFile());
 	    		
 				reader = new PubChemAIDReader(files[i],jsonmeta);
+				((PubChemAIDReader)reader).setReadPubchemScoreOnly(true);
 				int r = 0;
 				while (reader.hasNext()) {
 					IStructureRecord mol = reader.nextRecord();
