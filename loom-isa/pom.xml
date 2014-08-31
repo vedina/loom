@@ -1,37 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-isa</artifactId>
   <name>loom-isatab</name>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <repositories>
-  	<!--  isa-tools -->
+    <!--  isa-tools -->
     <repository>
       <id>oerc</id>
       <url>http://frog.oerc.ox.ac.uk:8080/nexus-2.1.2/content/repositories/releases/</url>
     </repository>
-   </repositories>   
+  </repositories>
   <dependencies>
-      <dependency>
-  		<groupId>net.idea</groupId>
-  		<artifactId>iuclid_5_common</artifactId>
-  		<version>${i5.version}</version>    
+    <dependency>
+      <groupId>net.idea</groupId>
+      <artifactId>iuclid_5_common</artifactId>
+      <version>${i5.version}</version>
     </dependency>
     <dependency>
       <groupId>ambit</groupId>
       <artifactId>ambit2-core</artifactId>
       <version>${ambit.version}</version>
     </dependency>
-  	<dependency>
-            <groupId>org.isatools</groupId>
-            <artifactId>import_layer</artifactId>
-            <version>1.6</version>
-            <!-- 
+    <dependency>
+      <groupId>org.isatools</groupId>
+      <artifactId>import_layer</artifactId>
+      <version>1.6</version>
+      <!-- 
             <exclusions>
                 <exclusion>
                     <groupId>uk.ac.ebi</groupId>
@@ -44,7 +45,6 @@
                 </exclusion>
             </exclusions>
              -->
-        </dependency>    
-
-   </dependencies>   
+    </dependency>
+  </dependencies>
 </project>

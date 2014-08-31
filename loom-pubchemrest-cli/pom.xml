@@ -1,30 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-pubchemrest-cli</artifactId>
   <name>loom-pubchemrest-cli</name>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <description>Client for http://pubchem.ncbi.nlm.nih.gov/pug_rest/PUG_REST_Tutorial.html</description>
   <organization>
     <name>Ideaconsult </name>
     <url>http://ideaconsult.net</url>
   </organization>
   <dependencies>
-  <dependency>
+    <dependency>
       <groupId>ambit</groupId>
       <artifactId>ambit2-core</artifactId>
       <version>${ambit.version}</version>
     </dependency>
     <dependency>
-  		<groupId>net.idea</groupId>
-  		<artifactId>iuclid_5_common</artifactId>
-  		<version>${i5.version}</version>    
-    </dependency>  
+      <groupId>net.idea</groupId>
+      <artifactId>iuclid_5_common</artifactId>
+      <version>${i5.version}</version>
+    </dependency>
   </dependencies>
 </project>

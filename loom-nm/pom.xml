@@ -1,13 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-nm</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <name>nano materials support</name>
   <dependencies>
     <dependency>
@@ -16,30 +17,29 @@
       <version>${ambit.version}</version>
     </dependency>
     <dependency>
-    	<groupId>com.hp.hpl.jena</groupId>
-    	<artifactId>jena</artifactId>
-    	<version>${rdf.jena.version}</version>
-    </dependency>
-  <dependency>
-    	<groupId>com.hp.hpl.jena</groupId>
-    	<artifactId>arq</artifactId>
-    	<version>${rdf.arq.version}</version>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>jena</artifactId>
+      <version>${rdf.jena.version}</version>
     </dependency>
     <dependency>
-    	<groupId>com.hp.hpl.jena</groupId>
-    	<artifactId>iri</artifactId>
-    	<version>${rdf.iri.version}</version>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>arq</artifactId>
+      <version>${rdf.arq.version}</version>
     </dependency>
     <dependency>
-    	<groupId>com.hp.hpl.jena</groupId>
-    	<artifactId>arq-extra</artifactId>
-    	<version>${rdf.arqextra.version}</version>
-    </dependency>    
-    <dependency>
-  		<groupId>net.idea</groupId>
-  		<artifactId>iuclid_5_common</artifactId>
-  		<version>${i5.version}</version>    
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>iri</artifactId>
+      <version>${rdf.iri.version}</version>
     </dependency>
-
-  </dependencies>  
+    <dependency>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>arq-extra</artifactId>
+      <version>${rdf.arqextra.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.idea</groupId>
+      <artifactId>iuclid_5_common</artifactId>
+      <version>${i5.version}</version>
+    </dependency>
+  </dependencies>
 </project>

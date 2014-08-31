@@ -1,16 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-i5ws</artifactId>
   <name>loom-iuclid5-ws</name>
-  <version>1.0.3-SNAPSHOT</version>
-<dependencies>
-  <dependency>
+  <version>1.0.3</version>
+  <dependencies>
+    <dependency>
       <groupId>ambit</groupId>
       <artifactId>opentox-client</artifactId>
       <version>1.0.5-SNAPSHOT</version>
@@ -43,13 +44,13 @@
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
       <version>1.9.13</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>${org.apache.httpcomponents.httpclient.version}</version>
-    </dependency>    
-</dependencies>  
+    </dependency>
+  </dependencies>
   <build>
     <resources>
       <resource>
