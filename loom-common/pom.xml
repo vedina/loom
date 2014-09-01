@@ -4,10 +4,10 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-common</artifactId>
   <name>loom-common</name>
-  <version>1.0.3</version>
+  <version>1.0.4-SNAPSHOT</version>
 </project>
