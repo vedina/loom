@@ -167,10 +167,11 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 	}
 	*/
 	private static final String m_material =
+		"PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
 		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
-		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source \n"+
+		"SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?source_year ?source_doi ?source_journal ?doilink ?journal_title\n"+
 		"WHERE {\n"+
 		"<%s> rdf:type mw:Category-3AMaterials.\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"+
@@ -180,7 +181,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n"+
 		"OPTIONAL {<%s> rdfs:label ?label2.}\n"+
-		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source.}\n"+
+		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?source_year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal.}  OPTIONAL {?source_journal rdfs:label ?journal_title.}}\n"+
 		"}";
 
 	private static final String m_coating =
@@ -304,6 +305,17 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.eAGGLO_AGGR_SIZE;
 			}
 		},
+		Primary_Particle_Size {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			}			
+				
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.pPARTICLESIZE;
+			}
+		},
 		Particle_Size {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -390,18 +402,35 @@ class ProcessMeasurement extends ProcessSolution {
 		RDFNode value = qs.get("value");
 		String endpoint = null;
 		try {endpoint = qs.get("endpoint").asResource().getLocalName();}catch (Exception x) {endpoint = qs.get("endpoint").toString(); }
+		
+		String assayType = null;
+		String bao = null;
+		try {assayType = qs.get("assayType").asResource().getURI();}catch (Exception x) { }
+		try {bao = qs.get("bao").asResource().getURI();}catch (Exception x) { }
+		
+		//System.out.println(endpoint);
+		//System.out.println(assayType);
+		if (bao!= null) 	System.out.println(bao);
+		
 		Protocol protocol = new Protocol(endpoint); 
 		String measuredEndpoint = endpoint;
-		I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+		I5_ROOT_OBJECTS category = null;
+		
+		
+		try {
+			if (bao!= null)
+				category = I5_ROOT_OBJECTS.valueOf(bao.replace("http://www.bioassayontology.org/bao#",""));
+		} catch (Exception x) {}
 		try {
 			
 			endpoints ep = endpoints.valueOf(endpoint.replace("-","_").replace(" ","_"));
-			category = ep.getCategory();
+			if (category==null) category = ep.getCategory();
 			measuredEndpoint = ep.getTag();
 		} catch (Exception x) {
 		}	
 		protocol.setCategory(category.name()+"_SECTION");
-		protocol.setTopCategory(category.getTopCategory());		
+		protocol.setTopCategory(category.getTopCategory());
+				
 				
 		RDFNode method = qs.get("method");
 		try {protocol.addGuideline(method.asResource().getLocalName());} catch (Exception x) {}
@@ -416,13 +445,16 @@ class ProcessMeasurement extends ProcessSolution {
 		}
 		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",null));
 		try {
-			if (citation == null)
+			if (qs.get("doilink")!=null)
+				papp.setReference(qs.get("doilink").asResource().getURI());
+			else 
 				papp.setReference(qs.get("study").asResource().getURI());
-			else {
+		} catch (Exception x) {
+			if (citation!=null) {
 				papp.setReference(citation.getURL());
-			}	
-			//record.setReference(null);
-		} catch (Exception x) {}
+				papp.setReferenceOwner(citation.getTitle());
+			}
+		}
 		try {
 			papp.setCompanyName(qs.get("measurement").asResource().getURI());
 		} catch (Exception x) {}
@@ -484,7 +516,14 @@ class ProcessNMMeasurement extends ProcessSolution {
 			RDFNode value = qs.get("value");
 			if (value==null && qs.get("valueMin")==null) return;
 			
+			String assayType = null;
+			String bao = null;
+			try {assayType = qs.get("assayType").asResource().getURI();}catch (Exception x) { }
+			try {bao = qs.get("bao").asResource().getURI();}catch (Exception x) { }
+			
 			Protocol protocol = new Protocol(endpoint); 
+			
+			
 			protocol.setCategory(category.name()+"_SECTION");
 			protocol.setTopCategory(category.getTopCategory());
 			
@@ -499,10 +538,17 @@ class ProcessNMMeasurement extends ProcessSolution {
 			papp.setReliability(reliability);
 			
 			try {
-				if (citation != null)
+				if (qs.get("doilink")!=null)
+					papp.setReference(qs.get("doilink").asResource().getURI());
+				else 
+					papp.setReference(qs.get("study").asResource().getURI());
+			} catch (Exception x) {
+				if (citation != null) {
 					papp.setReference(citation.getURL());
-			} catch (Exception x) {}
-			
+					papp.setReferenceOwner(citation.getTitle());
+				}
+			}
+		
 			try {
 				if (method!=null)
 					papp.getParameters().put(I5CONSTANTS.methodType,method.asResource().getLocalName());
@@ -649,10 +695,11 @@ class ProcessMaterial extends ProcessSolution {
 			}
 		} catch (Exception x) {};
 		try {
-			if (qs.get("source")!=null) {
-				Resource resource = qs.get("source").asResource();
-				record.setReference(new LiteratureEntry(resource.getLocalName(),resource.getURI()));
-			}
+			LiteratureEntry ref = new LiteratureEntry(
+					qs.get("journal_title")==null?null:qs.get("journal_title").asLiteral().getString(),
+					qs.get("doilink")==null?null:(qs.get("doilink")).asResource().getURI()
+					);
+			record.setReference(ref);
 		} catch (Exception x) { 
 			record.setReference(null);
 		};
@@ -716,7 +763,7 @@ class ProcessMaterial extends ProcessSolution {
 		"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
 		"SELECT DISTINCT \n"+
-		"?study ?measurement ?label ?method ?definedBy ?study ?endpoint ?dose ?doseUnit\n"+ 
+		"?study ?measurement ?label ?method ?definedBy ?study ?studySource ?doilink ?assayType ?assayTypeLabel ?bao ?endpoint ?dose ?doseUnit\n"+ 
 		"?value ?valueUnit ?valueError ?resultInterpretation\n"+
 		"WHERE {\n"+
 		//"?material rdf:type mw:Category-3AMaterials.\n"+
@@ -731,7 +778,8 @@ class ProcessMaterial extends ProcessSolution {
 		"OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}\n"+
 		"OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}\n"+
 		"OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Error ?valueError.}\n"+
-		"OPTIONAL {?measurement mw:Property-3AHas_Study ?study.}\n"+
+		"OPTIONAL {?measurement mw:Property-3AHas_Study ?study. OPTIONAL {?study mw:Property-3AHas_Source ?studySource.} OPTIONAL {?study owl:sameAs ?doilink.}}\n"+
+		"OPTIONAL {?endpoint mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} }\n"+
 		"} ORDER by ?measurement\n";
 	private void parseIEP(Model rdf,RDFNode material,SubstanceRecord record) {
 		execQuery(rdf, String.format(m_iep, 
