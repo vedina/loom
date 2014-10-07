@@ -181,7 +181,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader implemen
 		"OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}\n"+
 		"OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n"+
 		"OPTIONAL {<%s> rdfs:label ?label2.}\n"+
-		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal.}  OPTIONAL {?source_journal rdfs:label ?journal_title.}}\n"+
+		"OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal. ?source_journal rdfs:label ?journal_title.}}\n"+
 		"}";
 
 	private static final String m_coating =
@@ -340,6 +340,33 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.pMMAD;
 			}
 		}, 		
+		
+		Shape {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.ASPECT_RATIO_SHAPE;
+			}			
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.eSHAPE;
+			}
+		},				
+		Specific_Surface_Area {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+			}			
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
+			}
+		},
+		Surface_Area {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+			}			
+		},		
 		Toxicity {
 			//what kind of toxicity endpoint???
 			@Override
@@ -355,6 +382,10 @@ class ProcessMeasurement extends ProcessSolution {
 				//best guess
 				return I5_ROOT_OBJECTS.TO_GENETIC_IN_VITRO;
 			}			
+			@Override
+			public String getTag() {
+				return name().replace("_", " ");
+			}
 		},
 		Oxidation_State_Concentration,
 		Log_Reciprocal_EC50 {
@@ -407,19 +438,34 @@ class ProcessMeasurement extends ProcessSolution {
 		String assayType = null;
 		String bao = null;
 		String celline = null;
-		try {assayType = qs.get("assayType").asResource().getURI();}catch (Exception x) { }
-		try {bao = qs.get("bao").asResource().getURI();}catch (Exception x) { }
-		
 		try {
-			if (qs.get("o_celline")!=null)
-				celline = qs.get("o_celline").asResource().getURI();
+			assayType = qs.get("assayType").asResource().getURI();
+		}catch (Exception x) { }
+		try {
+			if (assayType==null)
+			assayType = qs.get("assayType1").asResource().getURI();
+		}catch (Exception x) { }
+		try {
+			bao = qs.get("bao").asResource().getURI();
+		}catch (Exception x) { }
+		
+		if (bao==null) {
+			try {
+				bao = qs.get("bao1").asResource().getURI();
+			}catch (Exception x) { }
+			
+		}
+			
+		try {
+			if (qs.get("t_celline")!=null)
+				celline = qs.get("t_celline").asLiteral().getString();
 		}catch (Exception x) {
 			x.printStackTrace();
 		}
 		
 		//System.out.println(endpoint);
 		//System.out.println(assayType);
-		if (bao!= null) 	System.out.println(bao);
+		
 		
 		Protocol protocol = new Protocol(endpoint); 
 		String measuredEndpoint = endpoint;
@@ -465,6 +511,13 @@ class ProcessMeasurement extends ProcessSolution {
 				papp.setReference(qs.get("doilink").asResource().getURI());
 			else 
 				papp.setReference(qs.get("study").asResource().getURI());
+			
+			if (qs.get("assayJournalYear")!=null)
+				papp.setReferenceYear(qs.get("assayJournalYear").asLiteral().getString());
+			
+			if (qs.get("assayJournalLabel")!=null)
+				papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral().getString());
+			
 		} catch (Exception x) {
 			if (citation!=null) {
 				papp.setReference(citation.getURL());
@@ -477,7 +530,7 @@ class ProcessMeasurement extends ProcessSolution {
 		try {papp.setInterpretationResult(qs.get("resultInterpretation").asLiteral().getString());} catch (Exception x) {}
 		
 		if (celline!=null)
-			papp.getParameters().put(I5CONSTANTS.cSpecies, celline);
+			papp.getParameters().put("Cell line", celline);
 		
 		EffectRecord<String,IParams,String> effect = category.createEffectRecord();
 		effect.setEndpoint(measuredEndpoint);
@@ -487,6 +540,7 @@ class ProcessMeasurement extends ProcessSolution {
 			if (value!=null) effect.setLoValue(Double.parseDouble(value.asLiteral().getString()));
 		} catch (Exception x) {
 			effect.setTextValue(value.asLiteral().getString());
+			papp.setInterpretationResult(value.asLiteral().getString());
 		}
 		
 		RDFNode valueError = qs.get("valueError");
@@ -564,6 +618,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 					papp.setReference(qs.get("doilink").asResource().getURI());
 				else 
 					papp.setReference(qs.get("study").asResource().getURI());
+				
 			} catch (Exception x) {
 				if (citation != null) {
 					papp.setReference(citation.getURL());
@@ -723,6 +778,8 @@ class ProcessMaterial extends ProcessSolution {
 					);
 			record.setReference(ref);
 		} catch (Exception x) { 
+			//System.out.println(record.getCompanyName());
+			//x.printStackTrace();
 			record.setReference(null);
 		};
 		parseSize(rdf, material, record);
@@ -786,8 +843,8 @@ class ProcessMaterial extends ProcessSolution {
 		"PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"+
 		"SELECT DISTINCT \n"+
 		"?study ?measurement ?label ?method ?definedBy ?study ?assaySource ?doilink ?year\n"+ 
-		"?assayType ?assayTypeLabel ?bao ?o_celline ?t_celline ?endpoint ?dose ?doseUnit\n"+
-		"?value ?valueUnit ?valueError ?resultInterpretation\n"+
+		"?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?dose ?doseUnit\n"+
+		"?value ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear\n"+
 		"WHERE {\n"+
 		"?measurement mw:Property-3AHas_Entity <%s>.\n"+
 		"OPTIONAl {?measurement rdfs:label ?label.}\n"+
@@ -802,11 +859,12 @@ class ProcessMaterial extends ProcessSolution {
 		"OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Error ?valueError.}\n"+
 		"OPTIONAL {?endpointResource mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} }\n"+
 		"OPTIONAL {?measurement mw:Property-3AHas_Assay ?assay. \n"+
-		"OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }\n"+ 
-		"OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} }  \n"+
+		"OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }\n"+
+		"OPTIONAL {?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}}\n"+
+		"OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel. ?assaySource mw:Property-3AHas_Year ?assayJournalYear.} }  \n"+
 		"}} ORDER by ?measurement\n";
 	
-	
+	//assay tyle linked to the assay, not endpoint
 	private void parseIEP(Model rdf,RDFNode material,SubstanceRecord record) {
 		execQuery(rdf, String.format(m_iep, 
 				material.asResource().getURI(),material.asResource().getURI(),material.asResource().getURI(),
