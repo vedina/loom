@@ -2,6 +2,7 @@ package net.idea.loom.nm.nanowiki.test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.net.URL;
 
 import junit.framework.Assert;
 import net.idea.loom.nm.csv.CSV12Reader;
@@ -35,6 +36,37 @@ public class ProteinCoronaPaperReaderTest  {
 				r++;
 			}
 			Assert.assertEquals(120,r);
+		} finally {
+			reader.close();
+		}
+	}
+	
+	
+	@Test
+	public void test_CSV() throws Exception {
+		RawIteratingWrapper reader = null;
+		try {
+			LiteratureEntry entry = new LiteratureEntry("New test","http://example.com");
+    		entry.setType(_type.Dataset);
+    		
+    		URL resource = getClass().getClassLoader().getResource("net/idea/loom/nm/csv/csvimport2.csv");
+    		Assert.assertNotNull(resource);
+			CSV12Reader chemObjectReader = new CSV12Reader(new FileReader(resource.getFile()),entry,"TEST-");
+			reader = new CSV12SubstanceReader(chemObjectReader);
+			int r = 0;
+			while (reader.hasNext()) {
+				IStructureRecord mol = reader.nextRecord();
+				Assert.assertTrue(mol instanceof SubstanceRecord);
+				SubstanceRecord substance = (SubstanceRecord)mol;
+				Assert.assertNotNull(substance.getPublicName());
+				System.out.println(substance.getPublicName());
+				Assert.assertNotNull(substance.getCompanyName());
+				Assert.assertNotNull(substance.getMeasurements());
+				
+				System.out.println(substance.getMeasurements());
+				r++;
+			}
+			Assert.assertEquals(37,r);
 		} finally {
 			reader.close();
 		}
