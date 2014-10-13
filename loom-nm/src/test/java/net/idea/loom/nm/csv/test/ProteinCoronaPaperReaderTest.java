@@ -1,4 +1,4 @@
-package net.idea.loom.nm.nanowiki.test;
+package net.idea.loom.nm.csv.test;
 
 import java.io.File;
 import java.io.FileReader;
@@ -31,11 +31,17 @@ public class ProteinCoronaPaperReaderTest  {
 			while (reader.hasNext()) {
 				IStructureRecord mol = reader.nextRecord();
 				Assert.assertTrue(mol instanceof SubstanceRecord);
-				System.out.println(((SubstanceRecord)mol).getPublicName());
-				System.out.println(((SubstanceRecord)mol).getMeasurements());
+				SubstanceRecord substance = (SubstanceRecord)mol;
+				Assert.assertNotNull(substance.getPublicName());
+				System.out.println(substance.getPublicName());
+				Assert.assertNotNull(substance.getCompanyName());
+				Assert.assertNotNull(substance.getMeasurements());
+				
+				System.out.println(substance.getMeasurements());
+				
 				r++;
 			}
-			Assert.assertEquals(120,r);
+			Assert.assertEquals(121,r);
 		} finally {
 			reader.close();
 		}
