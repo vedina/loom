@@ -2,6 +2,9 @@
   "PC_AssayContainer": [
     {
       "assay": {
+      	"rdf" : "https://pubchem.ncbi.nlm.nih.gov/rest/rdf/bioassay/AID743222.html",
+      	"json" : "https://pubchem.ncbi.nlm.nih.gov/rest/rdf/bioassay/AID743222.json",
+      	"ttl" : "https://pubchem.ncbi.nlm.nih.gov/rest/rdf/bioassay/AID743222.ttl",
         "descr": {
           "aid": {
             "id": 743222,

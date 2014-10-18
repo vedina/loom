@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -31,7 +32,11 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IteratingDelimitedFileReader;
 import ambit2.core.io.RawIteratingWrapper;
 
+/**
 
+ * @author nina
+ *
+ */
 
 public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFileReader> {
 	private static String prefix = "PCHM-";
@@ -51,11 +56,19 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 	public PubChemAIDReader(IteratingDelimitedFileReader reader) {
 		super(reader);
 	}
-	
 	public PubChemAIDReader(File file, InputStream json_meta) throws Exception {
+		this(file,json_meta,null);
+	}
+	public PubChemAIDReader(File file, InputStream json_meta, String[] activity_outcome_method) throws Exception {
 		this(new IteratingDelimitedFileReader(new FileReader(file)));
 		metadata = initMetadata(json_meta);
-		setReference(new LiteratureEntry(metadata.getAIDSource_name(),metadata.getDescriptionAsText()));
+		if ((activity_outcome_method!=null) && 
+			(Arrays.binarySearch(activity_outcome_method, metadata.getActivityOutcomeMethod())<0)) 
+			throw new Exception(metadata.getActivityOutcomeMethod());
+		
+		
+		setReference(new LiteratureEntry(String.format("ID%s (%s)", metadata.getAIDSource_name(),metadata.getAIDSource_id()),
+										metadata.getDescriptionAsText()));
 		try {
 			json_meta.close();
 		} catch (Exception x) {}
@@ -143,7 +156,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			@Override
 			public void parse(String key,ProtocolApplication<Protocol, IParams, String, IParams, String> experiment0,
 					SubstanceRecord r, IAtomContainer mol) {
-				experiment0.setInterpretationCriteria(name().replace("_", " ")+ "=" + mol.getProperty(name()).toString());
+				//experiment0.setInterpretationCriteria(name().replace("_", " ")+ "=" + mol.getProperty(name()).toString());
 			}			
 			@Override
 			public String toString() {
@@ -771,7 +784,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			}
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = category.createExperimentRecord(protocol);
 		experiment.setReferenceYear(metadata.getAIDSource_year());
-		experiment.setReference(String.format("AID %d",metadata.getAID()));
+		experiment.setReference(String.format("https://pubchem.ncbi.nlm.nih.gov/rest/rdf/bioassay/AID%d.html",metadata.getAID()));
 		experiment.setReliability(reliability);
 		experiment.setParameters(new Params());
 		experiment.setReferenceOwner(getReference().getName());
@@ -860,7 +873,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		ix = thetag.indexOf("AhR ");
 		if (ix==0) {
 			Value v = new Value("Aryl hydrocarbon receptor");
-			effect.getConditions().put("Target", v);
 			//http://www.ncbi.nlm.nih.gov/protein/51095037
 			return thetag.substring(4);
 		}		
@@ -868,14 +880,12 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		ix = thetag.indexOf("TR ");
 		if (ix==0) {
 			Value v = new Value("Thyroid receptor");
-			effect.getConditions().put("Target", v);
 			return thetag.substring(3);
 		}		
 		
 		ix = thetag.indexOf("AR ");
 		if (ix==0) {
 			Value v = new Value("Androgen receptor");
-			effect.getConditions().put("Target", v);
 			//http://www.ncbi.nlm.nih.gov/protein/124375976
 			return thetag.substring(3);
 		}
@@ -883,7 +893,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		ix = thetag.indexOf("ER ");
 		if (ix==0) {
 			Value v = new Value("Estrogen receptor alpha");
-			effect.getConditions().put("Target", v);
 			//http://www.ncbi.nlm.nih.gov/protein/348019627
 			return thetag.substring(3);
 		}
@@ -891,7 +900,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		ix = thetag.indexOf("ATAD5 ");
 		if (ix==0) {
 			Value v = new Value("ATAD5");
-			effect.getConditions().put("Target", v);
 			//http://www.ncbi.nlm.nih.gov/protein/296439460
 			return thetag.substring(6);
 		}		
@@ -901,7 +909,6 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		ix = thetag.indexOf("Antagonist ");
 		if (ix==0) {
 			Value v = new Value("Aromatase inhibitor");
-			effect.getConditions().put("Target", v);
 			//http://www.ncbi.nlm.nih.gov/protein/119597822
 			return thetag.substring(10);
 		}		
@@ -985,7 +992,8 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			String title = metadata.getTitle();
 			String uri = metadata.getURI();
 			String cell = null;// metadata.get("cell")==null?null:metadata.get("cell").getTextValue();
-			String target = metadata.getTargetName();
+			String target_name = metadata.getTargetName();
+			String target_id = metadata.getTargetMolID()==null?null:String.format("https://pubchem.ncbi.nlm.nih.gov/rest/rdf/protein/GI%s",metadata.getTargetMolID());
 			int aid = metadata.getAID();
 			String assay_type = "PUBCHEM_"+metadata.getActivityOutcomeMethod().toUpperCase();
 			
@@ -996,7 +1004,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 			Protocol protocol0 = category0.getProtocol(metadata.getActivityOutcomeMethod());
 			Protocol protocol1 = category1.getProtocol(metadata.getActivityOutcomeMethod());
 			
-			protocol0.addGuideline(metadata.getProtocolAsText());
+			protocol0.addGuideline(metadata.getTitle() + "<p/>" +  metadata.getProtocolAsText());
 			//protocol1.addGuideline(metadata.getProtocolAsText());
 			
 			
@@ -1012,14 +1020,20 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 				experiment1 = getExperiment(category1,(IAtomContainer)o,(SubstanceRecord)r,protocol1,rel,1);
 			}	
 			
-			if (target!= null) {
-				experiment0.getParameters().put(I5CONSTANTS.cTargetGene,target);
-				if (experiment1!=null) experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target);
+			if (target_id!= null) {
+				// * http://www.ncbi.nlm.nih.gov/gene/?term=7157
+				//https://pubchem.ncbi.nlm.nih.gov/rest/rdf/gene/GID367 Accept:application/json https://pubchem.ncbi.nlm.nih.gov/rdf/#_Toc376426185
+				experiment0.getParameters().put(I5CONSTANTS.cTargetGene,target_id);
+				if (experiment1!=null) experiment1.getParameters().put(I5CONSTANTS.cTargetGene,target_id);
 			}
 			if (cell!= null) {
 				experiment0.getParameters().put("Cell",cell);
 				if (experiment1!=null) experiment1.getParameters().put("Cell",cell);
 			}
+			
+
+			experiment0.setInterpretationCriteria(target_name);
+			if (experiment1!=null) experiment1.setInterpretationCriteria(target_name);
 			
 			Iterator  i = keys.iterator();
 			
@@ -1036,9 +1050,11 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					try {
 						_field_top field =  _field_top.valueOf(thetag.trim().replace(" ", "_").replace("-","_").replace("%","_").replace("(","_").replace(")","_"));
 						field.parse(key.toString(),experiment0,(SubstanceRecord)r, (IAtomContainer)o);
-						
+						EffectRecord effect = category0.createEffectRecord();
+						addConditions(effect, target_id, target_name);
+						field.addEffectRecord(key.toString(),experiment0,effect,(SubstanceRecord)r, (IAtomContainer)o);
 						if (isReadPubchemScoreOnly()) {
-							field.addEffectRecord(key.toString(),experiment0,category0.createEffectRecord(),(SubstanceRecord)r, (IAtomContainer)o);
+							//field.addEffectRecord(key.toString(),experiment0,category0.createEffectRecord(),(SubstanceRecord)r, (IAtomContainer)o);
 							continue;
 						}
 						continue;
@@ -1051,6 +1067,7 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 					}
 					
 					EffectRecord<String,IParams,String> effect =  category0.createEffectRecord();
+					addConditions(effect, target_id, target_name);
 					thetag = parseReplicate(thetag,effect, experiment0);
 					
 					_field field = null;
@@ -1110,5 +1127,15 @@ public class PubChemAIDReader  extends RawIteratingWrapper<IteratingDelimitedFil
 		} else return o;
 	}
 	
+	protected void addConditions(EffectRecord<String,IParams,String> effect,String target_id,String target_name) {
+		if (target_id!= null) {
+			// * http://www.ncbi.nlm.nih.gov/gene/?term=7157
+			//https://pubchem.ncbi.nlm.nih.gov/rest/rdf/gene/GID367 Accept:application/json https://pubchem.ncbi.nlm.nih.gov/rdf/#_Toc376426185
+			Value v = new Value(target_id);
+			v.setAnnotation(target_name);
+			effect.getConditions().put(I5CONSTANTS.cTargetGene,v);
+		} else 
+			effect.getConditions().put(I5CONSTANTS.cTargetGene,null);
+	}
 	
 }

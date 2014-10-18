@@ -145,6 +145,8 @@
           "revision": 1,
           "target": [
             {
+              "uri" : "http://www.ncbi.nlm.nih.gov/protein/296439460",
+              "rdf" : "https://pubchem.ncbi.nlm.nih.gov/rest/rdf/protein/GI296439460",
               "name": "RecName: Full=ATPase family AAA domain-containing protein 5; AltName: Full=Chromosome fragility-associated gene 1 protein",
               "mol_id": 296439460,
               "molecule_type": "protein",

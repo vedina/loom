@@ -116,6 +116,20 @@ public class PubChemAIDMetadata {
 			return null;
 		}
 	}	
+	public String getTargetMolID() {
+		StringBuilder b = null;
+		try {
+			ArrayNode n =  (ArrayNode) metadata.get("assay").get("descr").get("target");
+			if (n==null) return null;
+			for (int i=0; i < n.size(); i++) {
+				if (b==null) b = new StringBuilder(); else b.append("\n");
+				b.append(n.get(i).get("mol_id").getIntValue());
+			}
+			return b.toString();
+		} catch (Exception x) {
+			return null;
+		}
+	}	
 	/**
 	 * <assay type> = all | confirmatory | doseresponse | onhold | panel | rnai | screening | summary | cellbased | biochemical | invivo | invitro | activeconcentrationspecified
 	 * @return
