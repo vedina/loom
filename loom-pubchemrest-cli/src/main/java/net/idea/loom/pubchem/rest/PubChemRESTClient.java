@@ -86,7 +86,7 @@ public class PubChemRESTClient<T extends IIdentifiableResource<String>> extends
 		return null;
 	}
 
-	protected List<T> getSubstanceSynonyms(String pubchem_sid)
+	public List<T> getSubstanceSynonyms(String pubchem_sid)
 			throws RestException, IOException {
 		ICallback<List<T>> callback = new SubstanceSynonymsCallback();
 		return get(String.format("%s/%s/sid/%s/%s/%s", pubchem_rest,
@@ -194,7 +194,7 @@ class SubstanceSynonymsCallback<T extends IIdentifiableResource<String>> impleme
 				} catch (Exception x) {}
 				ArrayNode synonyms = (ArrayNode)item.get("Synonym");
 				for (int j=0; j < synonyms.size(); j++) {
-					String type = "Name";
+					String type = "PUBCHEM Name";
 					String value = synonyms.get(j).getTextValue();
 					if (value.startsWith("DSSTox_RID_")) {
 						type = "DSSTox_RID";
@@ -213,7 +213,9 @@ class SubstanceSynonymsCallback<T extends IIdentifiableResource<String>> impleme
 						value = value.substring(4);
 					} else if (value.startsWith("NCGC")) {
 						type = "NCGC";
-					}																
+					} else {
+						value = value.toLowerCase();
+					}
 					T id = (T) new Identifier(type,value);
 					list.add(id);
 				}

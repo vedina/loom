@@ -1,14 +1,23 @@
 package net.idea.loom.tox21.test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.List;
 
 import junit.framework.Assert;
+import net.idea.loom.pubchem.rest.Identifier;
+import net.idea.loom.pubchem.rest.PubChemRESTClient;
 import net.idea.loom.tox21.Tox21SubstanceReader;
 
 import org.junit.Test;
+import org.openscience.cdk.interfaces.IAtomContainer;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.interfaces.IStructureRecord;
+import ambit2.core.io.DelimitedFileFormat;
+import ambit2.core.io.DelimitedFileWriter;
+import ambit2.core.io.IteratingDelimitedFileReader;
 import ambit2.core.io.RawIteratingWrapper;
 
 /*
@@ -65,4 +74,36 @@ public class Tox21SubstanceReaderTest  {
 		}
 	}
 	
+	@Test
+	public void readSubstances() throws Exception {
+		DelimitedFileWriter writer = new DelimitedFileWriter(new FileOutputStream("substances.csv"));
+		InputStream in = Tox21SubstanceReader.class.getClassLoader().getResourceAsStream(String.format("net/idea/loom/tox21/substances.txt"));
+		PubChemRESTClient cli = new PubChemRESTClient();
+		long now = System.currentTimeMillis();
+		try {
+			
+			IteratingDelimitedFileReader reader = new IteratingDelimitedFileReader(in,new DelimitedFileFormat("\t ",'"'));
+			int record = 0;
+			while (reader.hasNext()) {
+				IAtomContainer row = (IAtomContainer) reader.next();
+				
+				List<Identifier> ids = cli.getSubstanceSynonyms(row.getProperty("PUBCHEM_SID").toString());
+				for (Identifier id : ids) {
+					row.getProperties().put(id.getType(),id.getResourceIdentifier());
+				}
+				
+				//System.out.println(row.getProperties());
+				record++;
+				writer.writeMolecule(row);
+				if (record % 100 == 0) {
+					System.out.println(String.format("%d records [%s ms/record] ",record,(System.currentTimeMillis()-now)/100));
+					now = System.currentTimeMillis();
+				}
+			}
+		} finally {
+			if (in !=null) in.close();
+			if (cli!=null) cli.close();
+			if (writer !=null) writer.close();
+		}
+	}
 }
