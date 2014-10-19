@@ -28,7 +28,6 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
 import org.opentox.rest.RestException;
 
 /**
