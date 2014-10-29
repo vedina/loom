@@ -4,12 +4,12 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-ops-cli</artifactId>
   <name>loom-ops-cli</name>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.5</version>
   <description>Client for https://dev.openphacts.org/</description>
   <organization>
     <name>Ideaconsult Ltd.</name>
