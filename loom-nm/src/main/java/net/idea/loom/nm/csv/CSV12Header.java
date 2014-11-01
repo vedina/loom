@@ -85,6 +85,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	}
 	@Override
 	public void assign(SubstanceRecord record, Object value) {
+		if (value!=null) value = value.toString().trim();
 		if ("Change".equals(lines[_lines.condition2.ordinal()])) return;
 		else if ("Designation".equals(lines[_lines.result.ordinal()])) {
 			if (value == null) {
@@ -155,8 +156,8 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				try {core.setProperty(Property.getI5UUIDInstance(),prefix+uuid.toString());} catch (Exception x) {};
 
 			}
-		} else if ("Surface modifier".equals(lines[_lines.endpointcategory.ordinal()])) {
-			if ("Abbreviated".equals(lines[_lines.endpoint.ordinal()])) {
+		} else if (lines[_lines.endpointcategory.ordinal()].startsWith("Surface modifier")) {
+			if ("Name".equals(lines[_lines.endpoint.ordinal()])) {
 				//get the protocol to characterize composition from the paper!
 				Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol(lines[_lines.data_gathering_instruments.ordinal()]);
 				protocol.addGuideline(lines[_lines.data_gathering_instruments.ordinal()]);
@@ -179,8 +180,8 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 				IStructureRecord coating = new StructureRecord();
 				record.addStructureRelation(record.getCompanyUUID(), coating, STRUCTURE_RELATION.HAS_COATING, new Proportion());
 				//try {record.setOwnerName();} catch (Exception x) {};
-				try {coating.setProperty(Property.getNameInstance(),value);} catch (Exception x) {};
-				try {coating.setProperty(Property.getI5UUIDInstance(),prefix+UUID.nameUUIDFromBytes(value.toString().getBytes()));} catch (Exception x) {};
+				try {coating.setProperty(Property.getNameInstance(),value.toString());} catch (Exception x) {};
+				try {coating.setProperty(Property.getI5UUIDInstance(),prefix+UUID.nameUUIDFromBytes(value.toString().toLowerCase().getBytes()));} catch (Exception x) {};
 			}
 		} else if ("PROTEOMICS".equals(lines[_lines.endpointcategory.ordinal()])) {
 			Integer num = Integer.parseInt(value.toString());
