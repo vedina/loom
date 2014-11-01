@@ -9,7 +9,7 @@ Development
 <dependency>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.6-SNAPSHOT</version>
 </dependency>
 ````
 
@@ -18,6 +18,6 @@ Stable
 <dependency>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
 </dependency>
 ````
