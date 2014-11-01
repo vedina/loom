@@ -166,7 +166,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
     <!-- ambit.sf.net -->
-    <ambit.version>2.7.0-SNAPSHOT</ambit.version>
+    <ambit.version>2.7.1-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
     <i5.version>1.0.0-SNAPSHOT</i5.version>
     <rdf.jena.version>2.6.4</rdf.jena.version>
