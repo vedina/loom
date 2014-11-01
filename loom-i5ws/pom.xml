@@ -4,17 +4,17 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-i5ws</artifactId>
   <name>loom-iuclid5-ws</name>
-  <version>1.0.5</version>
+  <version>1.0.6-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>ambit</groupId>
       <artifactId>opentox-client</artifactId>
-      <version>1.0.5-SNAPSHOT</version>
+      <version>1.0.6-SNAPSHOT-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>net.ideaconsult</groupId>
