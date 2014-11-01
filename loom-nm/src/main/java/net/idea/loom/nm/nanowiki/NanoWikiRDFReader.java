@@ -767,6 +767,135 @@ class ProcessMaterial extends ProcessSolution {
 				};
 
 				core.setFormula(record.getFormula());
+				//hack
+				
+				if ("TiO2".equals(core.getFormula())) {
+					core.setSmiles("O=[Ti]=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+					
+
+				} else if ("NiO2".equals(core.getFormula())) { 
+					core.setSmiles("[Ni](=O)=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};					
+				} else if ("CdSe".equals(core.getFormula())) { 
+					core.setSmiles("[Se]=[Cd]"); 
+						try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+						core.setProperty(Property.getCASInstance(),"1306-24-7");
+					      
+				} else if ("ZrO2".equals(core.getFormula())) { 
+					core.setSmiles("O=[Zr]=O"); 
+						try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+						core.setProperty(Property.getCASInstance(),"1314-23-4");
+				} else if ("ZnO".equals(core.getFormula())) { 
+					core.setSmiles("O=[Zn]"); 
+						try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+						core.setProperty(Property.getEINECSInstance(),"215-222-5");
+						core.setProperty(Property.getCASInstance(),"1314-13-2");
+				} else if ("Yb2O3".equals(core.getFormula())) {
+					core.setSmiles("[Yb+3].[Yb+3].[O-2].[O-2].[O-2]");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+					core.setProperty(Property.getCASInstance(),"1314-37-0");
+				} else if ("Y2O3".equals(core.getFormula())) {
+					core.setSmiles("[O-2].[O-2].[O-2].[Y+3].[Y+3]");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+					core.setProperty(Property.getCASInstance(),"1314-36-9");
+				} else if ("WO3".equals(core.getFormula())) {
+					core.setSmiles("O=[W](=O)=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+					core.setProperty(Property.getCASInstance(),"1314-35-8");
+				} else if ("V2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1314-34-7");
+					core.setSmiles("O=[V]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("SnO2".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"18282-10-5");
+					core.setSmiles("O=[Sn]=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Sb2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1309-64-4");
+					core.setSmiles("O=[Sb]O[Sb]=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};					
+				} else if ("SiO2".equals(core.getFormula())) {
+					
+					core.setProperty(Property.getCASInstance(),"7631-86-9");
+					core.setSmiles("O=[Si]=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("NiO".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1313-99-1");
+					core.setSmiles("[Ni]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Ni2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1314-06-3");
+					core.setSmiles("[O-2].[O-2].[O-2].[Ni+3].[Ni+3]");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("MgO".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1309-48-4");
+					core.setSmiles("O=[Mg]"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("La2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1312-81-8");
+					core.setSmiles("[O-2].[O-2].[O-2].[La+3].[La+3]"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("In2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1312-43-3");
+					core.setSmiles("[O-2].[O-2].[O-2].[In+3].[In+3]");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("HfO2".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"12055-23-1");
+					core.setSmiles("O=[Hf]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Gd2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"12064-62-9");
+					core.setSmiles("[Gd+3].[Gd+3].[O-2].[O-2].[O-2]");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Fe3O4".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1317-61-9");
+					core.setSmiles("O=[Fe].O=[Fe]O[Fe]=O");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Fe2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1309-37-1");
+					core.setSmiles("O1[Fe]2O[Fe]1O2");
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("CuO".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1317-38-0");
+					core.setSmiles("[Cu]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("CrO3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1333-82-0");
+					core.setSmiles("O=[Cr](=O)=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Cr2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1308-38-9");
+					core.setSmiles("O=[Cr]O[Cr]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("[Co]=O".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1307-96-6");
+					core.setSmiles("[Co]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Co3O4".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1308-06-1");
+					core.setSmiles("O=[Co].O=[Co]O[Co]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("CoCr".equals(core.getFormula())) {
+					core.setSmiles("[Co].[Cr]"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};					
+				} else if ("CeO2".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1306-38-3");
+					core.setSmiles("O=[Ce]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Bi2O3".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"1304-76-3");
+					core.setSmiles("O=[Bi]O[Bi]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Al2O3".equals(core.getFormula())) {
+					core.setSmiles("O=[Al]O[Al]=O"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				} else if ("Ag".equals(core.getFormula())) {
+					core.setProperty(Property.getCASInstance(),"7440-22-4");
+					core.setSmiles("[Ag]"); 
+					try {core.setContent(core.getSmiles()); core.setFormat("INC"); core.setSmiles(core.getContent());} catch (Exception x) {};
+				}
+				
 				//todo more info
 				try {core.setProperty(Property.getNameInstance(),record.getFormula());} catch (Exception x) {};
 			}
