@@ -4,11 +4,11 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-tox21</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
+  <version>1.0.6</version>
   <name>loom-tox21</name>
   <description>Tox21 data parser
 http://pubchem.ncbi.nlm.nih.gov/sources/sources.cgi?mode=contact&amp;dsn=824
