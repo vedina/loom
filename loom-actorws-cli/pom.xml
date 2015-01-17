@@ -9,7 +9,7 @@
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-actorws-cli</artifactId>
   <name>loom-actorws-cli</name>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <description>Client for http://actorws.epa.gov/actorws/</description>
   <organization>
     <name>Ideaconsult</name>

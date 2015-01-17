@@ -9,7 +9,7 @@
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-pubchemrest-cli</artifactId>
   <name>loom-pubchemrest-cli</name>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <description>Client for http://pubchem.ncbi.nlm.nih.gov/pug_rest/PUG_REST_Tutorial.html</description>
   <organization>
     <name>Ideaconsult </name>

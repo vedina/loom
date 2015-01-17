@@ -8,7 +8,7 @@
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-tb-wiki</artifactId>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <name>ToxBank Wiki SPARQL access</name>
   <dependencies>
     <dependency>

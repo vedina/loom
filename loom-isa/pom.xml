@@ -9,7 +9,7 @@
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-isa</artifactId>
   <name>loom-isatab</name>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <repositories>
     <!--  isa-tools -->
     <repository>

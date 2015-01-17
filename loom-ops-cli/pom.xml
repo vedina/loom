@@ -9,7 +9,7 @@
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-ops-cli</artifactId>
   <name>loom-ops-cli</name>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <description>Client for https://dev.openphacts.org/</description>
   <organization>
     <name>Ideaconsult Ltd.</name>
