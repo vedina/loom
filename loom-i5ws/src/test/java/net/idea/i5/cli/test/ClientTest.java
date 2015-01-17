@@ -22,74 +22,79 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 
 public class ClientTest {
-	protected static Logger logger = Logger.getLogger(ClientTest.class.getName());
-	static I5LightClient i5 ;
-	@BeforeClass
-	public static void init() throws Exception {
-		i5 = new I5LightClient(PropertiesUtil.getTarget());
-	}
-	
-	@AfterClass
-	public static void done() throws Exception {
-		i5.close();
-	}
-	
+    protected static Logger logger = Logger.getLogger(ClientTest.class.getName());
+    static I5LightClient i5;
 
-	protected int unmarshall_i5z(File in,int nfiles) throws Exception {
-		Assert.assertNotNull(in);
-		FileOutputStream output = null; 
-		I5ZReader reader = null;
-		try {
-			reader = new I5ZReader(in) ;
-			reader.setQASettings(new QASettings(false));
-			if (nfiles>0)
-				Assert.assertEquals(nfiles,reader.getFiles().length);
-			reader.setErrorHandler(new IChemObjectReaderErrorHandler() {
-				public void handleError(String message, int row, int colStart, int colEnd,
-						Exception exception) {
+    @BeforeClass
+    public static void init() throws Exception {
+	i5 = new I5LightClient(PropertiesUtil.getTarget());
+    }
+
+    @AfterClass
+    public static void done() throws Exception {
+	i5.close();
+    }
+
+    protected int unmarshall_i5z(File in, int nfiles) throws Exception {
+	Assert.assertNotNull(in);
+	FileOutputStream output = null;
+	I5ZReader reader = null;
+	try {
+	    reader = new I5ZReader(in);
+	    reader.setQASettings(new QASettings(false));
+	    if (nfiles > 0)
+		Assert.assertEquals(nfiles, reader.getFiles().length);
+	    reader.setErrorHandler(new IChemObjectReaderErrorHandler() {
+		public void handleError(String message, int row, int colStart, int colEnd, Exception exception) {
+		}
+
+		public void handleError(String message, int row, int colStart, int colEnd) {
+		}
+
+		public void handleError(String message, Exception exception) {
+		    logger.log(Level.SEVERE, message);
+		}
+
+		public void handleError(String message) {
+		    logger.log(Level.SEVERE, message);
+		}
+	    });
+	    int count = 0;
+	    while (reader.hasNext()) {
+		Object next = reader.nextRecord();
+		if (next instanceof SubstanceRecord) {
+		    List<ProtocolApplication> papps = ((SubstanceRecord) next).getMeasurements();
+		    if (papps != null) {
+			Assert.assertTrue(papps.size() > 0);
+			for (ProtocolApplication papp : papps) {
+			    if (papp.getProtocol() != null) {
+				String category = ((Protocol) papp.getProtocol()).getCategory();
+				System.out.println(category);
+				try {
+				    I5_ROOT_OBJECTS r = I5_ROOT_OBJECTS.valueOf(((Protocol) papp.getProtocol())
+					    .getCategory().replace("_SECTION", ""));
+				    if (r.isNanoMaterialTemplate() && r.isSupported())
+					System.out.println(papp);
+				} catch (Exception x) {
+				    x.printStackTrace();
 				}
-				public void handleError(String message, int row, int colStart, int colEnd) {
-				}
-				public void handleError(String message, Exception exception) {
-					logger.log(Level.SEVERE,message);
-				}
-				public void handleError(String message) {
-					logger.log(Level.SEVERE,message);
-				}
-			});
-			int count = 0;
-			while (reader.hasNext()) {
-				Object next = reader.nextRecord();
-				if (next instanceof SubstanceRecord) {
-					List<ProtocolApplication> papps = ((SubstanceRecord)next).getMeasurements();
-					if (papps!=null) {
-						Assert.assertTrue(papps.size()>0);
-						for (ProtocolApplication papp : papps) {
-							if (papp.getProtocol()!=null) {
-								String category = ((Protocol)papp.getProtocol()).getCategory();
-								System.out.println(category);
-								try {
-									I5_ROOT_OBJECTS r = I5_ROOT_OBJECTS.valueOf(((Protocol)papp.getProtocol()).getCategory().replace("_SECTION", ""));
-									if (r.isNanoMaterialTemplate() && r.isSupported())
-										System.out.println(papp);
-								} catch (Exception x) {
-									x.printStackTrace();
-								}
-							}	
-						}
-					}	
-				} else if (next instanceof IStructureRecord) {
-					Assert.assertNotNull(((IStructureRecord)next).getContent());
-				}
-				logger.info(next==null?"null entry":next.toString());
-				count++;
+			    }
 			}
-			return count;
-		} catch (Exception x) {
-			throw x;
-		} finally {
-	        if(output != null) output.close();
-            if (reader!=null) reader.close();
-		}	
+		    }
+		} else if (next instanceof IStructureRecord) {
+		    Assert.assertNotNull(((IStructureRecord) next).getContent());
+		}
+		logger.info(next == null ? "null entry" : next.toString());
+		count++;
+	    }
+	    return count;
+	} catch (Exception x) {
+	    throw x;
+	} finally {
+	    if (output != null)
+		output.close();
+	    if (reader != null)
+		reader.close();
 	}
+    }
 }
