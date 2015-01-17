@@ -77,7 +77,7 @@ public abstract class AbstractOPSClient<T extends IIdentifiableResource<URL>> ex
 		return this.get(url, mediaType,(String[]) null);
 	}
 	@Override
-	protected List<T> get(URL url, String mediaType, String... params)
+	public List<T> get(URL url, String mediaType, String... params)
 			throws RestException, IOException {
 		return super.get(url, mediaType, extendParams(params));
 	}
