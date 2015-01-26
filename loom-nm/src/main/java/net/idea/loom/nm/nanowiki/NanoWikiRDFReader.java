@@ -573,14 +573,18 @@ class ProcessMeasurement extends ProcessSolution {
 
 		try {
 			RDFNode valueMin = qs.get("valueMin");
-			if (valueMin != null)
+			if (valueMin != null) {
 				effect.setLoValue(valueMin.asLiteral().getDouble());
+				effect.setLoQualifier(">=");
+			}
 		} catch (Exception x) {
 		}
 		try {
 			RDFNode valueMax = qs.get("valueMax");
-			if (valueMax != null)
+			if (valueMax != null) {
 				effect.setUpValue(valueMax.asLiteral().getDouble());
+				effect.setUpQualifier("<=");				
+			}
 		} catch (Exception x) {
 		}
 		RDFNode value = qs.get("value");
@@ -601,6 +605,7 @@ class ProcessMeasurement extends ProcessSolution {
 		try {
 			effect.setUnit(qs.get("valueUnit").asLiteral().getString());
 		} catch (Exception x) {
+			//x.printStackTrace();
 		}
 
 		RDFNode dose = qs.get("dose");
