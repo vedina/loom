@@ -4,12 +4,12 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.7</version>
+    <version>1.0.8-SNAPSHOT</version>
   </parent>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom-i5ws</artifactId>
   <name>loom-iuclid5-ws</name>
-  <version>1.0.7</version>
+  <version>1.0.8-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>net.ideaconsult</groupId>
