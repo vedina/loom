@@ -22,7 +22,7 @@ public class NanoWikiRDFTest {
 		try {
 			reader = new NanoWikiRDFReader(new InputStreamReader(
 					new FileInputStream(new File(
-							"D:/nina/ChemicalData/enm/backup_25012015.rdf")),
+							"F:/Downloads/Chemical Data/enanomapper/backup-29012015.rdf")),
 					"UTF-8"));
 			while (reader.hasNext()) {
 				IStructureRecord record = reader.nextRecord();
@@ -45,6 +45,8 @@ public class NanoWikiRDFTest {
 					System.out.print(material.getMeasurements().size());
 					System.out.print("\t");
 					for (ProtocolApplication papp : material.getMeasurements()) {
+					    	//System.out.print("Protocol " + ( papp.getProtocol()?null:papp.getProtocol()));
+					    	//System.out.print("\t");
 						System.out.print("Ref " + papp.getReference());
 						System.out.print("\t");
 					}
@@ -53,6 +55,8 @@ public class NanoWikiRDFTest {
 
 				records++;
 			}
+		} catch (Exception x) {
+		    x.printStackTrace();
 		} finally {
 			reader.close();
 		}
