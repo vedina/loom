@@ -3,6 +3,8 @@ package net.idea.loom.nm.nanowiki.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import junit.framework.Assert;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
@@ -17,6 +19,7 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 
 public class NanoWikiRDFTest {
+    private static Logger logger = Logger.getAnonymousLogger();
 
     @Test
     public void test() throws Exception {
@@ -28,37 +31,39 @@ public class NanoWikiRDFTest {
 	    while (reader.hasNext()) {
 		IStructureRecord record = reader.nextRecord();
 		Assert.assertTrue(record instanceof SubstanceRecord);
-		// if (((SubstanceRecord)record).getMeasurements()!=null)
-		// System.out.println(((SubstanceRecord)record).getMeasurements());
 		SubstanceRecord material = (SubstanceRecord) record;
 		/*
-		System.out.print(material.getCompanyName());
-		System.out.print("\t");
-		System.out.print(material.getReference().getName());
-		System.out.print("\t");
-		System.out.print(material.getReference().getTitle());
-		System.out.print("\t");
-		System.out.print(material.getReference().getURL());
-		System.out.print("\t");
-		*/
+		 * System.out.print(material.getCompanyName());
+		 * System.out.print("\t");
+		 * System.out.print(material.getReference().getName());
+		 * System.out.print("\t");
+		 * System.out.print(material.getReference().getTitle());
+		 * System.out.print("\t");
+		 * System.out.print(material.getReference().getURL());
+		 * System.out.print("\t");
+		 */
 		if (material.getMeasurements() == null) {
-		    System.err.println("Substance without measurements\t"+ material.getCompanyName());
+		    logger.log(Level.WARNING, material.getCompanyName() + "\tSubstance without measurements");
 		} else {
-		    if (material.getMeasurements().size()==0);
-		    	System.err.println("Substance without measurements\t"+ material.getCompanyName());
-		    for (ProtocolApplication<Protocol, IParams, String, IParams, String> papp : material.getMeasurements()) {
+		    int m = 0;
+		    for (ProtocolApplication<Protocol, IParams, String, IParams, String> papp : material
+			    .getMeasurements()) {
 			// System.out.print("Protocol " + (
 			// papp.getProtocol()?null:papp.getProtocol()));
 			// System.out.print("\t");
-			//System.out.print("Ref " + papp.getReference());
-			//System.out.print("\t");
-			Assert.assertTrue(papp.getEffects()!=null);
-			Assert.assertTrue(papp.getEffects().size()>0);
+			// System.out.print("Ref " + papp.getReference());
+			// System.out.print("\t");
+			if (papp.getEffects()==null || papp.getEffects().size()==0)
+			logger.log(Level.WARNING, material.getCompanyName() + "\tProtocol application without effect records");
 			for (EffectRecord effect : papp.getEffects()) {
-			    if ((effect.getLoValue()!=null) && (effect.getUnit()==null))
-				System.err.println("Value without unit " + effect.getEndpoint() + "\t"+ material.getCompanyName());
+			    if ((effect.getLoValue() != null) && (effect.getUnit() == null))
+				logger.log(Level.WARNING, material.getCompanyName() + "\t" + effect.getEndpoint() + "\tValue without unit" );
+			    m++;
 			}
+
 		    }
+		    if (m <= 0)
+			logger.log(Level.WARNING, material.getCompanyName() + "\tSubstance without measurements");
 		}
 		records++;
 	    }
@@ -67,6 +72,6 @@ public class NanoWikiRDFTest {
 	} finally {
 	    reader.close();
 	}
-	System.out.println(records);
+	logger.log(Level.INFO, "Substance records read\t"+records);
     }
 }
