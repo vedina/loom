@@ -24,13 +24,14 @@ public class NanoWikiRDFTest {
 	int records = 0;
 	try {
 	    reader = new NanoWikiRDFReader(new InputStreamReader(new FileInputStream(new File(
-		    "F:/Downloads/Chemical Data/enanomapper/backup-29012015.rdf")), "UTF-8"));
+		    "F:/Downloads/Chemical Data/enanomapper/backup-01022015.rdf")), "UTF-8"));
 	    while (reader.hasNext()) {
 		IStructureRecord record = reader.nextRecord();
 		Assert.assertTrue(record instanceof SubstanceRecord);
 		// if (((SubstanceRecord)record).getMeasurements()!=null)
 		// System.out.println(((SubstanceRecord)record).getMeasurements());
 		SubstanceRecord material = (SubstanceRecord) record;
+		/*
 		System.out.print(material.getCompanyName());
 		System.out.print("\t");
 		System.out.print(material.getReference().getName());
@@ -39,27 +40,26 @@ public class NanoWikiRDFTest {
 		System.out.print("\t");
 		System.out.print(material.getReference().getURL());
 		System.out.print("\t");
+		*/
 		if (material.getMeasurements() == null) {
-		    System.out.print(0);
-		    System.out.print("\t");
+		    System.err.println("Substance without measurements\t"+ material.getCompanyName());
 		} else {
-		    System.out.print(material.getMeasurements().size());
-		    System.out.print("\t");
+		    if (material.getMeasurements().size()==0);
+		    	System.err.println("Substance without measurements\t"+ material.getCompanyName());
 		    for (ProtocolApplication<Protocol, IParams, String, IParams, String> papp : material.getMeasurements()) {
 			// System.out.print("Protocol " + (
 			// papp.getProtocol()?null:papp.getProtocol()));
 			// System.out.print("\t");
-			System.out.print("Ref " + papp.getReference());
-			System.out.print("\t");
+			//System.out.print("Ref " + papp.getReference());
+			//System.out.print("\t");
 			Assert.assertTrue(papp.getEffects()!=null);
 			Assert.assertTrue(papp.getEffects().size()>0);
 			for (EffectRecord effect : papp.getEffects()) {
-			    System.out.print("Endpoint" + effect.toString());
+			    if ((effect.getLoValue()!=null) && (effect.getUnit()==null))
+				System.err.println("Value without unit " + effect.getEndpoint() + "\t"+ material.getCompanyName());
 			}
 		    }
 		}
-		System.out.println();
-
 		records++;
 	    }
 	} catch (Exception x) {

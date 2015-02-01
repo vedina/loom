@@ -307,7 +307,7 @@ class ProcessCondition extends ProcessSolution {
 		effect.setConditions(conditions);
 	    }
 	    if ("PH".equals(endpoint.getString().toUpperCase()))
-		    conditions.put(I5CONSTANTS.pH, v);
+		conditions.put(I5CONSTANTS.pH, v);
 	    else
 		conditions.put(endpoint.getString(), v);
 
@@ -334,6 +334,18 @@ class ProcessMeasurement extends ProcessSolution {
     }
 
     enum endpoints {
+	BET {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+	    }
+
+	    @Override
+	    public String getTag() {
+		return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
+	    }
+	},
+	
 	Zeta_Potential {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -355,7 +367,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    public String getTag() {
 		return I5CONSTANTS.eISOELECTRIC_POINT;
 	    }
-	},	
+	},
 	Aggregation {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -378,6 +390,17 @@ class ProcessMeasurement extends ProcessSolution {
 		return I5CONSTANTS.pPARTICLESIZE;
 	    }
 	},
+	Mean_Particle_Size {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+	    }
+
+	    @Override
+	    public String getTag() {
+		return I5CONSTANTS.pPARTICLESIZE;
+	    }	    
+	},
 	Particle_Size {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -399,7 +422,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    public String getTag() {
 		return "Average Length";
 	    }
-	},	
+	},
 	Diameter {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -410,7 +433,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    public String getTag() {
 		return "Diameter";
 	    }
-	},	
+	},
 	Hydrodynamic_size {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -453,6 +476,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
 	    }
+
 	    @Override
 	    public String getTag() {
 		return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
@@ -479,26 +503,40 @@ class ProcessMeasurement extends ProcessSolution {
 		return name().replace("_", " ");
 	    }
 	},
-	Oxidation_State_Concentration, Log_Reciprocal_EC50 {
-	    // what endpoint?
+	Oxidation_State_Concentration {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		// best guess
 		return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
 	    }
 	},
+	Log_Reciprocal_EC50 {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.BAO_0003009;
+		//Cell_Viability_Assay
+	    }
+	},	
 	Cytotoxicity {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
-		// best guess
-		return I5_ROOT_OBJECTS.TO_GENETIC_IN_VITRO;
+		return I5_ROOT_OBJECTS.BAO_0002993;
+		//Cytotoxicity_Assay
 	    }
 	},
-	Log_GI50, Percentage_Non_2DViable_Cells {
+	GI50,Log_GI50,Negative_Log_GI50 {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
-		// best guess
-		return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+		return I5_ROOT_OBJECTS.BAO_0002100;
+		//Cell_Growth_Assay
+	    }
+
+	},	
+	Percentage_Non_2DViable_Cells, Percentage_Viable_Cells  {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.BAO_0003009;
+		//Cell_Viability_Assay
 	    }
 
 	    @Override
@@ -506,6 +544,37 @@ class ProcessMeasurement extends ProcessSolution {
 		return "%";
 	    }
 	},
+	Concentration_in_cell {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		// best guess
+		return I5_ROOT_OBJECTS.BAO_0002993;
+	    }	    
+	},
+	LDH_Release {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.BAO_0003009;
+		//Cell_Membrane_Integrity_Assay
+	    }
+	},
+	Metabolic_Activity {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.BAO_0003009;
+		//Metabolic_Activity_Assay
+	    }	    
+	},
+	DNA_in_Tail {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.BAO_0002167;
+		//DNA_Damage_Assay
+	    }
+	},
+	Concentration_in_culture_medium {
+
+	},	
 	Bioassay_Profile {
 	// ????
 	};
@@ -584,6 +653,7 @@ class ProcessMeasurement extends ProcessSolution {
 		category = ep.getCategory();
 	    measuredEndpoint = ep.getTag();
 	} catch (Exception x) {
+	    x.printStackTrace();
 	}
 
 	if (category == null)
@@ -684,9 +754,11 @@ class ProcessMeasurement extends ProcessSolution {
 	}
 
 	try {
-	    effect.setUnit(qs.get("valueUnit").asLiteral().getString());
+	    if (qs.get("valueUnit") != null) {
+		effect.setUnit(qs.get("valueUnit").asLiteral().getString());
+	    }
 	} catch (Exception x) {
-	    // x.printStackTrace();
+	    x.printStackTrace();
 	}
 
 	RDFNode dose = qs.get("dose");
@@ -809,8 +881,10 @@ class ProcessNMMeasurement extends ProcessSolution {
 	// effect.setConditions(new Params());
 
 	try {
-	    if (value != null)
+	    if (value != null) {
 		effect.setLoValue(Double.parseDouble(value.asLiteral().getString()));
+		effect.setLoQualifier("=");
+	    }	
 	} catch (Exception x) {
 	    effect.setTextValue(value.asLiteral().getString());
 	}
@@ -1443,6 +1517,7 @@ class ProcessMaterial extends ProcessSolution {
 	    + "OPTIONAL {?endpointResource mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} }\n"
 	    + "OPTIONAL {?measurement mw:Property-3AHas_Assay ?assay. \n"
 	    + "OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }\n"
+	    + "OPTIONAL {?assay mw:Property-3AHas_Assay_Method ?assaymethod. OPTIONAL {?assaymethod owl:sameAs ?baomethod.}}\n"
 	    + "OPTIONAL {?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}}\n"
 	    + "OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel. ?assaySource mw:Property-3AHas_Year ?assayJournalYear.} }  \n"
 	    + "}} ORDER by ?measurement\n";
