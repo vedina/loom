@@ -345,7 +345,7 @@ class ProcessMeasurement extends ProcessSolution {
 		return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 	    }
 	},
-	
+
 	Zeta_Potential {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -399,7 +399,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    @Override
 	    public String getTag() {
 		return I5CONSTANTS.pPARTICLESIZE;
-	    }	    
+	    }
 	},
 	Particle_Size {
 	    @Override
@@ -514,29 +514,29 @@ class ProcessMeasurement extends ProcessSolution {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0003009;
-		//Cell_Viability_Assay
+		// Cell_Viability_Assay
 	    }
-	},	
+	},
 	Cytotoxicity {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0002993;
-		//Cytotoxicity_Assay
+		// Cytotoxicity_Assay
 	    }
 	},
-	GI50,Log_GI50,Negative_Log_GI50 {
+	GI50, Log_GI50, Negative_Log_GI50 {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0002100;
-		//Cell_Growth_Assay
+		// Cell_Growth_Assay
 	    }
 
-	},	
-	Percentage_Non_2DViable_Cells, Percentage_Viable_Cells  {
+	},
+	Percentage_Non_2DViable_Cells, Percentage_Viable_Cells {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0003009;
-		//Cell_Viability_Assay
+		// Cell_Viability_Assay
 	    }
 
 	    @Override
@@ -549,32 +549,32 @@ class ProcessMeasurement extends ProcessSolution {
 	    public I5_ROOT_OBJECTS getCategory() {
 		// best guess
 		return I5_ROOT_OBJECTS.BAO_0002993;
-	    }	    
+	    }
 	},
 	LDH_Release {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0003009;
-		//Cell_Membrane_Integrity_Assay
+		// Cell_Membrane_Integrity_Assay
 	    }
 	},
 	Metabolic_Activity {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0003009;
-		//Metabolic_Activity_Assay
-	    }	    
+		// Metabolic_Activity_Assay
+	    }
 	},
 	DNA_in_Tail {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.BAO_0002167;
-		//DNA_Damage_Assay
+		// DNA_Damage_Assay
 	    }
 	},
 	Concentration_in_culture_medium {
 
-	},	
+	},
 	Bioassay_Profile {
 	// ????
 	};
@@ -667,6 +667,13 @@ class ProcessMeasurement extends ProcessSolution {
 	} catch (Exception x) {
 	}
 
+	if (method == null)
+	    try {
+		method = qs.get("assaymethod");
+		protocol.addGuideline(method.asResource().getLocalName());
+	    } catch (Exception x) {
+	    }
+
 	ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
 		.createExperimentRecord(protocol);
 	// papp.setReliability(reliability)
@@ -688,8 +695,8 @@ class ProcessMeasurement extends ProcessSolution {
 	    else
 		papp.setReference(qs.get("study").asResource().getURI());
 
-	    if (qs.get("assayJournalYear") != null)
-		papp.setReferenceYear(qs.get("assayJournalYear").asLiteral().getString());
+	    if (qs.get("year") != null)
+		papp.setReferenceYear(qs.get("year").asLiteral().getString());
 
 	    if (qs.get("assayJournalLabel") != null)
 		papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral().getString());
@@ -884,7 +891,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 	    if (value != null) {
 		effect.setLoValue(Double.parseDouble(value.asLiteral().getString()));
 		effect.setLoQualifier("=");
-	    }	
+	    }
 	} catch (Exception x) {
 	    effect.setTextValue(value.asLiteral().getString());
 	}
@@ -1499,7 +1506,7 @@ class ProcessMaterial extends ProcessSolution {
 	    + "SELECT DISTINCT \n"
 	    + "?study ?measurement ?label ?method ?definedBy ?study ?assaySource ?doilink ?year\n"
 	    + "?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?dose ?doseUnit\n"
-	    + "?value ?valueMin ?valueMax ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear\n"
+	    + "?value ?valueMin ?valueMax ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear ?assaymethod ?baomethod\n"
 	    + "WHERE {\n"
 	    + "?measurement mw:Property-3AHas_Entity <%s>.\n"
 	    + "OPTIONAl {?measurement rdfs:label ?label.}\n"
@@ -1519,7 +1526,9 @@ class ProcessMaterial extends ProcessSolution {
 	    + "OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }\n"
 	    + "OPTIONAL {?assay mw:Property-3AHas_Assay_Method ?assaymethod. OPTIONAL {?assaymethod owl:sameAs ?baomethod.}}\n"
 	    + "OPTIONAL {?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}}\n"
-	    + "OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel. ?assaySource mw:Property-3AHas_Year ?assayJournalYear.} }  \n"
+	    + "OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} "
+	    + "OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} "
+	    + "OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel.} }  \n"
 	    + "}} ORDER by ?measurement\n";
 
     // assay tyle linked to the assay, not endpoint
