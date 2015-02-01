@@ -679,7 +679,7 @@ class ProcessMeasurement extends ProcessSolution {
 	// papp.setReliability(reliability)
 	try {
 	    if (method != null)
-		papp.getParameters().put(I5CONSTANTS.methodType, method.asResource().getLocalName());
+		papp.getParameters().put(I5CONSTANTS.methodType, method.asResource().getLocalName().replace("_", " "));
 	} catch (Exception x) {
 
 	}
