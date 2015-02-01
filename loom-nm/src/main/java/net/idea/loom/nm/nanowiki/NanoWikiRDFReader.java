@@ -306,7 +306,10 @@ class ProcessCondition extends ProcessSolution {
 		conditions = new Params();
 		effect.setConditions(conditions);
 	    }
-	    conditions.put(endpoint.getString(), v);
+	    if ("PH".equals(endpoint.getString().toUpperCase()))
+		    conditions.put(I5CONSTANTS.pH, v);
+	    else
+		conditions.put(endpoint.getString(), v);
 
 	} catch (Exception x) {
 	    x.printStackTrace();
@@ -720,7 +723,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    + "SELECT ?condition ?endpoint ?endpointLabel ?value ?valueUnit \n" + "WHERE {\n"
 	    + "?condition mw:Property-3AFor_Measurement <%s>.\n" + "?condition mw:Property-3AHas_Endpoint ?endpoint.\n"
 	    + "?endpoint rdfs:label ?endpointLabel.\n" + "?condition mw:Property-3AHas_Endpoint_Value ?value.\n"
-	    + "?condition mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.\n"
+	    + "OPTIONAL {?condition mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}\n"
 	    + "OPTIONAL {?condition rdfs:label ?label.}\n" + "}\n";
 
 }
