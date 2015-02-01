@@ -53,6 +53,15 @@ public class NanoWikiRDFTest {
 			// System.out.print("\t");
 			// System.out.print("Ref " + papp.getReference());
 			// System.out.print("\t");
+			if (papp.getProtocol()==null)
+			    logger.log(Level.WARNING, material.getCompanyName() + "\tProtocol application without protocol");
+			
+			if (papp.getReference()==null)
+			    logger.log(Level.WARNING, material.getCompanyName() + "\tReference  not defined");
+			if (papp.getReferenceOwner()==null)
+			    logger.log(Level.WARNING, material.getCompanyName() + "\tJournal not defined");
+			if (papp.getReferenceYear()==null)
+			    logger.log(Level.WARNING, material.getCompanyName() + "\tPublication year not defined");
 			if (papp.getEffects()==null || papp.getEffects().size()==0)
 			logger.log(Level.WARNING, material.getCompanyName() + "\tProtocol application without effect records");
 			for (EffectRecord effect : papp.getEffects()) {
