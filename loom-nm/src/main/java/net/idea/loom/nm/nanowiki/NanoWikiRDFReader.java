@@ -596,7 +596,7 @@ class ProcessMeasurement extends ProcessSolution {
 
 	String endpoint = null;
 	try {
-	    endpoint = qs.get("endpoint").asResource().getLocalName();
+	    endpoint = qs.get("endpoint").asResource().getLocalName().replace("_", " ");
 	} catch (Exception x) {
 	    endpoint = qs.get("endpoint").toString();
 	}
@@ -670,7 +670,7 @@ class ProcessMeasurement extends ProcessSolution {
 	if (method == null)
 	    try {
 		method = qs.get("assaymethod");
-		protocol.addGuideline(method.asResource().getLocalName());
+		protocol.addGuideline(method.asResource().getLocalName().replace("_", " "));
 	    } catch (Exception x) {
 	    }
 
