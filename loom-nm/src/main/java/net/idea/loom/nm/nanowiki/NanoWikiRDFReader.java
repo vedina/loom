@@ -342,7 +342,7 @@ class ProcessMeasurement extends ProcessSolution {
 		return I5CONSTANTS.eZETA_POTENTIAL;
 	    }
 	},
-	Isoelectric_point {
+	Isoelectric_Point {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.ZETA_POTENTIAL;
@@ -352,7 +352,7 @@ class ProcessMeasurement extends ProcessSolution {
 	    public String getTag() {
 		return I5CONSTANTS.eISOELECTRIC_POINT;
 	    }
-	},
+	},	
 	Aggregation {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -386,6 +386,28 @@ class ProcessMeasurement extends ProcessSolution {
 		return I5CONSTANTS.pPARTICLESIZE;
 	    }
 	},
+	Average_Length {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+	    }
+
+	    @Override
+	    public String getTag() {
+		return "Average Length";
+	    }
+	},	
+	Diameter {
+	    @Override
+	    public I5_ROOT_OBJECTS getCategory() {
+		return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+	    }
+
+	    @Override
+	    public String getTag() {
+		return "Diameter";
+	    }
+	},	
 	Hydrodynamic_size {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
@@ -427,6 +449,10 @@ class ProcessMeasurement extends ProcessSolution {
 	    @Override
 	    public I5_ROOT_OBJECTS getCategory() {
 		return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+	    }
+	    @Override
+	    public String getTag() {
+		return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 	    }
 	},
 	Toxicity {
