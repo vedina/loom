@@ -287,7 +287,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	    if (value == null || "".equals(value.toString()))
 		return;
 	    if (("".equals(line) || "mean".equals(line) || "sd".equals(line) || "std".equals(line)
-		    || "sem".equals(line) || "interpretation".equals(line) || "condition".equals(line))) {
+		    || "sem".equals(line) || "interpretation".equals(line) || "criteria".equals(line)|| "text".equals(line) || "condition".equals(line))) {
 		I5_ROOT_OBJECTS category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
 		try {
 		    category = category.valueOf(lines[_lines.endpointcategory.ordinal()]);
@@ -327,7 +327,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		 * x) { effect.getConditions().put(name, value.toString()); }
 		 * experiment.addEffect(effect); }
 		 */
-		if ("mean".equals(line) || "".equals(line) || "interpretation".equals(line)) {
+		if ("mean".equals(line) || "".equals(line) || "interpretation".equals(line) || "criteria".equals(line) || "text".equals(line)) {
 		    String endpoint = lines[_lines.endpoint.ordinal()];
 		    effect.setEndpoint(endpoint);
 
@@ -345,9 +345,18 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			effect.setLoQualifier(line);
 		    if ("interpretation".equals(line))
 			experiment.setInterpretationResult(value.toString());
-
+		    else if ("criteria".equals(line))
+			experiment.setInterpretationCriteria(value.toString());
+		    else if ("text".equals(line))
+			effect.setTextValue(value.toString());		    
+		    else 
 		    try {
-			effect.setLoValue(Double.parseDouble(value.toString()));
+			String v = value.toString();
+			if (v.startsWith(">")) {
+			    effect.setLoQualifier(">");
+			    v = v.replace(">", "");
+			}
+			effect.setLoValue(Double.parseDouble(v));
 			effect.setUnit(lines[_lines.units.ordinal()] == null ? null : lines[_lines.units.ordinal()]
 				.trim());
 		    } catch (Exception x) {
