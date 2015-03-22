@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>1.0.8-SNAPSHOT</version>
+  <version>1.0.8</version>
   <packaging>pom</packaging>
   <name>Loom</name>
   <description>Weaving the space</description>
@@ -161,7 +161,7 @@
         <ops.app_key>opsappkey</ops.app_key>
       </properties>
     </profile>
-<profile>
+    <profile>
       <id>JRE6</id>
       <activation>
         <jdk>1.6</jdk>
@@ -193,9 +193,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
     <!-- ambit.sf.net -->
-    <ambit.version>2.7.3-SNAPSHOT</ambit.version>
+    <ambit.version>2.7.3</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>1.0.3-SNAPSHOT</i5.version>
+    <i5.version>1.0.3</i5.version>
     <rdf.jena.version>2.6.4</rdf.jena.version>
     <rdf.arq.version>2.8.8</rdf.arq.version>
     <rdf.arqextra.version>2.7.0</rdf.arqextra.version>
