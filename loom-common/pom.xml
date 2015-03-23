@@ -4,7 +4,7 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.8</version>
+    <version>1.0.9-SNAPSHOT</version>
   </parent>
   <artifactId>loom-common</artifactId>
   <name>loom-common</name>

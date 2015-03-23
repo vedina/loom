@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Loom</name>
   <description>Weaving the space</description>
@@ -193,9 +193,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.8.1</junit.version>
     <!-- ambit.sf.net -->
-    <ambit.version>2.7.3</ambit.version>
+    <ambit.version>2.7.4-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>1.0.3</i5.version>
+    <i5.version>1.0.4-SNAPSHOT</i5.version>
     <rdf.jena.version>2.6.4</rdf.jena.version>
     <rdf.arq.version>2.8.8</rdf.arq.version>
     <rdf.arqextra.version>2.7.0</rdf.arqextra.version>
