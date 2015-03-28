@@ -115,8 +115,8 @@ public class PubChemAIDReader extends RawIteratingWrapper<IteratingDelimitedFile
 		    r.getExternalids().add(new ExternalIdentifier(name(), value));
 
 		    experiment0.setSubstanceUUID(uuid);
-		    r.setCompanyName(name() + " " + value);
-		    r.setCompanyUUID(uuid);
+		    r.setSubstanceName(name() + " " + value);
+		    r.setSubstanceUUID(uuid);
 		} catch (Exception x) {
 		    x.printStackTrace();
 		}

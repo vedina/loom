@@ -148,10 +148,10 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 	ambit2.base.data.study.ProtocolApplication a_papp = new ambit2.base.data.study.ProtocolApplication(a_protocol);
 	trackAssay(a_papp, result.getData().getProcessingNode(), record, params, effect, 0);
 
-	if (record.getCompanyUUID() == null) {
+	if (record.getSubstanceUUID() == null) {
 	    record.setPublicName("Dummy substance");
-	    record.setCompanyName("Dummy substance");
-	    record.setCompanyUUID("ISTB-" + UUID.nameUUIDFromBytes("Dummy substance".getBytes()));
+	    record.setSubstanceName("Dummy substance");
+	    record.setSubstanceUUID("ISTB-" + UUID.nameUUIDFromBytes("Dummy substance".getBytes()));
 	    record.setOwnerName("Unknown");
 	    record.setOwnerUUID("ISTB-" + UUID.nameUUIDFromBytes("Unknown".getBytes()));
 	    record.setFormat("ISATAB");
@@ -181,7 +181,7 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 
 	a_papp.setCompanyName(record.getOwnerName());
 	a_papp.setCompanyUUID(record.getOwnerUUID());
-	a_papp.setSubstanceUUID(record.getCompanyUUID());
+	a_papp.setSubstanceUUID(record.getSubstanceUUID());
 
 	a_papp.addEffect(effect);
 	ReliabilityParams reliability = new ReliabilityParams();
@@ -219,8 +219,8 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 		OntologyTerm term = pv.getSingleOntologyTerm();
 		record.setPublicName(pv.getValue().toLowerCase());
 		if (term != null) {
-		    record.setCompanyName(term.getAcc());
-		    record.setCompanyUUID("ISTB-" + UUID.nameUUIDFromBytes(term.getAcc().getBytes()));
+		    record.setSubstanceName(term.getAcc());
+		    record.setSubstanceUUID("ISTB-" + UUID.nameUUIDFromBytes(term.getAcc().getBytes()));
 		    record.setOwnerName(term.getSource().getUrl());
 		    record.setOwnerUUID("ISTB-" + UUID.nameUUIDFromBytes(term.getSource().getName().getBytes()));
 		    record.setFormat("ISATAB");
@@ -231,8 +231,8 @@ public class ISAReader extends DefaultIteratingChemObjectReader implements IRawR
 			    .getUrl(), term.getAcc()));
 		} else {
 		    byte[] name = record.getPublicName().getBytes();
-		    record.setCompanyName(record.getPublicName());
-		    record.setCompanyUUID("ISTB-" + UUID.nameUUIDFromBytes(name));
+		    record.setSubstanceName(record.getPublicName());
+		    record.setSubstanceUUID("ISTB-" + UUID.nameUUIDFromBytes(name));
 		    record.setOwnerName("ISA-TAB");
 		    record.setOwnerUUID("ISTB-" + UUID.nameUUIDFromBytes("ISA-TAB".getBytes()));
 		    record.setFormat("ISATAB");

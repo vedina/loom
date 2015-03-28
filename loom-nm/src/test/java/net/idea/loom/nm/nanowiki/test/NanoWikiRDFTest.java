@@ -43,7 +43,7 @@ public class NanoWikiRDFTest {
 		 * System.out.print("\t");
 		 */
 		if (material.getMeasurements() == null) {
-		    logger.log(Level.WARNING, material.getCompanyName() + "\tSubstance without measurements");
+		    logger.log(Level.WARNING, material.getSubstanceName() + "\tSubstance without measurements");
 		} else {
 		    int m = 0;
 		    for (ProtocolApplication<Protocol, IParams, String, IParams, String> papp : material
@@ -54,25 +54,25 @@ public class NanoWikiRDFTest {
 			// System.out.print("Ref " + papp.getReference());
 			// System.out.print("\t");
 			if (papp.getProtocol()==null)
-			    logger.log(Level.WARNING, material.getCompanyName() + "\tProtocol application without protocol");
+			    logger.log(Level.WARNING, material.getSubstanceName() + "\tProtocol application without protocol");
 			
 			if (papp.getReference()==null)
-			    logger.log(Level.WARNING, material.getCompanyName() + "\tReference  not defined");
+			    logger.log(Level.WARNING, material.getSubstanceName() + "\tReference  not defined");
 			if (papp.getReferenceOwner()==null)
-			    logger.log(Level.WARNING, material.getCompanyName() + "\tJournal not defined");
+			    logger.log(Level.WARNING, material.getSubstanceName() + "\tJournal not defined");
 			if (papp.getReferenceYear()==null)
-			    logger.log(Level.WARNING, material.getCompanyName() + "\tPublication year not defined");
+			    logger.log(Level.WARNING, material.getSubstanceName() + "\tPublication year not defined");
 			if (papp.getEffects()==null || papp.getEffects().size()==0)
-			logger.log(Level.WARNING, material.getCompanyName() + "\tProtocol application without effect records");
+			logger.log(Level.WARNING, material.getSubstanceName() + "\tProtocol application without effect records");
 			for (EffectRecord effect : papp.getEffects()) {
 			    if ((effect.getLoValue() != null) && (effect.getUnit() == null))
-				logger.log(Level.WARNING, material.getCompanyName() + "\t" + effect.getEndpoint() + "\tValue without unit" );
+				logger.log(Level.WARNING, material.getSubstanceName() + "\t" + effect.getEndpoint() + "\tValue without unit" );
 			    m++;
 			}
 
 		    }
 		    if (m <= 0)
-			logger.log(Level.WARNING, material.getCompanyName() + "\tSubstance without measurements");
+			logger.log(Level.WARNING, material.getSubstanceName() + "\tSubstance without measurements");
 		}
 		records++;
 	    }

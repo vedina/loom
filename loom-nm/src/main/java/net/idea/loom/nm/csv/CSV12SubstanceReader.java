@@ -42,8 +42,8 @@ public class CSV12SubstanceReader extends RawIteratingWrapper<CSV12Reader> {
 		    // r.setProperty(key,
 		    // ((IAtomContainer)o).getProperties().get(key));
 		}
-		if (((SubstanceRecord) r).getCompanyUUID() == null)
-		    ((SubstanceRecord) r).setCompanyUUID(reader.getPrefix() + UUID.randomUUID());
+		if (((SubstanceRecord) r).getSubstanceUUID() == null)
+		    ((SubstanceRecord) r).setSubstanceUUID(reader.getPrefix() + UUID.randomUUID());
 
 		// owner is the dataset
 		((SubstanceRecord) r).setOwnerName(reader.getReference().getName());

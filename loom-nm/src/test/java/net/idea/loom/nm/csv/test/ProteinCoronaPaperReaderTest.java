@@ -36,7 +36,7 @@ public class ProteinCoronaPaperReaderTest {
 		SubstanceRecord substance = (SubstanceRecord) mol;
 		Assert.assertNotNull(substance.getPublicName());
 		System.out.println(substance.getPublicName());
-		Assert.assertNotNull(substance.getCompanyName());
+		Assert.assertNotNull(substance.getSubstanceName());
 		Assert.assertNotNull(substance.getMeasurements());
 
 		System.out.println(substance.getMeasurements());
@@ -67,7 +67,7 @@ public class ProteinCoronaPaperReaderTest {
 		SubstanceRecord substance = (SubstanceRecord) mol;
 		Assert.assertNotNull(substance.getPublicName());
 		System.out.println(substance.getPublicName());
-		Assert.assertNotNull(substance.getCompanyName());
+		Assert.assertNotNull(substance.getSubstanceName());
 		Assert.assertNotNull(substance.getMeasurements());
 
 		System.out.println(substance.getMeasurements());

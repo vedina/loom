@@ -855,7 +855,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 	ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
 		.createExperimentRecord(protocol);
 	papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
-	papp.setSubstanceUUID(record.getCompanyUUID());
+	papp.setSubstanceUUID(record.getSubstanceUUID());
 	ReliabilityParams reliability = new ReliabilityParams();
 	reliability.setStudyResultType("experimental result");
 	papp.setReliability(reliability);
@@ -933,7 +933,7 @@ class ProcessCoatings extends ProcessSolution {
 	this.record = record;
 	this.rdf = rdf;
 	this.material = material;
-	composition_uuid = record.getCompanyUUID();
+	composition_uuid = record.getSubstanceUUID();
     }
 
     @Override
@@ -1043,7 +1043,7 @@ class ProcessMaterial extends ProcessSolution {
 	;
 
 	record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", name));
-	record.setCompanyUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", name));
+	record.setSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", name));
 	// ?source variable is a pointer to the paper the material
 	// try
 	// {record.setOwnerName(qs.get("source").asResource().getLocalName());}
@@ -1056,7 +1056,7 @@ class ProcessMaterial extends ProcessSolution {
 	}
 	;
 	try {
-	    record.setCompanyName(name);
+	    record.setSubstanceName(name);
 	} catch (Exception x) {
 	}
 	;
@@ -1103,7 +1103,7 @@ class ProcessMaterial extends ProcessSolution {
 	try {
 	    record.setFormula(qs.get("composition").asLiteral().getString());
 	    if (record.getFormula() != null) {
-		String composition_uuid = record.getCompanyUUID();
+		String composition_uuid = record.getSubstanceUUID();
 		IStructureRecord core = new StructureRecord();
 		record.addStructureRelation(composition_uuid, core, STRUCTURE_RELATION.HAS_CORE, new Proportion());
 		try {

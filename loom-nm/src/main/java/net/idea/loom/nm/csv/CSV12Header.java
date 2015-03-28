@@ -89,12 +89,12 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	else if ("Designation".equals(lines[_lines.result.ordinal()])) {
 	    if (value == null) {
 		record.setPublicName(null);
-		record.setCompanyName(null);
-		record.setCompanyUUID(prefix + UUID.randomUUID());
+		record.setSubstanceName(null);
+		record.setSubstanceUUID(prefix + UUID.randomUUID());
 	    } else {
 		record.setPublicName(value.toString());
-		record.setCompanyName(value.toString());
-		record.setCompanyUUID(prefix + UUID.nameUUIDFromBytes(value.toString().getBytes()));
+		record.setSubstanceName(value.toString());
+		record.setSubstanceUUID(prefix + UUID.nameUUIDFromBytes(value.toString().getBytes()));
 	    }
 	} else if ("external identifier".equals(lines[_lines.endpointcategory.ordinal()].toLowerCase())) {
 	    if (value != null) {
@@ -109,7 +109,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		UUID uuid = UUID.nameUUIDFromBytes(value.toString().getBytes());
 		record.setReferenceSubstanceUUID(prefix + uuid.toString());
 		IStructureRecord structure = new StructureRecord();
-		record.addStructureRelation(record.getCompanyUUID(), structure, STRUCTURE_RELATION.HAS_CONSTITUENT,
+		record.addStructureRelation(record.getSubstanceUUID(), structure, STRUCTURE_RELATION.HAS_CONSTITUENT,
 			new Proportion());
 
 		try {
@@ -135,7 +135,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		}
 		;
 		try {
-		    structure.setProperty(Property.getTradeNameInstance("Name"), record.getCompanyName());
+		    structure.setProperty(Property.getTradeNameInstance("Name"), record.getSubstanceName());
 		} catch (Exception x) {
 		}
 		;
@@ -179,7 +179,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		UUID uuid = UUID.nameUUIDFromBytes(value.toString().getBytes());
 		record.setReferenceSubstanceUUID(prefix + uuid.toString());
 		IStructureRecord core = new StructureRecord();
-		record.addStructureRelation(record.getCompanyUUID(), core, STRUCTURE_RELATION.HAS_CORE,
+		record.addStructureRelation(record.getSubstanceUUID(), core, STRUCTURE_RELATION.HAS_CORE,
 			new Proportion());
 
 		try {
@@ -227,7 +227,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		experiment.addEffect(effect);
 
 		IStructureRecord coating = new StructureRecord();
-		record.addStructureRelation(record.getCompanyUUID(), coating, STRUCTURE_RELATION.HAS_COATING,
+		record.addStructureRelation(record.getSubstanceUUID(), coating, STRUCTURE_RELATION.HAS_COATING,
 			new Proportion());
 		// try {record.setOwnerName();} catch (Exception x) {};
 		try {
@@ -408,7 +408,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
     protected ProtocolApplication<Protocol, IParams, String, IParams, String> getExperiment(I5_ROOT_OBJECTS category,
 	    SubstanceRecord record, Protocol protocol, ReliabilityParams reliability) {
 	String experimentUUID = prefix
-		+ UUID.nameUUIDFromBytes((record.getCompanyUUID() + category.name() + lines[_lines.protocol.ordinal()]
+		+ UUID.nameUUIDFromBytes((record.getSubstanceUUID() + category.name() + lines[_lines.protocol.ordinal()]
 			+ lines[_lines.guideline.ordinal()] + lines[_lines.type_of_method.ordinal()]
 			+ lines[_lines.type_of_study.ordinal()] + lines[_lines.data_gathering_instruments.ordinal()]
 		// +lines[_lines.endpoint.ordinal()]
