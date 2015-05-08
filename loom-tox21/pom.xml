@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.9</version>
   </parent>
   <artifactId>loom-tox21</artifactId>
   <name>loom-tox21</name>
@@ -23,10 +23,9 @@ http://pubchem.ncbi.nlm.nih.gov/rest/pug/assay/sourceall/Tox21/aids/JSON</descri
       <version>${i5.version}</version>
     </dependency>
     <dependency>
-      <groupId>net.ideaconsult</groupId>
-      <artifactId>loom-pubchemrest-cli</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
+    	<groupId>net.ideaconsult</groupId>
+    	<artifactId>loom-pubchemrest-cli</artifactId>
+    	<version>1.0.9</version>
     </dependency>
   </dependencies>
 </project>
