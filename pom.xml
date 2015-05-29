@@ -17,6 +17,7 @@
     <module>loom-isa</module>
     <module>loom-i5ws</module>
     <module>loom-tox21</module>
+    <module>loom-effectopedia</module>
   </modules>
   <dependencies>
     <dependency>

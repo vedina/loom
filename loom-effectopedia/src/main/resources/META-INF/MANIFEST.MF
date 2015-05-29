@@ -1,0 +1,14 @@
+Manifest-version: 1.0
+Package: net.idea.loom.effectopedia
+Main-Class: net.idea.loom.effectopedia.Converter
+
+Name: net/idea/loom/effectopedia
+Specification-Title: Effectopedia converter
+Specification-Version: ${project.version}
+Specification-Vendor: Ideaconsult LTD
+Implementation-Title: net.idea.loom.effectopedia
+Implementation-Version: ${project.version}-${buildNumber}-${timestamp}
+Implementation-Vendor: Ideaconsult Ltd.
+Package-Title: net.idea.loom.effectopedia
+Package-Version: ${project.version}
+Package-Vendor: Ideaconsult Ltd.
