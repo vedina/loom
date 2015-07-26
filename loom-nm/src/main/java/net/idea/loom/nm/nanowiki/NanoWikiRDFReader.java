@@ -721,17 +721,21 @@ class ProcessMeasurement extends ProcessSolution {
 
 			if (qs.get("year") != null)
 				papp.setReferenceYear(qs.get("year").asLiteral().getString());
-
+			/*
 			if (qs.get("assayJournalLabel") != null)
 				papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral()
 						.getString());
+						*/
 
+			
 		} catch (Exception x) {
 			if (citation != null) {
 				papp.setReference(citation.getURL());
 				papp.setReferenceOwner(citation.getTitle());
 			}
 		}
+		
+		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
 
 		try {
@@ -910,10 +914,11 @@ class ProcessNMMeasurement extends ProcessSolution {
 		} catch (Exception x) {
 			if (citation != null) {
 				papp.setReference(citation.getURL());
-				papp.setReferenceOwner(citation.getTitle());
+				//papp.setReferenceOwner(citation.getTitle());
 			}
 		}
 
+		papp.setReferenceOwner("NanoWiki");
 		try {
 			if (method != null)
 				papp.getParameters().put(I5CONSTANTS.methodType,
@@ -1164,6 +1169,11 @@ class ProcessMaterial extends ProcessSolution {
 		}
 		;
 
+		if (record.getSubstanceName().startsWith("JRC2011")) {
+			ExternalIdentifier e = new ExternalIdentifier("JRC Representative Manufactured Nanomaterials", record.getSubstanceName().replace("JRC2011 ",""));
+			record.getExternalids().add(e);
+		}
+		
 		try {
 			record.setFormula(qs.get("composition").asLiteral().getString());
 			if (record.getFormula() != null) {
@@ -1180,8 +1190,6 @@ class ProcessMaterial extends ProcessSolution {
 							NanoWikiRDFReader.generateUUIDfromString("NWKI",
 									null));
 				}
-				;
-
 				core.setFormula(record.getFormula());
 
 				if ("CarbonNanotube".equals(record.getSubstancetype())) {
@@ -1201,7 +1209,7 @@ class ProcessMaterial extends ProcessSolution {
 					if (ptype.getEINECS() != null)
 						core.setProperty(Property.getEINECSInstance(),
 								ptype.getEINECS());								
-				} else
+				} 
 
 					for (ParticleTypes ptype : ParticleTypes.values()) {
 						if (ptype.getFormula() == null) {
