@@ -268,7 +268,7 @@ class ProcessSolution {
 
 	protected static int execQuery(Model rdf, String sparqlQuery,
 			ProcessSolution processor) {
-		// System.out.println(sparqlQuery);
+		System.out.println(sparqlQuery);
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		int records = 0;
@@ -722,19 +722,18 @@ class ProcessMeasurement extends ProcessSolution {
 			if (qs.get("year") != null)
 				papp.setReferenceYear(qs.get("year").asLiteral().getString());
 			/*
-			if (qs.get("assayJournalLabel") != null)
-				papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral()
-						.getString());
-						*/
+			 * if (qs.get("assayJournalLabel") != null)
+			 * papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral()
+			 * .getString());
+			 */
 
-			
 		} catch (Exception x) {
 			if (citation != null) {
 				papp.setReference(citation.getURL());
 				papp.setReferenceOwner(citation.getTitle());
 			}
 		}
-		
+
 		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
 
@@ -914,7 +913,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 		} catch (Exception x) {
 			if (citation != null) {
 				papp.setReference(citation.getURL());
-				//papp.setReferenceOwner(citation.getTitle());
+				// papp.setReferenceOwner(citation.getTitle());
 			}
 		}
 
@@ -995,6 +994,15 @@ class ProcessCoatings extends ProcessSolution {
 		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString(
 				"NWKI", null));
 		record.addMeasurement(experiment);// should be one and the same
+
+		try {
+			experiment
+					.setReference(qs.get("study").asResource().getLocalName());
+		} catch (Exception x) {
+		}
+		
+		experiment.setReferenceOwner("NanoWiki");
+
 		// experiment...
 		EffectRecord<String, IParams, String> erecord;
 
@@ -1044,7 +1052,6 @@ class ProcessCoatings extends ProcessSolution {
 			coating.setProperty(Property.getI5UUIDInstance(),
 					NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
 		}
-		;
 
 		erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 		erecord.setEndpoint("ATOMIC COMPOSITION");
@@ -1170,10 +1177,12 @@ class ProcessMaterial extends ProcessSolution {
 		;
 
 		if (record.getSubstanceName().startsWith("JRC2011")) {
-			ExternalIdentifier e = new ExternalIdentifier("JRC Representative Manufactured Nanomaterials", record.getSubstanceName().replace("JRC2011 ",""));
+			ExternalIdentifier e = new ExternalIdentifier(
+					"JRC Representative Manufactured Nanomaterials", record
+							.getSubstanceName().replace("JRC2011 ", ""));
 			record.getExternalids().add(e);
 		}
-		
+
 		try {
 			record.setFormula(qs.get("composition").asLiteral().getString());
 			if (record.getFormula() != null) {
@@ -1194,45 +1203,43 @@ class ProcessMaterial extends ProcessSolution {
 
 				if ("CarbonNanotube".equals(record.getSubstancetype())) {
 					ParticleTypes ptype = ParticleTypes.NPO_602;
-					record.setSubstancetype(ptype
-							.getAnnotation());
+					record.setSubstancetype(ptype.getAnnotation());
 					core.setSmiles(ptype.getSMILES());
 					try {
 						core.setContent(core.getSmiles());
 						core.setFormat("INC");
 						core.setSmiles(core.getContent());
 					} catch (Exception x) {
-					}					
+					}
 					if (ptype.getCAS() != null)
 						core.setProperty(Property.getCASInstance(),
 								ptype.getCAS());
 					if (ptype.getEINECS() != null)
 						core.setProperty(Property.getEINECSInstance(),
-								ptype.getEINECS());								
-				} 
+								ptype.getEINECS());
+				}
 
-					for (ParticleTypes ptype : ParticleTypes.values()) {
-						if (ptype.getFormula() == null) {
-							continue;
-						} else if (ptype.getFormula().equals(core.getFormula())) {
-							core.setSmiles(ptype.getSMILES());
-							try {
-								core.setContent(core.getSmiles());
-								core.setFormat("INC");
-								core.setSmiles(core.getContent());
-							} catch (Exception x) {
-							}
-							if (ptype.getCAS() != null)
-								core.setProperty(Property.getCASInstance(),
-										ptype.getCAS());
-							if (ptype.getEINECS() != null)
-								core.setProperty(Property.getEINECSInstance(),
-										ptype.getEINECS());							
-							record.setSubstancetype(ptype.name());
+				for (ParticleTypes ptype : ParticleTypes.values()) {
+					if (ptype.getFormula() == null) {
+						continue;
+					} else if (ptype.getFormula().equals(core.getFormula())) {
+						core.setSmiles(ptype.getSMILES());
+						try {
+							core.setContent(core.getSmiles());
+							core.setFormat("INC");
+							core.setSmiles(core.getContent());
+						} catch (Exception x) {
 						}
+						if (ptype.getCAS() != null)
+							core.setProperty(Property.getCASInstance(),
+									ptype.getCAS());
+						if (ptype.getEINECS() != null)
+							core.setProperty(Property.getEINECSInstance(),
+									ptype.getEINECS());
+						record.setSubstancetype(ptype.name());
 					}
+				}
 
-				
 				// todo more info
 				try {
 					core.setProperty(Property.getNameInstance(),
