@@ -4,7 +4,7 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.11-SNAPSHOT</version>
   </parent>
   <artifactId>loom-tox21</artifactId>
   <name>loom-tox21</name>
@@ -25,7 +25,7 @@ http://pubchem.ncbi.nlm.nih.gov/rest/pug/assay/sourceall/Tox21/aids/JSON</descri
     <dependency>
     	<groupId>net.ideaconsult</groupId>
     	<artifactId>loom-pubchemrest-cli</artifactId>
-    	<version>1.0.10-SNAPSHOT</version>
+    	<version>1.0.11-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
