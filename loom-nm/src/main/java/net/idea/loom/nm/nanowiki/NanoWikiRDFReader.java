@@ -268,7 +268,7 @@ class ProcessSolution {
 
 	protected static int execQuery(Model rdf, String sparqlQuery,
 			ProcessSolution processor) {
-		System.out.println(sparqlQuery);
+		//System.out.println(sparqlQuery);
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		int records = 0;
