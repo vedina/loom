@@ -152,7 +152,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		;
 	    }
 	} else if ("Core composition".equals(lines[_lines.endpointcategory.ordinal()])) {
-	    record.setSubstancetype("nanoparticle");
+	    record.setSubstancetype("NPO_707");
 	    if ("Element".equals(lines[_lines.endpoint.ordinal()])) {
 		// get the protocol to characterize composition from the paper!
 		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY
