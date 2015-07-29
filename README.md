@@ -21,3 +21,5 @@ Stable
   <version>1.0.9</version>
 </dependency>
 ````
+
+This branch 1.0.x works with Ambit 2.7.x dependency - soon to be outdated by Ambit 3.0
