@@ -210,6 +210,6 @@
     <rdf.arq.version>2.8.8</rdf.arq.version>
     <rdf.arqextra.version>2.7.0</rdf.arqextra.version>
     <rdf.iri.version>0.8</rdf.iri.version>
-    <org.apache.httpcomponents.httpclient.version>4.3.5</org.apache.httpcomponents.httpclient.version>
+    <org.apache.httpcomponents.httpclient.version>4.5</org.apache.httpcomponents.httpclient.version>
   </properties>
 </project>
