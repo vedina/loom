@@ -2,6 +2,7 @@ package net.idea.i5.cli.test;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.idea.i5.cli.Container;
 import net.idea.i5.cli.ContainerClient;
@@ -52,7 +53,8 @@ public class ContainerClientTest extends ClientTest {
 				file.delete();
 			} catch (Exception x) {
 			}
-			System.out.println(System.currentTimeMillis() - now);
+			logger.log(Level.INFO,
+					String.format("%s ms", (System.currentTimeMillis() - now)));
 		}
 	}
 

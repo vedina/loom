@@ -51,7 +51,8 @@ public class QueryToolClientTest extends ClientTest {
 				i5.logout();
 			} catch (Exception x) {
 			}
-			System.out.println(System.currentTimeMillis() - now);
+			logger.log(Level.INFO,
+					String.format("%s ms", (System.currentTimeMillis() - now)));
 		}
 	}
 
@@ -76,8 +77,8 @@ public class QueryToolClientTest extends ClientTest {
 
 					Assert.assertNotNull(content);
 					for (int j = 0; j < content.size(); j++) {
-						System.out.println(content.get(j)
-								.getResourceIdentifier());
+						logger.log(Level.FINE, content.get(j)
+								.getResourceIdentifier().toString());
 					}
 					Assert.assertEquals(expected, content.size());
 					int i = 0;
@@ -110,7 +111,7 @@ public class QueryToolClientTest extends ClientTest {
 						}
 					}
 				} catch (Exception x) {
-					System.err.println(x.getMessage());
+					logger.log(Level.SEVERE, x.getMessage());
 				}
 			}
 		} catch (Exception x) {
@@ -124,7 +125,8 @@ public class QueryToolClientTest extends ClientTest {
 				i5.getHttpClient().getConnectionManager().shutdown();
 			} catch (Exception x) {
 			}
-			System.out.println(System.currentTimeMillis() - now);
+			logger.log(Level.INFO,
+					String.format("%s ms", (System.currentTimeMillis() - now)));
 		}
 	}
 
@@ -144,11 +146,11 @@ public class QueryToolClientTest extends ClientTest {
 			file = ((Container) content.get(i)).getIpzarchive();
 			Assert.assertTrue(file.exists());
 			// Assert.assertTrue(file.length()>0);
-			System.out.println(file);
+			logger.log(Level.FINE,file.toString());
 			try {
 				unmarshall_i5z(file, -1);
 			} catch (Exception x) {
-				x.printStackTrace();
+				logger.log(Level.SEVERE,x.getMessage());
 			}
 			file.deleteOnExit();
 		}

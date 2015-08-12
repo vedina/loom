@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -75,7 +76,7 @@ public abstract class I5AbstractClient extends
 									.getAttributeValue(
 											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
 											"errorCode");
-							System.out.println(errorCode);
+							logger.log(Level.SEVERE,errorCode);
 							break;
 						}
 						case SessionFault: {
@@ -83,7 +84,7 @@ public abstract class I5AbstractClient extends
 									.getAttributeValue(
 											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
 											"errorCode");
-							System.out.println(errorCode);
+							logger.log(Level.SEVERE,errorCode);
 							break;
 						}
 						case errorMessage: {

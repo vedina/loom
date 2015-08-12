@@ -74,18 +74,15 @@ public class ClientTest {
 							if (papp.getProtocol() != null) {
 								String category = ((Protocol) papp
 										.getProtocol()).getCategory();
-								System.out.println(category);
 								try {
 									I5_ROOT_OBJECTS r = I5_ROOT_OBJECTS
 											.valueOf(((Protocol) papp
 													.getProtocol())
 													.getCategory().replace(
 															"_SECTION", ""));
-									if (r.isNanoMaterialTemplate()
-											&& r.isSupported())
-										System.out.println(papp);
+
 								} catch (Exception x) {
-									x.printStackTrace();
+									logger.log(Level.WARNING,x.getMessage());
 								}
 							}
 						}
@@ -93,7 +90,7 @@ public class ClientTest {
 				} else if (next instanceof IStructureRecord) {
 					Assert.assertNotNull(((IStructureRecord) next).getContent());
 				}
-				logger.info(next == null ? "null entry" : next.toString());
+				logger.fine(next == null ? "null entry" : next.toString());
 				count++;
 			}
 			return count;
