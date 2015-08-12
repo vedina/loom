@@ -2,9 +2,9 @@ package net.idea.loom.pubchem.rest;
 
 import net.idea.opentox.cli.IIdentifiableResource;
 
-public class Identifier implements IIdentifiableResource<String> {
+public class PubChemIdentifier implements IIdentifiableResource<String> {
 
-    public Identifier(String type, String value) {
+    public PubChemIdentifier(String type, String value) {
 	super();
 	this.type = type;
 	this.value = value;

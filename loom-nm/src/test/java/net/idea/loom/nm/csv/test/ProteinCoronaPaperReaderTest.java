@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
 
-import junit.framework.Assert;
 import net.idea.loom.nm.csv.CSV12Reader;
 import net.idea.loom.nm.csv.CSV12SubstanceReader;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import ambit2.base.data.ILiteratureEntry._type;

@@ -1,8 +1,7 @@
 package net.idea.ops.cli.assay;
 
-import java.net.URL;
-
 import net.idea.opentox.cli.AbstractURLResource;
+import net.idea.opentox.cli.id.IIdentifier;
 
 public class Assay extends AbstractURLResource {
 
@@ -42,7 +41,7 @@ public class Assay extends AbstractURLResource {
 	super(null);
     }
 
-    public Assay(URL url) {
+    public Assay(IIdentifier url) {
 	super(url);
     }
 

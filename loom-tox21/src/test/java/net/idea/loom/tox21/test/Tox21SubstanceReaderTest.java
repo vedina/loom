@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import junit.framework.Assert;
-import net.idea.loom.pubchem.rest.Identifier;
+import net.idea.loom.pubchem.rest.PubChemIdentifier;
 import net.idea.loom.pubchem.rest.PubChemRESTClient;
 import net.idea.loom.tox21.Tox21SubstanceReader;
 
@@ -87,8 +87,8 @@ public class Tox21SubstanceReaderTest {
 	    while (reader.hasNext()) {
 		IAtomContainer row = (IAtomContainer) reader.next();
 
-		List<Identifier> ids = cli.getSubstanceSynonyms(row.getProperty("PUBCHEM_SID").toString());
-		for (Identifier id : ids) {
+		List<PubChemIdentifier> ids = cli.getSubstanceSynonyms(row.getProperty("PUBCHEM_SID").toString());
+		for (PubChemIdentifier id : ids) {
 		    row.getProperties().put(id.getType(), id.getResourceIdentifier());
 		}
 
