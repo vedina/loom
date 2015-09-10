@@ -89,7 +89,7 @@ public class Tox21SubstanceReaderTest {
 
 		List<PubChemIdentifier> ids = cli.getSubstanceSynonyms(row.getProperty("PUBCHEM_SID").toString());
 		for (PubChemIdentifier id : ids) {
-		    row.getProperties().put(id.getType(), id.getResourceIdentifier());
+		    row.setProperty(id.getType(), id.getResourceIdentifier());
 		}
 
 		// System.out.println(row.getProperties());

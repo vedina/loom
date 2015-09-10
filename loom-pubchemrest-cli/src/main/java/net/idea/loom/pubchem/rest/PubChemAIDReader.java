@@ -29,6 +29,7 @@ import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
+import ambit2.core.data.MoleculeTools;
 import ambit2.core.io.IteratingDelimitedFileReader;
 import ambit2.core.io.RawIteratingWrapper;
 
@@ -1182,8 +1183,7 @@ public class PubChemAIDReader extends RawIteratingWrapper<IteratingDelimitedFile
 		 * ExternalIdentifier("DOI","http://dx.doi.org/10.1021/nn406018q"
 		 * ));
 		 */
-		((IAtomContainer) o).getProperties().clear();
-
+		MoleculeTools.clearProperties((IAtomContainer) o);
 		r.setContent(writer.process((IAtomContainer) o));
 		Object ref = ((IAtomContainer) o).getProperty("REFERENCE");
 		if (ref instanceof LiteratureEntry)

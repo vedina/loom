@@ -1025,13 +1025,13 @@ class ProcessCoatings extends ProcessSolution {
 		record.addStructureRelation(composition_uuid, coating,
 				STRUCTURE_RELATION.HAS_COATING, new Proportion());
 		try {
-			coating.setProperty(Property.getTradeNameInstance("COATING"), qs
+			coating.setRecordProperty(Property.getTradeNameInstance("COATING"), qs
 					.get("coating").asResource().getLocalName());
 		} catch (Exception x) {
 		}
 		;
 		try {
-			coating.setProperty(Property.getNameInstance(), qs.get("chemical")
+			coating.setRecordProperty(Property.getNameInstance(), qs.get("chemical")
 					.asResource().getLocalName());
 		} catch (Exception x) {
 		}
@@ -1044,12 +1044,12 @@ class ProcessCoatings extends ProcessSolution {
 		}
 		;
 		try {
-			coating.setProperty(
+			coating.setRecordProperty(
 					Property.getI5UUIDInstance(),
 					NanoWikiRDFReader.generateUUIDfromString("NWKI",
 							qs.get("chemical").asResource().getLocalName()));
 		} catch (Exception x) {
-			coating.setProperty(Property.getI5UUIDInstance(),
+			coating.setRecordProperty(Property.getI5UUIDInstance(),
 					NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
 		}
 
@@ -1191,11 +1191,11 @@ class ProcessMaterial extends ProcessSolution {
 				record.addStructureRelation(composition_uuid, core,
 						STRUCTURE_RELATION.HAS_CORE, new Proportion());
 				try {
-					core.setProperty(Property.getI5UUIDInstance(),
+					core.setRecordProperty(Property.getI5UUIDInstance(),
 							NanoWikiRDFReader.generateUUIDfromString("NWKI",
 									record.getFormula()));
 				} catch (Exception x) {
-					core.setProperty(Property.getI5UUIDInstance(),
+					core.setRecordProperty(Property.getI5UUIDInstance(),
 							NanoWikiRDFReader.generateUUIDfromString("NWKI",
 									null));
 				}
@@ -1212,10 +1212,10 @@ class ProcessMaterial extends ProcessSolution {
 					} catch (Exception x) {
 					}
 					if (ptype.getCAS() != null)
-						core.setProperty(Property.getCASInstance(),
+						core.setRecordProperty(Property.getCASInstance(),
 								ptype.getCAS());
 					if (ptype.getEINECS() != null)
-						core.setProperty(Property.getEINECSInstance(),
+						core.setRecordProperty(Property.getEINECSInstance(),
 								ptype.getEINECS());
 				}
 
@@ -1231,10 +1231,10 @@ class ProcessMaterial extends ProcessSolution {
 						} catch (Exception x) {
 						}
 						if (ptype.getCAS() != null)
-							core.setProperty(Property.getCASInstance(),
+							core.setRecordProperty(Property.getCASInstance(),
 									ptype.getCAS());
 						if (ptype.getEINECS() != null)
-							core.setProperty(Property.getEINECSInstance(),
+							core.setRecordProperty(Property.getEINECSInstance(),
 									ptype.getEINECS());
 						record.setSubstancetype(ptype.name());
 					}
@@ -1242,7 +1242,7 @@ class ProcessMaterial extends ProcessSolution {
 
 				// todo more info
 				try {
-					core.setProperty(Property.getNameInstance(),
+					core.setRecordProperty(Property.getNameInstance(),
 							record.getFormula());
 				} catch (Exception x) {
 				}

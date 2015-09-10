@@ -8,6 +8,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import ambit2.base.data.LiteratureEntry;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.interfaces.IStructureRecord;
+import ambit2.core.data.MoleculeTools;
 import ambit2.core.io.RawIteratingWrapper;
 import ambit2.core.io.StringArrayHeader;
 
@@ -35,7 +36,7 @@ public class CSV12SubstanceReader extends RawIteratingWrapper<CSV12Reader> {
 		    Object key = i.next();
 		    if (key instanceof StringArrayHeader) {
 			((StringArrayHeader) key).assign((SubstanceRecord) r,
-				((IAtomContainer) o).getProperties().get(key));
+				((IAtomContainer) o).getProperty(key));
 		    }
 		    // System.out.println(key.getClass().getName() + " : " +
 		    // key);
@@ -52,8 +53,7 @@ public class CSV12SubstanceReader extends RawIteratingWrapper<CSV12Reader> {
 		// ids.add(new
 		// ExternalIdentifier("DOI","http://dx.doi.org/10.1021/nn406018q"));
 
-		((IAtomContainer) o).getProperties().clear();
-
+		MoleculeTools.clearProperties((IAtomContainer)o);
 		r.setContent(writer.process((IAtomContainer) o));
 		Object ref = ((IAtomContainer) o).getProperty("REFERENCE");
 		if (ref instanceof LiteratureEntry)

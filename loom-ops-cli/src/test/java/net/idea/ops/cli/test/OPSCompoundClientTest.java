@@ -81,6 +81,6 @@ public class OPSCompoundClientTest extends AbstractOPSClientTest<Compound, OPSCo
      * Assert.assertNotNull(s.getResourceIdentifier());
      * System.out.println(s.getName());
      * System.out.println(s.getResourceIdentifier());
-     * System.out.println(s.getProperties().get(Compound.opentox_ChEBI)); } }
+     * System.out.println(s.getProperty(Compound.opentox_ChEBI)); } }
      */
 }

@@ -113,7 +113,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			new Proportion());
 
 		try {
-		    structure.setProperty(Property.getNameInstance(), value.toString());
+		    structure.setRecordProperty(Property.getNameInstance(), value.toString());
 		} catch (Exception x) {
 		}
 		;
@@ -125,17 +125,17 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		}
 		;
 		try {
-		    structure.setProperty(Property.getI5UUIDInstance(), prefix + uuid.toString());
+		    structure.setRecordProperty(Property.getI5UUIDInstance(), prefix + uuid.toString());
 		} catch (Exception x) {
 		}
 		;
 		try {
-		    structure.setProperty(Property.getNameInstance(), record.getPublicName());
+		    structure.setRecordProperty(Property.getNameInstance(), record.getPublicName());
 		} catch (Exception x) {
 		}
 		;
 		try {
-		    structure.setProperty(Property.getTradeNameInstance("Name"), record.getSubstanceName());
+		    structure.setRecordProperty(Property.getTradeNameInstance("Name"), record.getSubstanceName());
 		} catch (Exception x) {
 		}
 		;
@@ -146,7 +146,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		    for (CompositionRelation rel : record.getRelatedStructures())
 			if (STRUCTURE_RELATION.HAS_CONSTITUENT.name().equals(rel.getRelation().getClass()))
 			    try {
-				rel.getSecondStructure().setProperty(Property.getCASInstance(), value.toString());
+				rel.getSecondStructure().setRecordProperty(Property.getCASInstance(), value.toString());
 			    } catch (Exception x) {
 			    }
 		;
@@ -183,7 +183,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			new Proportion());
 
 		try {
-		    core.setProperty(Property.getNameInstance(), value.toString());
+		    core.setRecordProperty(Property.getNameInstance(), value.toString());
 		} catch (Exception x) {
 		}
 		;
@@ -195,7 +195,7 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 		}
 		;
 		try {
-		    core.setProperty(Property.getI5UUIDInstance(), prefix + uuid.toString());
+		    core.setRecordProperty(Property.getI5UUIDInstance(), prefix + uuid.toString());
 		} catch (Exception x) {
 		}
 		;
@@ -231,12 +231,12 @@ public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 			new Proportion());
 		// try {record.setOwnerName();} catch (Exception x) {};
 		try {
-		    coating.setProperty(Property.getNameInstance(), value.toString());
+		    coating.setRecordProperty(Property.getNameInstance(), value.toString());
 		} catch (Exception x) {
 		}
 		;
 		try {
-		    coating.setProperty(Property.getI5UUIDInstance(),
+		    coating.setRecordProperty(Property.getI5UUIDInstance(),
 			    prefix + UUID.nameUUIDFromBytes(value.toString().toLowerCase().getBytes()));
 		} catch (Exception x) {
 		}
