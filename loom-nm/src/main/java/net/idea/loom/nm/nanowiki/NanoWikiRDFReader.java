@@ -1202,7 +1202,7 @@ class ProcessMaterial extends ProcessSolution {
 				core.setFormula(record.getFormula());
 
 				if ("CarbonNanotube".equals(record.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.NPO_602;
+					ParticleTypes ptype = ParticleTypes.NPO_606;
 					record.setSubstancetype(ptype.getAnnotation());
 					core.setSmiles(ptype.getSMILES());
 					try {
