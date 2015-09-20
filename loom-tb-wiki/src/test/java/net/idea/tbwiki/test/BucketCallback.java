@@ -1,7 +1,7 @@
 package net.idea.tbwiki.test;
 
-import net.idea.loom.common.Bucket;
 import net.idea.loom.common.ICallBack;
+import net.idea.modbcum.i.bucket.Bucket;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.RDFNode;
