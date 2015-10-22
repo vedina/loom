@@ -77,7 +77,7 @@ public class CSV12Reader extends IteratingDelimitedFileReaderComplexHeader<Strin
 		    addHeaderColumn(token);
 		} else {
 		    StringArrayHeader column = getHeaderColumn(col);
-		    System.out.println(col + ":" + column + " " + token);
+		    //System.out.println(col + ":" + column + " " + token);
 		    column.setValue(nline, col, token);
 		}
 	    }
