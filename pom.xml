@@ -14,7 +14,9 @@
     <module>loom-tb-wiki</module>
     <module>loom-common</module>
     <module>loom-nm</module>
+    <!--
     <module>loom-isa</module>
+    -->
     <module>loom-i5ws</module>
     <module>loom-tox21</module>
     <module>loom-effectopedia</module>
