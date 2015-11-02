@@ -16,25 +16,16 @@
 			<version>${ambit.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>jena</artifactId>
-			<version>${rdf.jena.version}</version>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>${apache.jena.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>arq</artifactId>
-			<version>${rdf.arq.version}</version>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<version>${apache.jena.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>iri</artifactId>
-			<version>${rdf.iri.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>arq-extra</artifactId>
-			<version>${rdf.arqextra.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>net.idea</groupId>
 			<artifactId>iuclid_5_common</artifactId>
