@@ -1,14 +1,14 @@
 package net.idea.loom.nm.nanowiki.test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
-import junit.framework.Assert;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import ambit2.base.data.SubstanceRecord;
@@ -26,8 +26,10 @@ public class NanoWikiRDFTest {
 	NanoWikiRDFReader reader = null;
 	int records = 0;
 	try {
-	    reader = new NanoWikiRDFReader(new InputStreamReader(new FileInputStream(new File(
-		    "F:/Downloads/Chemical Data/enanomapper/backup-01022015.rdf")), "UTF-8"));
+		URL url = new URL("http://files.figshare.com/1941966/nanowiki.cczero.1.rdf.gz");
+		Assert.assertNotNull(url);
+
+	    reader = new NanoWikiRDFReader(new InputStreamReader(new GZIPInputStream(url.openStream()), "UTF-8"));
 	    while (reader.hasNext()) {
 		IStructureRecord record = reader.nextRecord();
 		Assert.assertTrue(record instanceof SubstanceRecord);
@@ -77,9 +79,9 @@ public class NanoWikiRDFTest {
 		records++;
 	    }
 	} catch (Exception x) {
-	    x.printStackTrace();
+	    logger.log(Level.SEVERE,x.getMessage(),x);
 	} finally {
-	    reader.close();
+	    if (reader!=null) reader.close();
 	}
 	logger.log(Level.INFO, "Substance records read\t"+records);
     }
