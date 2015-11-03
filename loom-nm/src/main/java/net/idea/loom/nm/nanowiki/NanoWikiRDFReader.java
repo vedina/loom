@@ -70,7 +70,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	public void setReader(Reader reader) throws CDKException {
 		try {
 			rdf = ModelFactory.createDefaultModel();
-			rdf.read(reader, null, "RDF/XML");
+			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
 			Resource materialtype = rdf
 					.createResource("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Category-3AMaterials");
 			materials = rdf.listResourcesWithProperty(RDF.type, materialtype);
