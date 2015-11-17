@@ -48,6 +48,16 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+/**
+ * TODO bundles http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Bundle
+ * IDs (go to external ids)
+ * COD
+ * http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_COD_ID
+ * Former JRC
+ * http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AFormerly
+ * @author nina
+ *
+ */
 public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		implements IRawReader<IStructureRecord>, ICiteable {
 	protected Model rdf;
@@ -141,6 +151,9 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		return record;
 	}
 
+	
+
+	
 	/*
 	 * private void parseStudy(Model rdf,RDFNode studyNode,SubstanceRecord
 	 * record) { StmtIterator ii =
@@ -245,12 +258,13 @@ class ProcessSolution {
 
 	void processHeader(ResultSet rs) {
 		for (String name : rs.getResultVars()) {
-			System.out.print(name);
-			System.out.print("\t");
+			//System.out.print(name);
+			//System.out.print("\t");
 		}
 	}
 
 	void process(ResultSet rs, QuerySolution qs) {
+		/*
 		for (String name : rs.getResultVars()) {
 			RDFNode node = qs.get(name);
 			if (node == null)
@@ -264,6 +278,7 @@ class ProcessSolution {
 			System.out.print("\t");
 		}
 		System.out.println();
+		*/
 	}
 
 	protected static int execQuery(Model rdf, String sparqlQuery,
@@ -359,7 +374,28 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 			}
 		},
+		Boiling_Point {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_BOILING;
+			}
 
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.BOILINGPOINT;
+			}
+		},
+		Melting_Point {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_MELTING;
+			}
+
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.eMELTINGPOINT;
+			}
+		},		
 		Zeta_Potential {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
