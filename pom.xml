@@ -207,7 +207,7 @@
     <!-- ambit.sf.net -->
     <ambit.version>3.0.1-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>1.1.0</i5.version>
+    <i5.version>1.1.1-SNAPSHOT</i5.version>
 	<apache.jena.version>2.13.0</apache.jena.version>
     <org.apache.httpcomponents.httpclient.version>4.5</org.apache.httpcomponents.httpclient.version>
   </properties>
