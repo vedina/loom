@@ -45,7 +45,7 @@ public class ContainerClient extends I5AbstractClient {
 		String xml = String.format(
 				loadXML("net/idea/i5/cli/container/request.xml"), token,
 				identifier);
-		// System.out.println(xml);
+
 		HttpEntity content = new StringEntity(xml, "UTF-8");
 		HttpPost httpPOST = new HttpPost(baseURL + "/ContainerEngine");
 		if (headers != null)
