@@ -49,14 +49,15 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
- * TODO bundles http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Bundle
- * IDs (go to external ids)
- * COD
- * http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_COD_ID
- * Former JRC
+ * TODO bundles
+ * http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property
+ * -3AHas_Bundle IDs (go to external ids) COD
+ * http://127.0.0.1/mediawiki/index.php
+ * /Special:URIResolver/Property-3AHas_COD_ID Former JRC
  * http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AFormerly
+ * 
  * @author nina
- *
+ * 
  */
 public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		implements IRawReader<IStructureRecord>, ICiteable {
@@ -151,9 +152,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		return record;
 	}
 
-	
-
-	
 	/*
 	 * private void parseStudy(Model rdf,RDFNode studyNode,SubstanceRecord
 	 * record) { StmtIterator ii =
@@ -258,32 +256,25 @@ class ProcessSolution {
 
 	void processHeader(ResultSet rs) {
 		for (String name : rs.getResultVars()) {
-			//System.out.print(name);
-			//System.out.print("\t");
+			// System.out.print(name);
+			// System.out.print("\t");
 		}
 	}
 
 	void process(ResultSet rs, QuerySolution qs) {
 		/*
-		for (String name : rs.getResultVars()) {
-			RDFNode node = qs.get(name);
-			if (node == null)
-				;
-			else if (node.isLiteral())
-				System.out.print(node.asLiteral().getString());
-			else if (node.isResource())
-				System.out.print(node.asResource().getURI());
-			else
-				System.out.print(node.asNode().getName());
-			System.out.print("\t");
-		}
-		System.out.println();
-		*/
+		 * for (String name : rs.getResultVars()) { RDFNode node = qs.get(name);
+		 * if (node == null) ; else if (node.isLiteral())
+		 * System.out.print(node.asLiteral().getString()); else if
+		 * (node.isResource()) System.out.print(node.asResource().getURI());
+		 * else System.out.print(node.asNode().getName());
+		 * System.out.print("\t"); } System.out.println();
+		 */
 	}
 
 	protected static int execQuery(Model rdf, String sparqlQuery,
 			ProcessSolution processor) {
-		//System.out.println(sparqlQuery);
+		// System.out.println(sparqlQuery);
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		int records = 0;
@@ -395,7 +386,7 @@ class ProcessMeasurement extends ProcessSolution {
 			public String getTag() {
 				return I5CONSTANTS.eMELTINGPOINT;
 			}
-		},		
+		},
 		Zeta_Potential {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -1036,7 +1027,7 @@ class ProcessCoatings extends ProcessSolution {
 					.setReference(qs.get("study").asResource().getLocalName());
 		} catch (Exception x) {
 		}
-		
+
 		experiment.setReferenceOwner("NanoWiki");
 
 		// experiment...
@@ -1061,14 +1052,14 @@ class ProcessCoatings extends ProcessSolution {
 		record.addStructureRelation(composition_uuid, coating,
 				STRUCTURE_RELATION.HAS_COATING, new Proportion());
 		try {
-			coating.setRecordProperty(Property.getTradeNameInstance("COATING"), qs
-					.get("coating").asResource().getLocalName());
+			coating.setRecordProperty(Property.getTradeNameInstance("COATING"),
+					qs.get("coating").asResource().getLocalName());
 		} catch (Exception x) {
 		}
 		;
 		try {
-			coating.setRecordProperty(Property.getNameInstance(), qs.get("chemical")
-					.asResource().getLocalName());
+			coating.setRecordProperty(Property.getNameInstance(),
+					qs.get("chemical").asResource().getLocalName());
 		} catch (Exception x) {
 		}
 		;
@@ -1237,7 +1228,45 @@ class ProcessMaterial extends ProcessSolution {
 				}
 				core.setFormula(record.getFormula());
 
-				if ("CarbonNanotube".equals(record.getSubstancetype())) {
+				if ("Nanoclay".equals(record.getSubstancetype())) {
+					ParticleTypes ptype = ParticleTypes.ENM_9000007;
+					record.setSubstancetype(ptype.getAnnotation());
+				} else if ("CarbonNanoparticle".equals(record
+						.getSubstancetype())) {
+					ParticleTypes ptype = ParticleTypes.CHEBI_82297;
+					record.setSubstancetype(ptype.getAnnotation());
+					core.setSmiles(ptype.getSMILES());
+					try {
+						core.setContent(core.getSmiles());
+						core.setFormat("INC");
+						core.setSmiles(core.getContent());
+					} catch (Exception x) {
+					}
+				} else if ("MetalOxide".equals(record.getSubstancetype())) {
+					ParticleTypes ptype = ParticleTypes.NPO_1541;
+					record.setSubstancetype(ptype.getAnnotation());
+				} else if ("Multi-2Dwalled_Carbon_Nanotube".equals(record
+						.getSubstancetype())) {
+					ParticleTypes ptype = ParticleTypes.NPO_354;
+					record.setSubstancetype(ptype.getAnnotation());
+					core.setSmiles(ptype.getSMILES());
+					try {
+						core.setContent(core.getSmiles());
+						core.setFormat("INC");
+						core.setSmiles(core.getContent());
+					} catch (Exception x) {
+					}
+					if (ptype.getCAS() != null)
+						core.setRecordProperty(Property.getCASInstance(),
+								ptype.getCAS());
+					if (ptype.getEINECS() != null)
+						core.setRecordProperty(Property.getEINECSInstance(),
+								ptype.getEINECS());
+				} else if ("PolymerCore".equals(record.getSubstancetype())) {
+					ParticleTypes ptype = ParticleTypes.NPO_1862;
+					record.setSubstancetype(ptype.getAnnotation());
+
+				} else if ("CarbonNanotube".equals(record.getSubstancetype())) {
 					ParticleTypes ptype = ParticleTypes.NPO_606;
 					record.setSubstancetype(ptype.getAnnotation());
 					core.setSmiles(ptype.getSMILES());
@@ -1253,7 +1282,16 @@ class ProcessMaterial extends ProcessSolution {
 					if (ptype.getEINECS() != null)
 						core.setRecordProperty(Property.getEINECSInstance(),
 								ptype.getEINECS());
+				} else if (record.getSubstancetype() == null
+						|| "".equals(record.getSubstancetype().trim())) {
+					ParticleTypes ptype = ParticleTypes.NPO_199;
+					record.setSubstancetype(ptype.getAnnotation());
+				} else if ("Glass wool".equals(record.getPublicName().trim())) {
+					record.setSubstancetype(record.getPublicName());
+				} else if ("Asbestos".equals(record.getPublicName().trim())) {
+					record.setSubstancetype(record.getPublicName());
 				}
+				
 
 				for (ParticleTypes ptype : ParticleTypes.values()) {
 					if (ptype.getFormula() == null) {
@@ -1270,7 +1308,8 @@ class ProcessMaterial extends ProcessSolution {
 							core.setRecordProperty(Property.getCASInstance(),
 									ptype.getCAS());
 						if (ptype.getEINECS() != null)
-							core.setRecordProperty(Property.getEINECSInstance(),
+							core.setRecordProperty(
+									Property.getEINECSInstance(),
 									ptype.getEINECS());
 						record.setSubstancetype(ptype.name());
 					}
