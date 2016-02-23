@@ -4,7 +4,7 @@
   <parent>
     <artifactId>loom</artifactId>
     <groupId>net.ideaconsult</groupId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
   </parent>
   <artifactId>loom-actorws-cli</artifactId>
   <name>loom-actorws-cli</name>
