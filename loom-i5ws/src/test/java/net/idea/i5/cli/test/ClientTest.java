@@ -37,6 +37,7 @@ public class ClientTest {
 	}
 
 	protected int unmarshall_i5z(File in, int nfiles) throws Exception {
+		logger.log(Level.INFO,"unmarshall_i5z "+ in.toString());
 		Assert.assertNotNull(in);
 		FileOutputStream output = null;
 		I5ZReader reader = null;
@@ -46,16 +47,17 @@ public class ClientTest {
 			if (nfiles > 0)
 				Assert.assertEquals(nfiles, reader.getFiles().length);
 			reader.setErrorHandler(new IChemObjectReaderErrorHandler() {
+				@Override
 				public void handleError(String message, int row, int colStart,
 						int colEnd, Exception exception) {
 				}
-
+				@Override
 				public void handleError(String message, int row, int colStart,
 						int colEnd) {
 				}
-
+				@Override
 				public void handleError(String message, Exception exception) {
-					logger.log(Level.SEVERE, message);
+					logger.log(Level.SEVERE, message,exception);
 				}
 
 				public void handleError(String message) {
