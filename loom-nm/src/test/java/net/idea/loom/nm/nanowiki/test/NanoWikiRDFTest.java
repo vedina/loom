@@ -26,7 +26,7 @@ public class NanoWikiRDFTest {
 	NanoWikiRDFReader reader = null;
 	int records = 0;
 	try {
-		URL url = new URL("http://files.figshare.com/1941966/nanowiki.cczero.1.rdf.gz");
+		URL url = new URL("http://files.figshare.com/5228257/nanowiki.cczero.3.rdf.gz");
 		Assert.assertNotNull(url);
 
 	    reader = new NanoWikiRDFReader(new InputStreamReader(new GZIPInputStream(url.openStream()), "UTF-8"));

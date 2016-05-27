@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.idea.i5.io.I5CONSTANTS;
 import net.idea.i5.io.I5_ROOT_OBJECTS;
@@ -61,13 +63,29 @@ import com.hp.hpl.jena.vocabulary.RDF;
  */
 public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		implements IRawReader<IStructureRecord>, ICiteable {
+
 	protected Model rdf;
 	protected ResIterator materials;
 	protected SubstanceRecord record;
+	protected Logger logger;
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger == null ? Logger.getLogger(getClass().getName())
+				: logger;
+	}
 
 	public NanoWikiRDFReader(Reader reader) throws CDKException {
+		this(reader, null);
+	}
+
+	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException {
 		super();
 		setReader(reader);
+
 	}
 
 	public static String generateUUIDfromString(String prefix, String id) {
@@ -121,9 +139,15 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			Resource material = materials.next();
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
-			parseMaterial(rdf, material, record);
-			parseCoatings(rdf, material, record);
-			return true;
+			try {
+				parseMaterial(rdf, material, record);
+				parseCoatings(rdf, material, record);
+				return true;
+			} catch (IOException x) {
+				logger.log(Level.WARNING, x.getMessage());
+				record = null;
+				return false;
+			}
 		} else {
 			record = null;
 			return false;
@@ -193,46 +217,37 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	 * 
 	 * }
 	 */
-	private static final String m_material = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?year ?source_doi ?source_journal ?doilink ?journal_title\n"
-			+ "WHERE {\n"
-			+ "<%s> rdf:type mw:Category-3AMaterials.\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Coating ?coating.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Identifier ?id.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Label ?label.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n"
-			+ "OPTIONAL {<%s> rdfs:label ?label2.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal. ?source_journal rdfs:label ?journal_title.}}\n"
-			+ "}";
-
-	private static final String m_coating = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT distinct ?coating ?chemical ?smiles\n"
-			+ "WHERE {\n"
-			+ "<%s> mw:Property-3AHas_Chemical_Coating ?coating.\n"
-			+ "?coating mw:Property-3AHas_Chemical ?chemical.\n"
-			+ "OPTIONAL {\n"
-			+ "?chemical mw:Property-3AHas_SMILES ?smiles.\n"
-			+ "}\n" + "} order by ?coating ?chemical ?smiles\n";
+	/*
+	 * private static final String m_material =
+	 * "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
+	 * "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+	 * "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+	 * "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
+	 * +
+	 * "SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?year ?source_doi ?source_journal ?doilink ?journal_title\n"
+	 * + "WHERE {\n" + "<%s> rdf:type mw:Category-3AMaterials.\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"
+	 * + "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Coating ?coating.}\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_Identifier ?id.}\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_Label ?label.}\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n" +
+	 * "OPTIONAL {<%s> rdfs:label ?label2.}\n" +
+	 * "OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal. ?source_journal rdfs:label ?journal_title.}}\n"
+	 * + "}";
+	 */
 
 	private void parseCoatings(Model rdf, RDFNode material,
-			SubstanceRecord record) {
-		ProcessSolution.execQuery(rdf,
-				String.format(m_coating, material.asResource().getURI()),
-				new ProcessCoatings(rdf, material, record));
+			SubstanceRecord record) throws IOException {
+		ProcessSolution.execQuery(rdf, String.format(NW.m_coating.SPARQL(),
+				material.asResource().getURI()), new ProcessCoatings(rdf,
+				material, record));
 	}
 
 	private void parseMaterial(Model rdf, RDFNode material,
-			SubstanceRecord record) {
-		ProcessSolution.execQuery(rdf, String.format(m_material, material
-				.asResource().getURI(), material.asResource().getURI(),
+			SubstanceRecord record) throws IOException {
+		ProcessSolution.execQuery(rdf, String.format(NW.m_material.SPARQL(),
+				material.asResource().getURI(), material.asResource().getURI(),
 				material.asResource().getURI(), material.asResource().getURI(),
 				material.asResource().getURI(), material.asResource().getURI(),
 				material.asResource().getURI(), material.asResource().getURI(),
@@ -847,28 +862,19 @@ class ProcessMeasurement extends ProcessSolution {
 			effect.setConditions(conditions);
 		}
 
-		ProcessSolution.execQuery(rdf,
-				String.format(m_condition, measurement.getURI()),
-				new ProcessCondition(effect));
+		try {
+			ProcessSolution.execQuery(rdf, String.format(
+					NW.m_condition.SPARQL(), measurement.getURI()),
+					new ProcessCondition(effect));
 
-		papp.addEffect(effect);
+			papp.addEffect(effect);
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
 		// qs.get("label");
 		// qs.get("definedBy");
 		record.addMeasurement(papp);
 	}
-
-	private static final String m_condition = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT ?condition ?endpoint ?endpointLabel ?value ?valueUnit \n"
-			+ "WHERE {\n"
-			+ "?condition mw:Property-3AFor_Measurement <%s>.\n"
-			+ "?condition mw:Property-3AHas_Endpoint ?endpoint.\n"
-			+ "?endpoint rdfs:label ?endpointLabel.\n"
-			+ "?condition mw:Property-3AHas_Endpoint_Value ?value.\n"
-			+ "OPTIONAL {?condition mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}\n"
-			+ "OPTIONAL {?condition rdfs:label ?label.}\n" + "}\n";
 
 }
 
@@ -1291,7 +1297,6 @@ class ProcessMaterial extends ProcessSolution {
 				} else if ("Asbestos".equals(record.getPublicName().trim())) {
 					record.setSubstancetype(record.getPublicName());
 				}
-				
 
 				for (ParticleTypes ptype : ParticleTypes.values()) {
 					if (ptype.getFormula() == null) {
@@ -1338,124 +1343,59 @@ class ProcessMaterial extends ProcessSolution {
 			// x.printStackTrace();
 			record.setReference(null);
 		}
-		;
-		parseSize(rdf, material, record);
-		parseIEP(rdf, material, record);
-		parseZetaPotential(rdf, material, record);
-		parseMeasurement(rdf, material, record);
+		try {
+			parseSize(rdf, material, record);
+			parseIEP(rdf, material, record);
+			parseZetaPotential(rdf, material, record);
+			parseMeasurement(rdf, material, record);
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
 	}
-
-	private static final String m_iep = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT DISTINCT ?value\n"
-			+ "WHERE {\n"
-			+ "<%s> mw:Property-3AHas_IEP ?value.\n" + "}";
-
-	private static final String m_size = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT DISTINCT "
-			+ "?method ?value ?valueUnit ?valueError ?valueMin ?valueMax\n"
-			+ "WHERE {\n"
-			+
-			// "?material rdf:type mw:Category-3AMaterials.\n"+
-			"OPTIONAL {<%s> mw:Property-3AHas_Size ?value.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Size_Error ?valueError.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Size_Units ?valueUnit.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Size_Min ?valueMin.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Size_Max ?valueMax.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Size_Method ?method.}\n" + "}";
-
-	private static final String m_zetapotential = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT DISTINCT "
-			+ "?method ?value ?valueUnit ?valueError\n"
-			+ "WHERE {\n"
-			+
-			// "?material rdf:type mw:Category-3AMaterials.\n"+
-			"OPTIONAL {<%s> mw:Property-3AHas_Zeta_potential ?value.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Zeta_Error ?valueError.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Zeta_Units ?valueUnit.}\n"
-			+ "OPTIONAL {<%s> mw:Property-3AHas_Zeta_Method ?method.}\n" + "}";
-
-	private static final String m_sparql =
-
-	"PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-			+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
-			+ "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-			+ "SELECT DISTINCT \n"
-			+ "?study ?measurement ?label ?method ?definedBy ?study ?assaySource ?doilink ?year\n"
-			+ "?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?dose ?doseUnit\n"
-			+ "?value ?valueMin ?valueMax ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear ?assaymethod ?baomethod\n"
-			+ "WHERE {\n"
-			+ "?measurement mw:Property-3AHas_Entity <%s>.\n"
-			+ "OPTIONAl {?measurement rdfs:label ?label.}\n"
-			+ "OPTIONAl {?measurement mw:Property-3AHas_Method ?method.}\n"
-			+ "OPTIONAL {?measurement rdfs:isDefinedBy ?definedBy.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Dose ?dose.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Dose_Units ?doseUnit.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Class ?resultInterpretation.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint ?endpointResource. ?endpointResource rdfs:label ?endpoint.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Min ?valueMin.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Max ?valueMax.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Error ?valueError.}\n"
-			+ "OPTIONAL {?endpointResource mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} }\n"
-			+ "OPTIONAL {?measurement mw:Property-3AHas_Assay ?assay. \n"
-			+ "OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }\n"
-			+ "OPTIONAL {?assay mw:Property-3AHas_Assay_Method ?assaymethod. OPTIONAL {?assaymethod owl:sameAs ?baomethod.}}\n"
-			+ "OPTIONAL {?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}}\n"
-			+ "OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} "
-			+ "OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} "
-			+ "OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel.} }  \n"
-			+ "}} ORDER by ?measurement\n";
 
 	// assay tyle linked to the assay, not endpoint
-	private void parseIEP(Model rdf, RDFNode material, SubstanceRecord record) {
-		execQuery(rdf, String.format(m_iep, material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI()), new ProcessNMMeasurement(
-				record, I5_ROOT_OBJECTS.ZETA_POTENTIAL,
-				I5CONSTANTS.eISOELECTRIC_POINT));
-	}
-
-	private void parseSize(Model rdf, RDFNode material, SubstanceRecord record) {
-		execQuery(rdf, String.format(m_size, material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI()), new ProcessNMMeasurement(
-				record, I5_ROOT_OBJECTS.PC_GRANULOMETRY,
-				I5CONSTANTS.pPARTICLESIZE));
-	}
-
-	private void parseZetaPotential(Model rdf, RDFNode material,
-			SubstanceRecord record) {
+	private void parseIEP(Model rdf, RDFNode material, SubstanceRecord record)
+			throws Exception {
 		execQuery(rdf,
-				String.format(m_zetapotential, material.asResource().getURI(),
+				String.format(NW.m_iep.SPARQL(),
 						material.asResource().getURI(), material.asResource()
 								.getURI(), material.asResource().getURI(),
 						material.asResource().getURI(), material.asResource()
+								.getURI(), material.asResource().getURI()),
+				new ProcessNMMeasurement(record,
+						I5_ROOT_OBJECTS.ZETA_POTENTIAL,
+						I5CONSTANTS.eISOELECTRIC_POINT));
+	}
+
+	private void parseSize(Model rdf, RDFNode material, SubstanceRecord record)
+			throws IOException {
+		execQuery(rdf,
+				String.format(NW.m_size.SPARQL(), material.asResource()
+						.getURI(), material.asResource().getURI(), material
+						.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource()
 								.getURI()), new ProcessNMMeasurement(record,
+						I5_ROOT_OBJECTS.PC_GRANULOMETRY,
+						I5CONSTANTS.pPARTICLESIZE));
+	}
+
+	private void parseZetaPotential(Model rdf, RDFNode material,
+			SubstanceRecord record) throws IOException {
+		execQuery(rdf,
+				String.format(NW.m_zetapotential.SPARQL(), material
+						.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource()
+								.getURI(), material.asResource().getURI(),
+						material.asResource().getURI()),
+				new ProcessNMMeasurement(record,
 						I5_ROOT_OBJECTS.ZETA_POTENTIAL,
 						I5CONSTANTS.eZETA_POTENTIAL));
 	}
 
 	private void parseMeasurement(Model rdf, RDFNode material,
-			SubstanceRecord record) {
-		execQuery(rdf, String.format(m_sparql, material.asResource().getURI()),
-				new ProcessMeasurement(rdf, record));
+			SubstanceRecord record) throws IOException {
+		execQuery(rdf, String.format(NW.m_sparql.SPARQL(), material
+				.asResource().getURI()), new ProcessMeasurement(rdf, record));
 	}
 
 }
