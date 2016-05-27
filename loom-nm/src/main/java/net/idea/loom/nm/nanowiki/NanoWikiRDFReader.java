@@ -217,25 +217,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	 * 
 	 * }
 	 */
-	/*
-	 * private static final String m_material =
-	 * "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-	 * "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-	 * "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-	 * "PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>\n"
-	 * +
-	 * "SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?year ?source_doi ?source_journal ?doilink ?journal_title\n"
-	 * + "WHERE {\n" + "<%s> rdf:type mw:Category-3AMaterials.\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}\n"
-	 * + "OPTIONAL {<%s> mw:Property-3AHas_Chemical_Coating ?coating.}\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_Identifier ?id.}\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_Label ?label.}\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}\n" +
-	 * "OPTIONAL {<%s> rdfs:label ?label2.}\n" +
-	 * "OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal. ?source_journal rdfs:label ?journal_title.}}\n"
-	 * + "}";
-	 */
 
 	private void parseCoatings(Model rdf, RDFNode material,
 			SubstanceRecord record) throws IOException {
