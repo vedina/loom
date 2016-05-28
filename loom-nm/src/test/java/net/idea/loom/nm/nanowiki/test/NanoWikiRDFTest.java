@@ -71,6 +71,10 @@ public class NanoWikiRDFTest {
 		testProperties("measurement_units", 16);
 	}
 
+	@Test
+	public void testmeasurementEndpoint() throws Exception {
+		testProperties("measurement_endpoint", 42);
+	}
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
 		final Properties p = new Properties();
