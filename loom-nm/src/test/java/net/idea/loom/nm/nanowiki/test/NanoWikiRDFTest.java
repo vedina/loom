@@ -46,12 +46,34 @@ public class NanoWikiRDFTest {
 	}
 
 	@Test
+	public void testSourceProperties() throws Exception {
+		testProperties("properties_source", 14);
+
+	}
+
+	@Test
 	public void testMaterialProperties() throws Exception {
+		testProperties("properties_material", 28);
+
+	}
+
+	@Test
+	public void testMeasurementProperties() throws Exception {
+		testProperties("properties_measurement", 20);
+	}
+
+	@Test
+	public void testmeasurementMethod() throws Exception {
+		testProperties("measurement_method", 4);
+	}
+
+	public void testProperties(String resource, int expectedsize)
+			throws Exception {
 		final Properties p = new Properties();
 		InputStream in = null;
 		try {
 			in = getClass().getClassLoader().getResourceAsStream(
-					"net/idea/loom/nm/nanowiki/properties_material.properties");
+					"net/idea/loom/nm/nanowiki/" + resource + ".properties");
 			Assert.assertNotNull(in);
 			p.load(in);
 			System.out.println(p);
@@ -59,7 +81,7 @@ public class NanoWikiRDFTest {
 			if (in != null)
 				in.close();
 		}
-		Assert.assertEquals(28, p.size());
+		Assert.assertEquals(expectedsize, p.size());
 		InputStreamReader reader = new InputStreamReader(new GZIPInputStream(
 				new FileInputStream(getNanoWikiFile())), "UTF-8");
 		try {
@@ -67,7 +89,7 @@ public class NanoWikiRDFTest {
 			Model rdf = ModelFactory.createDefaultModel();
 			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
 
-			ProcessSolution.execQuery(rdf, NW.SPARQL("properties_material"),
+			ProcessSolution.execQuery(rdf, NW.SPARQL(resource),
 					new ProcessSolution() {
 						int props = 0;
 
