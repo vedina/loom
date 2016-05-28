@@ -2,13 +2,17 @@ package net.idea.loom.nm.nanowiki.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import net.idea.loom.nm.nanowiki.NW;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
+import net.idea.loom.nm.nanowiki.ProcessSolution;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,23 +25,77 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.io.DownloadTool;
 
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+
 public class NanoWikiRDFTest {
 	private static Logger logger = Logger.getAnonymousLogger();
+
+	public File getNanoWikiFile() throws Exception {
+		String nw3 = "nanowiki.cczero.3.rdf.gz";
+		URL url = new URL("https://ndownloader.figshare.com/files/5228257");
+		Assert.assertNotNull(url);
+		File baseDir = new File(System.getProperty("java.io.tmpdir"));
+		File file = new File(baseDir, nw3);
+		if (!file.exists())
+			DownloadTool.download(url, file);
+		Assert.assertTrue(file.exists());
+		return file;
+	}
+
+	@Test
+	public void testMaterialProperties() throws Exception {
+		final Properties p = new Properties();
+		InputStream in = null;
+		try {
+			in = getClass().getClassLoader().getResourceAsStream(
+					"net/idea/loom/nm/nanowiki/properties_material.properties");
+			Assert.assertNotNull(in);
+			p.load(in);
+			System.out.println(p);
+		} finally {
+			if (in != null)
+				in.close();
+		}
+		Assert.assertEquals(28, p.size());
+		InputStreamReader reader = new InputStreamReader(new GZIPInputStream(
+				new FileInputStream(getNanoWikiFile())), "UTF-8");
+		try {
+
+			Model rdf = ModelFactory.createDefaultModel();
+			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
+
+			ProcessSolution.execQuery(rdf, NW.SPARQL("properties_material"),
+					new ProcessSolution() {
+						int props = 0;
+
+						@Override
+						public void process(ResultSet rs, QuerySolution qs) {
+							String uri = qs.get("p").asResource().getURI();
+							Assert.assertNotNull(p.getProperty(uri.replace(":",
+									"|")));
+							System.out.println(uri);
+							props++;
+						}
+
+						@Override
+						public void done() {
+							Assert.assertEquals(props, p.size());
+						}
+					});
+		} finally {
+			reader.close();
+		}
+	}
 
 	@Test
 	public void test() throws Exception {
 		NanoWikiRDFReader reader = null;
 		int records = 0;
 		try {
-			String nw3 = "nanowiki.cczero.3.rdf.gz";
-			URL url = new URL("https://ndownloader.figshare.com/files/5228257" );
-			Assert.assertNotNull(url);
-			File baseDir = new File(System.getProperty("java.io.tmpdir"));
-			File file = new File(baseDir, nw3);
-			if (!file.exists())
-				DownloadTool.download(url, file);
-			Assert.assertTrue(file.exists());
-
+			File file = getNanoWikiFile();
 			reader = new NanoWikiRDFReader(new InputStreamReader(
 					new GZIPInputStream(new FileInputStream(file)), "UTF-8"));
 			while (reader.hasNext()) {

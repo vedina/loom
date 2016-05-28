@@ -36,10 +36,6 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -238,52 +234,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 
 }
 
-class ProcessSolution {
-	public int process(ResultSet rs) {
-		int records = 0;
-		processHeader(rs);
-		while (rs.hasNext()) {
-			records++;
-			QuerySolution qs = rs.next();
-			process(rs, qs);
-		}
-		return records;
-	}
 
-	void processHeader(ResultSet rs) {
-		for (String name : rs.getResultVars()) {
-			// System.out.print(name);
-			// System.out.print("\t");
-		}
-	}
-
-	void process(ResultSet rs, QuerySolution qs) {
-		/*
-		 * for (String name : rs.getResultVars()) { RDFNode node = qs.get(name);
-		 * if (node == null) ; else if (node.isLiteral())
-		 * System.out.print(node.asLiteral().getString()); else if
-		 * (node.isResource()) System.out.print(node.asResource().getURI());
-		 * else System.out.print(node.asNode().getName());
-		 * System.out.print("\t"); } System.out.println();
-		 */
-	}
-
-	protected static int execQuery(Model rdf, String sparqlQuery,
-			ProcessSolution processor) {
-		// System.out.println(sparqlQuery);
-		Query query = QueryFactory.create(sparqlQuery);
-		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
-		int records = 0;
-		try {
-			ResultSet rs = qe.execSelect();
-			records = processor.process(rs);
-		} finally {
-			qe.close();
-		}
-		return records;
-	}
-
-}
 
 class ProcessCondition extends ProcessSolution {
 	EffectRecord<String, IParams, String> effect;
@@ -298,7 +249,7 @@ class ProcessCondition extends ProcessSolution {
 	}
 
 	@Override
-	void process(ResultSet rs, QuerySolution qs) {
+	public void process(ResultSet rs, QuerySolution qs) {
 		Value v = null;
 		try {
 			Literal endpoint = qs.get("endpointLabel").asLiteral();
@@ -629,7 +580,7 @@ class ProcessMeasurement extends ProcessSolution {
 	}
 
 	@Override
-	void process(ResultSet rs, QuerySolution qs) {
+	public void process(ResultSet rs, QuerySolution qs) {
 
 		String endpoint = null;
 		try {
@@ -878,7 +829,7 @@ class ProcessNMMeasurement extends ProcessSolution {
 	}
 
 	@Override
-	void process(ResultSet rs, QuerySolution qs) {
+	public void process(ResultSet rs, QuerySolution qs) {
 		RDFNode value = qs.get("value");
 		if (value == null && qs.get("valueMin") == null)
 			return;
@@ -998,7 +949,7 @@ class ProcessCoatings extends ProcessSolution {
 	}
 
 	@Override
-	void process(ResultSet rs, QuerySolution qs) {
+	public void process(ResultSet rs, QuerySolution qs) {
 
 		// now add the same info as measurement - at least to test the approach
 		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY
@@ -1112,7 +1063,7 @@ class ProcessMaterial extends ProcessSolution {
 	}
 
 	@Override
-	void process(ResultSet rs, QuerySolution qs) {
+	public void process(ResultSet rs, QuerySolution qs) {
 		String name = null;
 		try {
 			name = qs.get("label2").asLiteral().getString();
