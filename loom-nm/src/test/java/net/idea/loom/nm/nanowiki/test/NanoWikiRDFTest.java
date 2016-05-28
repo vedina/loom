@@ -66,6 +66,10 @@ public class NanoWikiRDFTest {
 	public void testmeasurementMethod() throws Exception {
 		testProperties("measurement_method", 4);
 	}
+	@Test
+	public void testmeasurementUnits() throws Exception {
+		testProperties("measurement_units", 16);
+	}
 
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
@@ -95,10 +99,17 @@ public class NanoWikiRDFTest {
 
 						@Override
 						public void process(ResultSet rs, QuerySolution qs) {
-							String uri = qs.get("p").asResource().getURI();
-							Assert.assertNotNull(p.getProperty(uri.replace(":",
-									"|")));
-							System.out.println(uri);
+							if (qs.get("p").isResource()) {
+								String uri = qs.get("p").asResource().getURI();
+								Assert.assertNotNull(p.getProperty(uri.replace(
+										":", "|")));
+								System.out.println(uri);
+							} else {
+								String val = qs.get("p").asLiteral()
+										.getString();
+								Assert.assertNotNull(p.getProperty(val));
+								System.out.println(val);
+							}
 							props++;
 						}
 
