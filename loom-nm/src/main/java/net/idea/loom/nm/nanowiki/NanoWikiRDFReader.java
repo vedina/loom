@@ -777,24 +777,12 @@ class ProcessMeasurement extends ProcessSolution {
 		}
 		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",
 				null));
-		try {
-			if (qs.get("year") != null)
-				papp.setReference(qs.get("year").asLiteral().getString());
-		} catch (Exception x) {
-		}
+
 		try {
 			if (qs.get("doilink") != null)
 				papp.setReference(qs.get("doilink").asResource().getURI());
 			else
 				papp.setReference(qs.get("study").asResource().getURI());
-
-			if (qs.get("year") != null)
-				papp.setReferenceYear(qs.get("year").asLiteral().getString());
-			/*
-			 * if (qs.get("assayJournalLabel") != null)
-			 * papp.setReferenceOwner(qs.get("assayJournalLabel").asLiteral()
-			 * .getString());
-			 */
 
 		} catch (Exception x) {
 			if (citation != null) {
@@ -803,6 +791,13 @@ class ProcessMeasurement extends ProcessSolution {
 			}
 		}
 
+		try {
+			if (qs.get("year") != null)
+				papp.setReferenceYear(qs.get("year").asLiteral().getString());
+		} catch (Exception x) {
+				x.printStackTrace();
+		}
+		
 		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
 
