@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import net.idea.i5.io.I5CONSTANTS;
 import net.idea.i5.io.I5_ROOT_OBJECTS;
 
-import org.junit.Assert;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.iterator.DefaultIteratingChemObjectReader;
@@ -95,7 +94,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		try {
 			in = getClass().getClassLoader().getResourceAsStream(
 					"net/idea/loom/nm/nanowiki/substance_type.properties");
-			Assert.assertNotNull(in);
 			substance_types.load(in);
 		} finally {
 			if (in != null)
@@ -811,12 +809,11 @@ class ProcessMeasurement extends ProcessSolution {
 
 		}
 
-/*		
-		if (papp.getReference() == null && homepage != null) {
-			papp.setReference(homepage);
-			// papp.setReferenceOwner(citation.getTitle());
-		}
-*/
+		/*
+		 * if (papp.getReference() == null && homepage != null) {
+		 * papp.setReference(homepage); //
+		 * papp.setReferenceOwner(citation.getTitle()); }
+		 */
 		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
 
