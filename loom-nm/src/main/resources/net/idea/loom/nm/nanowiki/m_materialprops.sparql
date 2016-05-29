@@ -2,15 +2,26 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>
-SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?year ?source_doi ?source_journal ?doilink ?journal_title
+SELECT distinct ?composition ?coating ?id ?altid ?label ?type ?id ?label2 ?source ?year ?source_doi ?source_journal ?doilink ?journal_title ?pubchem_sid ?pubchem_cid ?homepage ?cod_id ?chembl_id ?cas ?smiles ?aldrich_id ?close_match ?same_as
 WHERE {
 <%s> rdf:type mw:Category-3AMaterials.
 OPTIONAL {<%s> mw:Property-3AHas_Chemical_Composition ?composition.}
+OPTIONAL {<%s> mw:Property-3AHas_Chemical_Component ?component.}
 OPTIONAL {<%s> mw:Property-3AHas_Chemical_Coating ?coating.}
 OPTIONAL {<%s> mw:Property-3AHas_Identifier ?id.}
 OPTIONAL {<%s> mw:Property-3AHas_Label ?label.}
 OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}
 OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}
+OPTIONAL {<%s> mw:Property-3AHas_PubChem_SID ?pubchem_sid.}
+OPTIONAL {<%s> mw:Property-3AHas_PubChem_CID ?pubchem_cid.}
+OPTIONAL {<%s> mw:Property-3AHas_homepage ?homepage.}
+OPTIONAL {<%s> mw:Property-3AHas_COD_ID ?cod_id.}
+OPTIONAL {<%s> mw:Property-3AHas_ChEMBL_ID ?chembl_id.}
+OPTIONAL {<%s> mw:Property-3AHas_CAS ?cas.}
+OPTIONAL {<%s> mw:Property-3AHas_SMILES ?smiles.}
+OPTIONAL {<%s> mw:Property-3AHas_Aldrich ?aldrich_id}
+OPTIONAL {<%s> mw:Property-3AClose_match ?close_match.}
+OPTIONAL {<%s> mw:Property-3ASame_As ?same_as.}
 OPTIONAL {<%s> rdfs:label ?label2.}
 OPTIONAL {<%s> mw:Property-3AHas_Source ?source. OPTIONAL {?source owl:sameAs ?doilink.} OPTIONAL {?source mw:Property-3AHas_Year ?year.}  OPTIONAL {?source mw:Property-3AHas_DOI ?source_doi.} OPTIONAL {?source mw:Property-3AHas_Journal ?source_journal. ?source_journal rdfs:label ?journal_title.}}
 }

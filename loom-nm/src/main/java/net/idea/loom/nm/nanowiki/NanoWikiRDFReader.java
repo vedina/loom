@@ -46,7 +46,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * TODO bundles
@@ -142,7 +141,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		if (materials == null)
 			return false;
 		if (materials.hasNext()) {
-			QuerySolution qs =  materials.next();
+			QuerySolution qs = materials.next();
 			Resource material = qs.getResource("m");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
@@ -235,15 +234,24 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	private void parseMaterial(Model rdf, RDFNode material,
 
 	SubstanceRecord record) throws IOException {
-		ProcessSolution.execQuery(rdf,
-				String.format(NW.m_materialprops.SPARQL(), material
-						.asResource().getURI(), material.asResource().getURI(),
-						material.asResource().getURI(), material.asResource()
-								.getURI(), material.asResource().getURI(),
-						material.asResource().getURI(), material.asResource()
-								.getURI(), material.asResource().getURI(),
-						material.asResource().getURI()), new ProcessMaterial(
-						rdf, material, record));
+		ProcessSolution.execQuery(rdf, String.format(
+				NW.m_materialprops.SPARQL(), material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				material.asResource().getURI(),
+				// new nw3
+				material.asResource().getURI(), material.asResource().getURI(),
+				material.asResource().getURI(), material.asResource().getURI(),
+				material.asResource().getURI(), material.asResource().getURI(),
+				material.asResource().getURI(), material.asResource().getURI(),
+				material.asResource().getURI(), material.asResource().getURI(),
+				material.asResource().getURI()), new ProcessMaterial(rdf,
+				material, record));
 	}
 
 }
@@ -331,6 +339,14 @@ class ProcessMeasurement extends ProcessSolution {
 			}
 
 		},
+		LUMO {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_UNKNOWN;
+			}
+
+		},
+
 		Boiling_Point {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -441,6 +457,24 @@ class ProcessMeasurement extends ProcessSolution {
 				return "Diameter";
 			}
 		},
+		Z_Average_Diameter {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			}
+		},
+		Inner_Diameter {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			}
+		},
+		Width {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			}
+		},
 		Hydrodynamic_size {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -455,7 +489,12 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.pMMAD;
 			}
 		},
-
+		Thickness {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			}
+		},
 		Shape {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -517,6 +556,13 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
 			}
 		},
+		IC50 {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				// best guess
+				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			}
+		},
 		Log_Reciprocal_EC50 {
 			@Override
 			public I5_ROOT_OBJECTS getCategory() {
@@ -538,6 +584,13 @@ class ProcessMeasurement extends ProcessSolution {
 				// Cell_Growth_Assay
 			}
 
+		},
+		Particles_Per_Cell {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				// best guess
+				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			}
 		},
 		Percentage_Non_2DViable_Cells, Percentage_Viable_Cells {
 			@Override
@@ -1070,41 +1123,99 @@ class ProcessMaterial extends ProcessSolution {
 							.asLiteral().getString()));
 		} catch (Exception x) {
 		}
-		;
+
 		try {
 			record.getExternalids().add(
 					new ExternalIdentifier("Alternative Identifier", qs
 							.get("altid").asLiteral().getString()));
 		} catch (Exception x) {
 		}
-		;
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("Sigma Aldrich", qs
+							.get("aldrich_id").asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("ChEMBL", qs.get("chembl_id")
+							.asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("PubChem SID", qs.get("pubchem_sid")
+							.asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("PubChem CID", qs.get("pubchem_cid")
+							.asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("COD", qs.get("cod_id").asLiteral()
+							.getString()));
+		} catch (Exception x) {
+		}
+		
 		try {
 			record.getExternalids().add(
 					new ExternalIdentifier("Composition", qs.get("composition")
 							.asLiteral().getString()));
 		} catch (Exception x) {
 		}
-		;
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("Same as", qs.get("same_as").asResource().getURI()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("Close match", qs.get("close_match").asResource().getURI()));
+		} catch (Exception x) {
+		}
 		try {
 			record.getExternalids().add(
 					new ExternalIdentifier("Coating", qs.get("coating")
 							.asResource().getLocalName()));
 		} catch (Exception x) {
 		}
-		;
+
 		try {
 			record.getExternalids().add(
 					new ExternalIdentifier("DATASET", "NanoWiki"));
 		} catch (Exception x) {
 		}
-		;
+
 		try {
 			record.getExternalids().add(
 					new ExternalIdentifier("SOURCE", qs.get("source")
 							.asResource().getLocalName()));
 		} catch (Exception x) {
 		}
-		;
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("HOMEPAGE", qs.get("homepage")
+							.asResource().getLocalName()));
+		} catch (Exception x) {
+		}
+
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("CAS", qs.get("cas")
+							.asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		try {
+			record.getExternalids().add(
+					new ExternalIdentifier("SMILES", qs.get("smiles")
+							.asLiteral().getString()));
+		} catch (Exception x) {
+		}
+		
 
 		if (record.getSubstanceName().startsWith("JRC2011")) {
 			ExternalIdentifier e = new ExternalIdentifier(

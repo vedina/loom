@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -14,7 +15,9 @@ import net.idea.loom.nm.nanowiki.NW;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 import net.idea.loom.nm.nanowiki.ProcessSolution;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import ambit2.base.data.SubstanceRecord;
@@ -22,9 +25,12 @@ import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.io.DownloadTool;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -32,6 +38,50 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class NanoWikiRDFTest {
 	private static Logger logger = Logger.getAnonymousLogger();
+
+	static final String loggingProperties = "config/logging.properties";
+	static final String log4jProperties = "config/log4j.properties";
+
+	@Before
+	public void init() throws Exception {
+		InputStream in = null;
+		try {
+			URL url = getClass().getClassLoader()
+					.getResource(loggingProperties);
+			System.setProperty("java.util.logging.config.file", url.getFile());
+			in = new FileInputStream(new File(url.getFile()));
+			LogManager.getLogManager().readConfiguration(in);
+			logger.log(
+					Level.INFO,
+					String.format("Logging configuration loaded from %s",
+							url.getFile()));
+		} catch (Exception x) {
+			System.err
+					.println("logging configuration failed " + x.getMessage());
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (Exception x) {
+			}
+		}
+
+		// now log4j for those who use it
+		in = null;
+		try {
+			in = NanoWikiRDFTest.class.getClassLoader().getResourceAsStream(
+					log4jProperties);
+			PropertyConfigurator.configure(in);
+
+		} catch (Exception x) {
+			logger.log(Level.WARNING, x.getMessage());
+		} finally {
+			try {
+				in.close();
+			} catch (Exception x) {
+			}
+		}
+	}
 
 	public File getNanoWikiFile() throws Exception {
 		String nw3 = "nanowiki.cczero.3.rdf.gz";
@@ -134,6 +184,9 @@ public class NanoWikiRDFTest {
 		NanoWikiRDFReader reader = null;
 		int records = 0;
 		int measurements = 0;
+		int effectrecords = 0;
+		Multiset<String> histogram = HashMultiset.create();
+
 		try {
 			File file = getNanoWikiFile();
 			reader = new NanoWikiRDFReader(new InputStreamReader(
@@ -143,6 +196,10 @@ public class NanoWikiRDFTest {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				SubstanceRecord material = (SubstanceRecord) record;
+
+				for (ExternalIdentifier id : material.getExternalids()) {
+					histogram.add(id.getSystemDesignator());
+				}
 
 				/*
 				 * System.out.print(material.getCompanyName());
@@ -199,7 +256,8 @@ public class NanoWikiRDFTest {
 												+ "\tValue without unit");
 							m++;
 						}
-						measurements ++;
+						measurements++;
+						effectrecords += m;
 					}
 
 					if (m <= 0)
@@ -214,9 +272,27 @@ public class NanoWikiRDFTest {
 			if (reader != null)
 				reader.close();
 		}
-		//all materials without renamed JRC ones
+		System.out.println(histogram);
+		Assert.assertEquals(12,histogram.count("Sigma Aldrich"));
+		Assert.assertEquals(4,histogram.count("ChEMBL"));
+		//Assert.assertEquals(histogram.count("PubChem CID"), 4);
+		Assert.assertEquals(4,histogram.count("PubChem SID"));
+		Assert.assertEquals(8,histogram.count("COD"));
+		Assert.assertEquals(22,histogram.count("JRC Representative Manufactured Nanomaterials"));
+		Assert.assertEquals(25,histogram.count("HOMEPAGE"));
+		Assert.assertEquals(13,histogram.count("CAS"));
+		Assert.assertEquals(132,histogram.count("SMILES"));
+		Assert.assertEquals(390,histogram.count("SOURCE"));
+		Assert.assertEquals(5,histogram.count("Close match"));
+		Assert.assertEquals(4,histogram.count("Same as"));
+		 
+		
+		//[Alternative Identifier x 51,  Coating x 68, SOURCE x 390,  Composition x 391, PubChem SID x 4, DATASET x 407, Has_Identifier x 407]
+		// all materials without renamed JRC ones
 		Assert.assertEquals(403, records);
-		Assert.assertEquals(851, measurements);
+		Assert.assertEquals(854, measurements);
+		Assert.assertEquals(2485, effectrecords);
+		
 		logger.log(Level.INFO, "Substance records read\t" + records);
 	}
 }
