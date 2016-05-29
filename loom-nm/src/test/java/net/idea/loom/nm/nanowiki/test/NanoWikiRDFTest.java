@@ -14,6 +14,7 @@ import java.util.zip.GZIPInputStream;
 import net.idea.loom.nm.nanowiki.NW;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 import net.idea.loom.nm.nanowiki.ProcessSolution;
+import net.idea.modbcum.i.facet.IFacet;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -131,11 +132,11 @@ public class NanoWikiRDFTest {
 	public void testSubstanceType() throws Exception {
 		testProperties("substance_type", 10);
 	}
+
 	@Test
 	public void testBundles() throws Exception {
 		testProperties("bundle", 9);
 	}
-
 
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
@@ -197,6 +198,7 @@ public class NanoWikiRDFTest {
 		int effectrecords = 0;
 		Multiset<String> histogram = HashMultiset.create();
 		Multiset<String> substancetypes = HashMultiset.create();
+		Multiset<IFacet> bundles = HashMultiset.create();
 
 		try {
 			File file = getNanoWikiFile();
@@ -208,11 +210,15 @@ public class NanoWikiRDFTest {
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				SubstanceRecord material = (SubstanceRecord) record;
 
-				Assert.assertNotNull(material.getPublicName(),material.getSubstancetype());
+				Assert.assertNotNull(material.getPublicName(),
+						material.getSubstancetype());
 				substancetypes.add(material.getSubstancetype());
 				for (ExternalIdentifier id : material.getExternalids()) {
 					histogram.add(id.getSystemDesignator());
 				}
+				if (material.getFacets() != null)
+					for (IFacet facet : material.getFacets())
+						bundles.add(facet);
 
 				/*
 				 * System.out.print(material.getCompanyName());
@@ -285,8 +291,11 @@ public class NanoWikiRDFTest {
 			if (reader != null)
 				reader.close();
 		}
+		System.out.println(bundles);
+		
 		System.out.println(substancetypes);
 		System.out.println(histogram);
+		Assert.assertEquals(6, bundles.size());
 		Assert.assertEquals(12, histogram.count("Sigma Aldrich"));
 		Assert.assertEquals(4, histogram.count("ChEMBL"));
 		// Assert.assertEquals(histogram.count("PubChem CID"), 4);

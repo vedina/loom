@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -31,6 +32,8 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.data.substance.ParticleTypes;
+import ambit2.base.data.substance.SubstanceEndpointsBundle;
+import ambit2.base.facet.BundleRoleFacet;
 import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
@@ -69,6 +72,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected SubstanceRecord record;
 	protected Logger logger;
 	public static final Properties substance_types = new Properties();
+	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
 
 	public Logger getLogger() {
 		return logger;
@@ -97,6 +101,11 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			if (in != null)
 				in.close();
 		}
+		try {
+			bundles = readBundles();
+		} catch (Exception x) {
+
+		}
 	}
 
 	public static String generateUUIDfromString(String prefix, String id) {
@@ -104,6 +113,30 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				+ "-"
 				+ (id == null ? UUID.randomUUID() : UUID.nameUUIDFromBytes(id
 						.getBytes()));
+	}
+
+	protected HashMap<String, BundleRoleFacet> readBundles() throws IOException {
+		HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
+		Query query = QueryFactory.create(NW.bundles_all.SPARQL());
+		QueryExecution qe_bundles = QueryExecutionFactory.create(query, rdf);
+		try {
+			ResultSet results = qe_bundles.execSelect();
+			while (results.hasNext()) {
+				QuerySolution qs = results.next();
+				SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
+				BundleRoleFacet facet = new BundleRoleFacet(null);
+				facet.setValue(bundle);
+				String bundle_uri = qs.get("b").asResource().getURI();
+				bundle.setName(qs.get("label").asLiteral().getString());
+				bundle.setDescription(qs.get("purpose").asLiteral().getString());
+				bundle.setStatus(qs.get("status").asLiteral().getString());
+				bundles.put(bundle_uri, facet);
+			}
+			return bundles;
+		} finally {
+			qe_bundles.close();
+		}
+
 	}
 
 	@Override
@@ -156,8 +189,19 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		if (materials.hasNext()) {
 			QuerySolution qs = materials.next();
 			Resource material = qs.getResource("m");
+			Resource bundle = qs.getResource("bundle");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
+			if (bundle != null) {
+				BundleRoleFacet bf = bundles.get(bundle.getURI());
+				if (bf == null) {
+					bf = new BundleRoleFacet(null);
+					SubstanceEndpointsBundle b = new SubstanceEndpointsBundle();
+					bf.setValue(b);
+					bundles.put(bundle.getURI(), bf);
+				}
+				record.addFacet(bf);
+			}
 			try {
 				parseMaterial(rdf, material, record);
 				parseCoatings(rdf, material, record);
@@ -1288,7 +1332,7 @@ class ProcessMaterial extends ProcessSolution {
 							core.setRecordProperty(
 									Property.getEINECSInstance(),
 									ptype.getEINECS());
-						
+
 						particletype = ptype;
 						break;
 
