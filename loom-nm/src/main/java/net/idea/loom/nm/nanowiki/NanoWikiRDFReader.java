@@ -665,9 +665,6 @@ class ProcessMeasurement extends ProcessSolution {
 			x.printStackTrace();
 		}
 
-		// System.out.println(endpoint);
-		// System.out.println(assayType);
-
 		Protocol protocol = new Protocol(endpoint);
 		String measuredEndpoint = endpoint;
 		I5_ROOT_OBJECTS category = null;
@@ -1083,9 +1080,12 @@ class ProcessMaterial extends ProcessSolution {
 		}
 		;
 		try {
-			record.setPublicName(qs.get("label").asLiteral().getString());
+			String label = qs.get("label").asLiteral().getString();
+			record.setPublicName(label);
+			Integer.parseInt(label);
+			record.setPublicName("");
 		} catch (Exception x) {
-			// ok, it could have label2
+
 		}
 		;
 		try {
@@ -1265,9 +1265,6 @@ class ProcessMaterial extends ProcessSolution {
 				System.out.println(record.getSubstancetype());
 			}
 
-			if (particletype != null)
-				record.setPublicName(particletype.toString());
-
 			if (core != null)
 				for (ParticleTypes ptype : ParticleTypes.values()) {
 					if (ptype.getFormula() == null) {
@@ -1291,10 +1288,23 @@ class ProcessMaterial extends ProcessSolution {
 							core.setRecordProperty(
 									Property.getEINECSInstance(),
 									ptype.getEINECS());
-						record.setSubstancetype(ptype.name());
-						record.setPublicName(record.getPublicName() + " " + ptype.toString());
+						
+						particletype = ptype;
+						break;
+
 					}
 				}
+			if (particletype != null) {
+				record.setSubstancetype(particletype.name());
+				StringBuilder b = new StringBuilder();
+				b.append(particletype.toString());
+				if (record.getPublicName() != null
+						&& (b.toString().indexOf(record.getPublicName()) < 0)) {
+					b.append(" ");
+					b.append(record.getPublicName());
+				}
+				record.setPublicName(b.toString());
+			}
 
 			// todo more info
 			try {
@@ -1320,9 +1330,6 @@ class ProcessMaterial extends ProcessSolution {
 			record.setReference(null);
 		}
 		try {
-			// parseSize(rdf, material, record);
-			// parseIEP(rdf, material, record);
-			// parseZetaPotential(rdf, material, record);
 			parseMeasurement(rdf, material, record);
 		} catch (Exception x) {
 			x.printStackTrace();
