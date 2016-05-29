@@ -8,25 +8,37 @@ SELECT DISTINCT
 ?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?dose ?doseUnit
 ?value ?valueMin ?valueMax ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear ?assaymethod ?baomethod
 WHERE {
-?measurement mw:Property-3AHas_Entity <%s>.
-OPTIONAl {?measurement rdfs:label ?label.}
-OPTIONAl {?measurement mw:Property-3AHas_Method ?method.}
-OPTIONAL {?measurement rdfs:isDefinedBy ?definedBy.}
-OPTIONAL {?measurement mw:Property-3AHas_Dose ?dose.}
-OPTIONAL {?measurement mw:Property-3AHas_Dose_Units ?doseUnit.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Class ?resultInterpretation.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint ?endpointResource. ?endpointResource rdfs:label ?endpoint.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Min ?valueMin.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Max ?valueMax.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}
-OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Error ?valueError.}
-OPTIONAL {?endpointResource mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} }
-OPTIONAL {?measurement mw:Property-3AHas_Assay ?assay. 
-OPTIONAL {?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} }
-OPTIONAL {?assay mw:Property-3AHas_Assay_Method ?assaymethod. OPTIONAL {?assaymethod owl:sameAs ?baomethod.}}
-OPTIONAL {?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}}
-OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. OPTIONAL {?assaySource owl:sameAs ?doilink.} 
-OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} 
-OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel.} }  
-}} ORDER by ?measurement
+	?measurement mw:Property-3AHas_Entity <%s>.
+	OPTIONAl {?measurement rdfs:label ?label.}
+	OPTIONAl {?measurement mw:Property-3AHas_Method ?method.}
+	OPTIONAL {?measurement rdfs:isDefinedBy ?definedBy.}
+	OPTIONAL {?measurement mw:Property-3AHas_Dose ?dose.}
+	OPTIONAL {?measurement mw:Property-3AHas_Dose_Units ?doseUnit.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Class ?resultInterpretation.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint ?endpointResource. ?endpointResource rdfs:label ?endpoint.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Min ?valueMin.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Max ?valueMax.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}
+	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Error ?valueError.}
+	OPTIONAL {
+		?endpointResource mw:Property-3AHas_Assay_Type ?assayType. OPTIONAL {?assayType owl:sameAs ?bao.} 
+	}
+	OPTIONAL {
+		?measurement mw:Property-3AHas_Assay ?assay. 
+		OPTIONAL {
+			?assay mw:Property-3AFor_Cell_line ?celline.  OPTIONAL {?celline owl:sameAs ?o_celline.} OPTIONAL {?celline rdfs:label ?t_celline.} 
+		}
+		OPTIONAL {
+			?assay mw:Property-3AHas_Assay_Method ?assaymethod. OPTIONAL {?assaymethod owl:sameAs ?baomethod.}
+		}
+		OPTIONAL {
+			?assay mw:Property-3AHas_Assay_Type ?assayType1. OPTIONAL {?assayType1 owl:sameAs ?bao1.}
+		}
+		OPTIONAL {?assay mw:Property-3AHas_Source ?assaySource. 
+			OPTIONAL {?assaySource owl:sameAs ?doilink.} 
+			OPTIONAL {?assaySource mw:Property-3AHas_Year ?year.} 
+			OPTIONAL {?assaySource mw:Property-3AHas_Journal ?assayJournal. ?assayJournal rdfs:label ?assayJournalLabel.} 
+		}  
+	}
+} ORDER by ?measurement
