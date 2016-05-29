@@ -66,6 +66,7 @@ public class NanoWikiRDFTest {
 	public void testmeasurementMethod() throws Exception {
 		testProperties("measurement_method", 4);
 	}
+
 	@Test
 	public void testmeasurementUnits() throws Exception {
 		testProperties("measurement_units", 16);
@@ -75,6 +76,7 @@ public class NanoWikiRDFTest {
 	public void testmeasurementEndpoint() throws Exception {
 		testProperties("measurement_endpoint", 42);
 	}
+
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
 		final Properties p = new Properties();
@@ -131,14 +133,17 @@ public class NanoWikiRDFTest {
 	public void test() throws Exception {
 		NanoWikiRDFReader reader = null;
 		int records = 0;
+		int measurements = 0;
 		try {
 			File file = getNanoWikiFile();
 			reader = new NanoWikiRDFReader(new InputStreamReader(
 					new GZIPInputStream(new FileInputStream(file)), "UTF-8"));
+
 			while (reader.hasNext()) {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				SubstanceRecord material = (SubstanceRecord) record;
+
 				/*
 				 * System.out.print(material.getCompanyName());
 				 * System.out.print("\t");
@@ -194,8 +199,9 @@ public class NanoWikiRDFTest {
 												+ "\tValue without unit");
 							m++;
 						}
-
+						measurements ++;
 					}
+
 					if (m <= 0)
 						logger.log(Level.WARNING, material.getSubstanceName()
 								+ "\tSubstance without measurements");
@@ -208,6 +214,9 @@ public class NanoWikiRDFTest {
 			if (reader != null)
 				reader.close();
 		}
+		//all materials without renamed JRC ones
+		Assert.assertEquals(403, records);
+		Assert.assertEquals(851, measurements);
 		logger.log(Level.INFO, "Substance records read\t" + records);
 	}
 }

@@ -7,7 +7,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 public enum NW {
-	m_material, m_coating, m_condition, m_iep, m_size, m_zetapotential, m_sparql;
+	m_allmaterials, m_materialprops, m_coating, m_condition,  m_sparql;
 	public String SPARQL() throws IOException {
 		return SPARQL(name());
 

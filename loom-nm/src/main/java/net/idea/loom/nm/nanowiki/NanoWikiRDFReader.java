@@ -26,7 +26,6 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
-import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.data.substance.ParticleTypes;
@@ -36,13 +35,16 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
 
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -61,7 +63,8 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		implements IRawReader<IStructureRecord>, ICiteable {
 
 	protected Model rdf;
-	protected ResIterator materials;
+	protected QueryExecution qe_materials;
+	protected ResultSet materials;
 	protected SubstanceRecord record;
 	protected Logger logger;
 
@@ -96,9 +99,13 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		try {
 			rdf = ModelFactory.createDefaultModel();
 			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
-			Resource materialtype = rdf
-					.createResource("http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Category-3AMaterials");
-			materials = rdf.listResourcesWithProperty(RDF.type, materialtype);
+
+			Query query = QueryFactory.create(NW.m_allmaterials.SPARQL());
+			qe_materials = QueryExecutionFactory.create(query, rdf);
+
+			materials = qe_materials.execSelect();
+		} catch (IOException x) {
+			throw new CDKException(x.getMessage());
 		} finally {
 			try {
 				reader.close();
@@ -124,6 +131,9 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 
 	@Override
 	public void close() throws IOException {
+		if (qe_materials != null)
+			qe_materials.close();
+
 		rdf.close();
 	}
 
@@ -132,7 +142,8 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		if (materials == null)
 			return false;
 		if (materials.hasNext()) {
-			Resource material = materials.next();
+			QuerySolution qs =  materials.next();
+			Resource material = qs.getResource("m");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
 			try {
@@ -222,19 +233,20 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	private void parseMaterial(Model rdf, RDFNode material,
-			SubstanceRecord record) throws IOException {
-		ProcessSolution.execQuery(rdf, String.format(NW.m_material.SPARQL(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI()), new ProcessMaterial(rdf,
-				material, record));
+
+	SubstanceRecord record) throws IOException {
+		ProcessSolution.execQuery(rdf,
+				String.format(NW.m_materialprops.SPARQL(), material
+						.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource()
+								.getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource()
+								.getURI(), material.asResource().getURI(),
+						material.asResource().getURI()), new ProcessMaterial(
+						rdf, material, record));
 	}
 
 }
-
-
 
 class ProcessCondition extends ProcessSolution {
 	EffectRecord<String, IParams, String> effect;
@@ -311,6 +323,13 @@ class ProcessMeasurement extends ProcessSolution {
 			public String getTag() {
 				return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 			}
+		},
+		HOMO {
+			@Override
+			public I5_ROOT_OBJECTS getCategory() {
+				return I5_ROOT_OBJECTS.PC_UNKNOWN;
+			}
+
 		},
 		Boiling_Point {
 			@Override
@@ -810,126 +829,72 @@ class ProcessMeasurement extends ProcessSolution {
 
 }
 
-class ProcessNMMeasurement extends ProcessSolution {
-	SubstanceRecord record;
-	String endpoint;
-	I5_ROOT_OBJECTS category;
-	ILiteratureEntry citation;
-
-	public ProcessNMMeasurement(SubstanceRecord record,
-			I5_ROOT_OBJECTS category, String endpoint) {
-		this.record = record;
-		this.endpoint = endpoint;
-		this.category = category;
-		this.citation = record.getReference();
-	}
-
-	@Override
-	void processHeader(ResultSet rs) {
-	}
-
-	@Override
-	public void process(ResultSet rs, QuerySolution qs) {
-		RDFNode value = qs.get("value");
-		if (value == null && qs.get("valueMin") == null)
-			return;
-
-		String assayType = null;
-		String bao = null;
-		try {
-			assayType = qs.get("assayType").asResource().getURI();
-		} catch (Exception x) {
-		}
-		try {
-			bao = qs.get("bao").asResource().getURI();
-		} catch (Exception x) {
-		}
-
-		Protocol protocol = new Protocol(endpoint);
-
-		protocol.setCategory(category.name() + "_SECTION");
-		protocol.setTopCategory(category.getTopCategory());
-
-		RDFNode method = qs.get("method");
-		try {
-			protocol.addGuideline(method.asResource().getLocalName());
-		} catch (Exception x) {
-		}
-
-		ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
-				.createExperimentRecord(protocol);
-		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",
-				null));
-		papp.setSubstanceUUID(record.getSubstanceUUID());
-		ReliabilityParams reliability = new ReliabilityParams();
-		reliability.setStudyResultType("experimental result");
-		papp.setReliability(reliability);
-		try {
-			if (qs.get("year") != null)
-				papp.setReference(qs.get("year").asLiteral().getString());
-		} catch (Exception x) {
-		}
-		try {
-			if (qs.get("doilink") != null)
-				papp.setReference(qs.get("doilink").asResource().getURI());
-			else
-				papp.setReference(qs.get("study").asResource().getURI());
-
-		} catch (Exception x) {
-			if (citation != null) {
-				papp.setReference(citation.getURL());
-				// papp.setReferenceOwner(citation.getTitle());
-			}
-		}
-
-		papp.setReferenceOwner("NanoWiki");
-		try {
-			if (method != null)
-				papp.getParameters().put(I5CONSTANTS.methodType,
-						method.asResource().getLocalName());
-		} catch (Exception x) {
-		}
-
-		EffectRecord effect = category.createEffectRecord();
-		effect.setEndpoint(endpoint);
-		// effect.setConditions(new Params());
-
-		try {
-			if (value != null) {
-				effect.setLoValue(Double.parseDouble(value.asLiteral()
-						.getString()));
-				effect.setLoQualifier("=");
-			}
-		} catch (Exception x) {
-			effect.setTextValue(value.asLiteral().getString());
-		}
-		try {
-			effect.setStdDev(qs.get("valueError").asLiteral().getDouble());
-		} catch (Exception x) {
-		}
-
-		try {
-			effect.setLoValue(qs.get("valueMin").asLiteral().getDouble());
-			;
-			effect.setLoQualifier(">=");
-		} catch (Exception x) {
-		}
-		try {
-			effect.setUpValue(qs.get("valueMax").asLiteral().getDouble());
-			effect.setUpQualifier("<=");
-		} catch (Exception x) {
-		}
-
-		try {
-			effect.setUnit(qs.get("valueUnit").asLiteral().getString());
-		} catch (Exception x) {
-		}
-
-		papp.addEffect(effect);
-		record.addMeasurement(papp);
-	}
-}
-
+/*
+ * class ProcessNMMeasurement extends ProcessSolution { SubstanceRecord record;
+ * String endpoint; I5_ROOT_OBJECTS category; ILiteratureEntry citation;
+ * 
+ * public ProcessNMMeasurement(SubstanceRecord record, I5_ROOT_OBJECTS category,
+ * String endpoint) { this.record = record; this.endpoint = endpoint;
+ * this.category = category; this.citation = record.getReference(); }
+ * 
+ * @Override void processHeader(ResultSet rs) { }
+ * 
+ * @Override public void process(ResultSet rs, QuerySolution qs) { RDFNode value
+ * = qs.get("value"); if (value == null && qs.get("valueMin") == null) return;
+ * 
+ * String assayType = null; String bao = null; try { assayType =
+ * qs.get("assayType").asResource().getURI(); } catch (Exception x) { } try {
+ * bao = qs.get("bao").asResource().getURI(); } catch (Exception x) { }
+ * 
+ * Protocol protocol = new Protocol(endpoint);
+ * 
+ * protocol.setCategory(category.name() + "_SECTION");
+ * protocol.setTopCategory(category.getTopCategory());
+ * 
+ * RDFNode method = qs.get("method"); try {
+ * protocol.addGuideline(method.asResource().getLocalName()); } catch (Exception
+ * x) { }
+ * 
+ * ProtocolApplication<Protocol, IParams, String, IParams, String> papp =
+ * category .createExperimentRecord(protocol);
+ * papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
+ * papp.setSubstanceUUID(record.getSubstanceUUID()); ReliabilityParams
+ * reliability = new ReliabilityParams();
+ * reliability.setStudyResultType("experimental result");
+ * papp.setReliability(reliability); try { if (qs.get("year") != null)
+ * papp.setReference(qs.get("year").asLiteral().getString()); } catch (Exception
+ * x) { } try { if (qs.get("doilink") != null)
+ * papp.setReference(qs.get("doilink").asResource().getURI()); else
+ * papp.setReference(qs.get("study").asResource().getURI());
+ * 
+ * } catch (Exception x) { if (citation != null) {
+ * papp.setReference(citation.getURL()); //
+ * papp.setReferenceOwner(citation.getTitle()); } }
+ * 
+ * papp.setReferenceOwner("NanoWiki"); try { if (method != null)
+ * papp.getParameters().put(I5CONSTANTS.methodType,
+ * method.asResource().getLocalName()); } catch (Exception x) { }
+ * 
+ * EffectRecord effect = category.createEffectRecord();
+ * effect.setEndpoint(endpoint); // effect.setConditions(new Params());
+ * 
+ * try { if (value != null) {
+ * effect.setLoValue(Double.parseDouble(value.asLiteral() .getString()));
+ * effect.setLoQualifier("="); } } catch (Exception x) {
+ * effect.setTextValue(value.asLiteral().getString()); } try {
+ * effect.setStdDev(qs.get("valueError").asLiteral().getDouble()); } catch
+ * (Exception x) { }
+ * 
+ * try { effect.setLoValue(qs.get("valueMin").asLiteral().getDouble()); ;
+ * effect.setLoQualifier(">="); } catch (Exception x) { } try {
+ * effect.setUpValue(qs.get("valueMax").asLiteral().getDouble());
+ * effect.setUpQualifier("<="); } catch (Exception x) { }
+ * 
+ * try { effect.setUnit(qs.get("valueUnit").asLiteral().getString()); } catch
+ * (Exception x) { }
+ * 
+ * papp.addEffect(effect); record.addMeasurement(papp); } }
+ */
 // "SELECT distinct ?coating ?chemical ?smiles\n"+
 class ProcessCoatings extends ProcessSolution {
 	SubstanceRecord record;
@@ -958,7 +923,7 @@ class ProcessCoatings extends ProcessSolution {
 				.createExperimentRecord(protocol);
 		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString(
 				"NWKI", null));
-		record.addMeasurement(experiment);// should be one and the same
+		// record.addMeasurement(experiment);// should be one and the same
 
 		try {
 			experiment
@@ -1096,7 +1061,7 @@ class ProcessMaterial extends ProcessSolution {
 		try {
 			record.setPublicName(qs.get("label").asLiteral().getString());
 		} catch (Exception x) {
-			x.printStackTrace();
+			// ok, it could have label2
 		}
 		;
 		try {
@@ -1276,52 +1241,13 @@ class ProcessMaterial extends ProcessSolution {
 			record.setReference(null);
 		}
 		try {
-			parseSize(rdf, material, record);
-			parseIEP(rdf, material, record);
-			parseZetaPotential(rdf, material, record);
+			// parseSize(rdf, material, record);
+			// parseIEP(rdf, material, record);
+			// parseZetaPotential(rdf, material, record);
 			parseMeasurement(rdf, material, record);
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
-	}
-
-	// assay tyle linked to the assay, not endpoint
-	private void parseIEP(Model rdf, RDFNode material, SubstanceRecord record)
-			throws Exception {
-		execQuery(rdf,
-				String.format(NW.m_iep.SPARQL(),
-						material.asResource().getURI(), material.asResource()
-								.getURI(), material.asResource().getURI(),
-						material.asResource().getURI(), material.asResource()
-								.getURI(), material.asResource().getURI()),
-				new ProcessNMMeasurement(record,
-						I5_ROOT_OBJECTS.ZETA_POTENTIAL,
-						I5CONSTANTS.eISOELECTRIC_POINT));
-	}
-
-	private void parseSize(Model rdf, RDFNode material, SubstanceRecord record)
-			throws IOException {
-		execQuery(rdf,
-				String.format(NW.m_size.SPARQL(), material.asResource()
-						.getURI(), material.asResource().getURI(), material
-						.asResource().getURI(), material.asResource().getURI(),
-						material.asResource().getURI(), material.asResource()
-								.getURI()), new ProcessNMMeasurement(record,
-						I5_ROOT_OBJECTS.PC_GRANULOMETRY,
-						I5CONSTANTS.pPARTICLESIZE));
-	}
-
-	private void parseZetaPotential(Model rdf, RDFNode material,
-			SubstanceRecord record) throws IOException {
-		execQuery(rdf,
-				String.format(NW.m_zetapotential.SPARQL(), material
-						.asResource().getURI(), material.asResource().getURI(),
-						material.asResource().getURI(), material.asResource()
-								.getURI(), material.asResource().getURI(),
-						material.asResource().getURI()),
-				new ProcessNMMeasurement(record,
-						I5_ROOT_OBJECTS.ZETA_POTENTIAL,
-						I5CONSTANTS.eZETA_POTENTIAL));
 	}
 
 	private void parseMeasurement(Model rdf, RDFNode material,
