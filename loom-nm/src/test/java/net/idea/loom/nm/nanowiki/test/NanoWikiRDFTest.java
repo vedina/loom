@@ -127,6 +127,16 @@ public class NanoWikiRDFTest {
 		testProperties("measurement_endpoint", 42);
 	}
 
+	@Test
+	public void testSubstanceType() throws Exception {
+		testProperties("substance_type", 10);
+	}
+	@Test
+	public void testBundles() throws Exception {
+		testProperties("bundle", 9);
+	}
+
+
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
 		final Properties p = new Properties();
@@ -180,12 +190,13 @@ public class NanoWikiRDFTest {
 	}
 
 	@Test
-	public void test() throws Exception {
+	public void parse() throws Exception {
 		NanoWikiRDFReader reader = null;
 		int records = 0;
 		int measurements = 0;
 		int effectrecords = 0;
 		Multiset<String> histogram = HashMultiset.create();
+		Multiset<String> substancetypes = HashMultiset.create();
 
 		try {
 			File file = getNanoWikiFile();
@@ -197,6 +208,8 @@ public class NanoWikiRDFTest {
 				Assert.assertTrue(record instanceof SubstanceRecord);
 				SubstanceRecord material = (SubstanceRecord) record;
 
+				Assert.assertNotNull(material.getPublicName(),material.getSubstancetype());
+				substancetypes.add(material.getSubstancetype());
 				for (ExternalIdentifier id : material.getExternalids()) {
 					histogram.add(id.getSystemDesignator());
 				}
@@ -272,27 +285,27 @@ public class NanoWikiRDFTest {
 			if (reader != null)
 				reader.close();
 		}
+		System.out.println(substancetypes);
 		System.out.println(histogram);
-		Assert.assertEquals(12,histogram.count("Sigma Aldrich"));
-		Assert.assertEquals(4,histogram.count("ChEMBL"));
-		//Assert.assertEquals(histogram.count("PubChem CID"), 4);
-		Assert.assertEquals(4,histogram.count("PubChem SID"));
-		Assert.assertEquals(8,histogram.count("COD"));
-		Assert.assertEquals(22,histogram.count("JRC Representative Manufactured Nanomaterials"));
-		Assert.assertEquals(25,histogram.count("HOMEPAGE"));
-		Assert.assertEquals(13,histogram.count("CAS"));
-		Assert.assertEquals(132,histogram.count("SMILES"));
-		Assert.assertEquals(390,histogram.count("SOURCE"));
-		Assert.assertEquals(5,histogram.count("Close match"));
-		Assert.assertEquals(4,histogram.count("Same as"));
-		 
-		
-		//[Alternative Identifier x 51,  Coating x 68, SOURCE x 390,  Composition x 391, PubChem SID x 4, DATASET x 407, Has_Identifier x 407]
+		Assert.assertEquals(12, histogram.count("Sigma Aldrich"));
+		Assert.assertEquals(4, histogram.count("ChEMBL"));
+		// Assert.assertEquals(histogram.count("PubChem CID"), 4);
+		Assert.assertEquals(4, histogram.count("PubChem SID"));
+		Assert.assertEquals(8, histogram.count("COD"));
+		Assert.assertEquals(22, histogram
+				.count("JRC Representative Manufactured Nanomaterials"));
+		Assert.assertEquals(25, histogram.count("HOMEPAGE"));
+		Assert.assertEquals(390, histogram.count("SOURCE"));
+		Assert.assertEquals(5, histogram.count("Close match"));
+		Assert.assertEquals(4, histogram.count("Same as"));
+
+		// [Alternative Identifier x 51, Coating x 68, SOURCE x 390, Composition
+		// x 391, PubChem SID x 4, DATASET x 407, Has_Identifier x 407]
 		// all materials without renamed JRC ones
 		Assert.assertEquals(403, records);
 		Assert.assertEquals(854, measurements);
 		Assert.assertEquals(2485, effectrecords);
-		
+
 		logger.log(Level.INFO, "Substance records read\t" + records);
 	}
 }
