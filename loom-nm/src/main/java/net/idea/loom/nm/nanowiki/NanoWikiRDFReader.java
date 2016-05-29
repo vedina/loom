@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 import net.idea.i5.io.I5CONSTANTS;
 import net.idea.i5.io.I5_ROOT_OBJECTS;
 
+import org.junit.Assert;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.iterator.DefaultIteratingChemObjectReader;
@@ -66,6 +68,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected ResultSet materials;
 	protected SubstanceRecord record;
 	protected Logger logger;
+	public static final Properties substance_types = new Properties();
 
 	public Logger getLogger() {
 		return logger;
@@ -76,14 +79,24 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				: logger;
 	}
 
-	public NanoWikiRDFReader(Reader reader) throws CDKException {
+	public NanoWikiRDFReader(Reader reader) throws CDKException, IOException {
 		this(reader, null);
 	}
 
-	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException {
+	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException,
+			IOException {
 		super();
 		setReader(reader);
-
+		InputStream in = null;
+		try {
+			in = getClass().getClassLoader().getResourceAsStream(
+					"net/idea/loom/nm/nanowiki/substance_type.properties");
+			Assert.assertNotNull(in);
+			substance_types.load(in);
+		} finally {
+			if (in != null)
+				in.close();
+		}
 	}
 
 	public static String generateUUIDfromString(String prefix, String id) {
@@ -181,48 +194,6 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	public IStructureRecord nextRecord() {
 		return record;
 	}
-
-	/*
-	 * private void parseStudy(Model rdf,RDFNode studyNode,SubstanceRecord
-	 * record) { StmtIterator ii =
-	 * rdf.listStatements(studyNode.asResource(),null,(RDFNode)null); String
-	 * endpoint = "unknown"; Protocol protocol = null; ProtocolApplication papp
-	 * = new ProtocolApplication(protocol); record.addtMeasurement(papp); while
-	 * (ii.hasNext()) { Statement stmt = ii.next(); Property p =
-	 * stmt.getPredicate(); RDFNode node = stmt.getObject(); if
-	 * (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Endpoint"
-	 * )) { endpoint = node.asResource().getLocalName(); //TODO this is a
-	 * resource protocol = new Protocol(endpoint); papp.setProtocol(protocol); }
-	 * else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Identifier"
-	 * )) {
-	 * 
-	 * } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Study_Type"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Source"
-	 * )) { } else if
-	 * (p.getURI().equals("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")) {
-	 * } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_Q2"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_R2"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_RMSEP"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AUses_Descriptor"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AHas_EA"
-	 * )) { } else if (p.getURI().equals(
-	 * "http://127.0.0.1/mediawiki/index.php/Special:URIResolver/Property-3AFor_Cell_line"
-	 * )) {
-	 * 
-	 * 
-	 * } //printStmt(stmt); }
-	 * 
-	 * }
-	 */
 
 	private void parseCoatings(Model rdf, RDFNode material,
 			SubstanceRecord record) throws IOException {
@@ -1102,7 +1073,7 @@ class ProcessMaterial extends ProcessSolution {
 				+ UUID.nameUUIDFromBytes(record.getOwnerName().getBytes())
 						.toString());
 		try {
-			record.setSubstancetype(qs.get("type").asResource().getLocalName());
+			record.setSubstancetype(qs.get("type").asResource().getURI());
 		} catch (Exception x) {
 		}
 		;
@@ -1160,27 +1131,28 @@ class ProcessMaterial extends ProcessSolution {
 							.getString()));
 		} catch (Exception x) {
 		}
-		
+		String material_formula = null;
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Composition", qs.get("composition")
-							.asLiteral().getString()));
+			material_formula = qs.get("composition").asLiteral().getString();
 		} catch (Exception x) {
 		}
 		try {
 			record.getExternalids().add(
-					new ExternalIdentifier("Same as", qs.get("same_as").asResource().getURI()));
+					new ExternalIdentifier("Same as", qs.get("same_as")
+							.asResource().getURI()));
 		} catch (Exception x) {
 		}
 		try {
 			record.getExternalids().add(
-					new ExternalIdentifier("Close match", qs.get("close_match").asResource().getURI()));
+					new ExternalIdentifier("Close match", qs.get("close_match")
+							.asResource().getURI()));
 		} catch (Exception x) {
 		}
+		String material_coating = null;
 		try {
+			material_coating = qs.get("coating").asResource().getLocalName();
 			record.getExternalids().add(
-					new ExternalIdentifier("Coating", qs.get("coating")
-							.asResource().getLocalName()));
+					new ExternalIdentifier("Coating", material_coating));
 		} catch (Exception x) {
 		}
 
@@ -1202,20 +1174,18 @@ class ProcessMaterial extends ProcessSolution {
 							.asResource().getLocalName()));
 		} catch (Exception x) {
 		}
+		String material_cas = null;
+		try {
+			material_cas = qs.get("cas").asLiteral().getString();
+		} catch (Exception x) {
+		}
 
+		String material_smiles = null;
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("CAS", qs.get("cas")
-							.asLiteral().getString()));
+			material_smiles = qs.get("smiles").asLiteral().getString();
+			System.out.println(record.getPublicName() + "\t" + material_smiles);
 		} catch (Exception x) {
 		}
-		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("SMILES", qs.get("smiles")
-							.asLiteral().getString()));
-		} catch (Exception x) {
-		}
-		
 
 		if (record.getSubstanceName().startsWith("JRC2011")) {
 			ExternalIdentifier e = new ExternalIdentifier(
@@ -1223,14 +1193,29 @@ class ProcessMaterial extends ProcessSolution {
 							.getSubstanceName().replace("JRC2011 ", ""));
 			record.getExternalids().add(e);
 		}
-
+		ParticleTypes particletype = null;
 		try {
-			record.setFormula(qs.get("composition").asLiteral().getString());
+			try {
+				record.setFormula(qs.get("composition").asLiteral().getString());
+			} catch (Exception x) {
+				record.setFormula(null);
+			}
+			IStructureRecord core = null;
 			if (record.getFormula() != null) {
 				String composition_uuid = record.getSubstanceUUID();
-				IStructureRecord core = new StructureRecord();
-				record.addStructureRelation(composition_uuid, core,
-						STRUCTURE_RELATION.HAS_CORE, new Proportion());
+				core = new StructureRecord();
+				// if there are no coating, will consider this is a component,
+				// not a core
+				Proportion p = new Proportion();
+				if (material_coating == null) {
+					p.setTypical_value(100.0);
+					p.setTypical_unit("%");
+				}
+				record.addStructureRelation(
+						composition_uuid,
+						core,
+						material_coating == null ? STRUCTURE_RELATION.HAS_CONSTITUENT
+								: STRUCTURE_RELATION.HAS_CORE, p);
 				try {
 					core.setRecordProperty(Property.getI5UUIDInstance(),
 							NanoWikiRDFReader.generateUUIDfromString("NWKI",
@@ -1241,102 +1226,85 @@ class ProcessMaterial extends ProcessSolution {
 									null));
 				}
 				core.setFormula(record.getFormula());
-
-				if ("Nanoclay".equals(record.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.ENM_9000007;
-					record.setSubstancetype(ptype.getAnnotation());
-				} else if ("CarbonNanoparticle".equals(record
-						.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.CHEBI_82297;
-					record.setSubstancetype(ptype.getAnnotation());
-					core.setSmiles(ptype.getSMILES());
-					try {
-						core.setContent(core.getSmiles());
-						core.setFormat("INC");
-						core.setSmiles(core.getContent());
-					} catch (Exception x) {
-					}
-				} else if ("MetalOxide".equals(record.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.NPO_1541;
-					record.setSubstancetype(ptype.getAnnotation());
-				} else if ("Multi-2Dwalled_Carbon_Nanotube".equals(record
-						.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.NPO_354;
-					record.setSubstancetype(ptype.getAnnotation());
-					core.setSmiles(ptype.getSMILES());
-					try {
-						core.setContent(core.getSmiles());
-						core.setFormat("INC");
-						core.setSmiles(core.getContent());
-					} catch (Exception x) {
-					}
-					if (ptype.getCAS() != null)
-						core.setRecordProperty(Property.getCASInstance(),
-								ptype.getCAS());
-					if (ptype.getEINECS() != null)
-						core.setRecordProperty(Property.getEINECSInstance(),
-								ptype.getEINECS());
-				} else if ("PolymerCore".equals(record.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.NPO_1862;
-					record.setSubstancetype(ptype.getAnnotation());
-
-				} else if ("CarbonNanotube".equals(record.getSubstancetype())) {
-					ParticleTypes ptype = ParticleTypes.NPO_606;
-					record.setSubstancetype(ptype.getAnnotation());
-					core.setSmiles(ptype.getSMILES());
-					try {
-						core.setContent(core.getSmiles());
-						core.setFormat("INC");
-						core.setSmiles(core.getContent());
-					} catch (Exception x) {
-					}
-					if (ptype.getCAS() != null)
-						core.setRecordProperty(Property.getCASInstance(),
-								ptype.getCAS());
-					if (ptype.getEINECS() != null)
-						core.setRecordProperty(Property.getEINECSInstance(),
-								ptype.getEINECS());
-				} else if (record.getSubstancetype() == null
-						|| "".equals(record.getSubstancetype().trim())) {
-					ParticleTypes ptype = ParticleTypes.NPO_199;
-					record.setSubstancetype(ptype.getAnnotation());
-				} else if ("Glass wool".equals(record.getPublicName().trim())) {
-					record.setSubstancetype(record.getPublicName());
-				} else if ("Asbestos".equals(record.getPublicName().trim())) {
-					record.setSubstancetype(record.getPublicName());
+				if (material_smiles != null) {
+					core.setContent(material_smiles);
+					core.setFormat("INC");
+					core.setSmiles(material_smiles);
 				}
+				if (material_cas != null)
+					core.setRecordProperty(Property.getCASInstance(),
+							material_cas);
+			}
 
+			// now guess for the rest
+			if (record.getSubstancetype() != null) {
+				String term = NanoWikiRDFReader.substance_types
+						.getProperty(record.getSubstancetype()
+								.replace(":", "|"));
+				try {
+					particletype = ParticleTypes.valueOf(term);
+					record.setSubstancetype(particletype.getAnnotation());
+				} catch (Exception x) {
+					x.printStackTrace();
+				}
+			} else if ("Glass wool".equals(record.getPublicName().trim())) {
+				particletype = ParticleTypes.CHEBI_131191;
+				record.setSubstancetype(particletype.getAnnotation());
+			} else if ("Asbestos".equals(record.getPublicName().trim())) {
+				particletype = ParticleTypes.CHEBI_46661;
+				record.setSubstancetype(particletype.getAnnotation());
+			} else if ("Alloy".equals(record.getSubstancetype())) {
+				// do nothing
+				particletype = ParticleTypes.Alloy;
+				record.setSubstancetype(particletype.getAnnotation());
+			} else if (record.getSubstancetype() == null
+					|| "".equals(record.getSubstancetype().trim())) {
+				particletype = ParticleTypes.NPO_199;
+				record.setSubstancetype(particletype.getAnnotation());
+			} else {
+				System.out.println(record.getSubstancetype());
+			}
+
+			if (particletype != null)
+				record.setPublicName(particletype.toString());
+
+			if (core != null)
 				for (ParticleTypes ptype : ParticleTypes.values()) {
 					if (ptype.getFormula() == null) {
 						continue;
 					} else if (ptype.getFormula().equals(core.getFormula())) {
-						core.setSmiles(ptype.getSMILES());
-						try {
-							core.setContent(core.getSmiles());
-							core.setFormat("INC");
-							core.setSmiles(core.getContent());
-						} catch (Exception x) {
+						core.setSmiles(getSmiles(material_smiles, ptype));
+						if (core.getSmiles() == null) {
+							try {
+								core.setContent(core.getSmiles());
+								core.setFormat("INC");
+								core.setSmiles(core.getContent());
+							} catch (Exception x) {
+							}
 						}
-						if (ptype.getCAS() != null)
-							core.setRecordProperty(Property.getCASInstance(),
-									ptype.getCAS());
+						if (core.getRecordProperty(Property.getCASInstance()) == null)
+							if (ptype.getCAS() != null)
+								core.setRecordProperty(
+										Property.getCASInstance(),
+										ptype.getCAS());
 						if (ptype.getEINECS() != null)
 							core.setRecordProperty(
 									Property.getEINECSInstance(),
 									ptype.getEINECS());
 						record.setSubstancetype(ptype.name());
+						record.setPublicName(record.getPublicName() + " " + ptype.toString());
 					}
 				}
 
-				// todo more info
-				try {
-					core.setRecordProperty(Property.getNameInstance(),
-							record.getFormula());
-				} catch (Exception x) {
-				}
-				;
+			// todo more info
+			try {
+				core.setRecordProperty(Property.getNameInstance(),
+						record.getFormula());
+			} catch (Exception x) {
 			}
+
 		} catch (Exception x) {
+			x.printStackTrace();
 		}
 		;
 		try {
@@ -1359,6 +1327,10 @@ class ProcessMaterial extends ProcessSolution {
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
+	}
+
+	private String getSmiles(String material_smiles, ParticleTypes ptype) {
+		return material_smiles == null ? ptype.getSMILES() : material_smiles;
 	}
 
 	private void parseMeasurement(Model rdf, RDFNode material,
