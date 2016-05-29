@@ -394,6 +394,10 @@ class ProcessMeasurement extends ProcessSolution {
 			public String getTag() {
 				return I5CONSTANTS.eZETA_POTENTIAL;
 			}
+			@Override
+			public String getUnit() {
+				return "mV";
+			}
 		},
 		Isoelectric_Point {
 			@Override
@@ -584,6 +588,7 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5_ROOT_OBJECTS.BAO_0003009;
 				// Cell_Viability_Assay
 			}
+			
 		},
 		Cytotoxicity {
 			@Override
@@ -605,6 +610,10 @@ class ProcessMeasurement extends ProcessSolution {
 			public I5_ROOT_OBJECTS getCategory() {
 				// best guess
 				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			}
+			@Override
+			public String getUnit() {
+				return "";
 			}
 		},
 		Percentage_Non_2DViable_Cells, Percentage_Viable_Cells {
@@ -711,6 +720,7 @@ class ProcessMeasurement extends ProcessSolution {
 
 		Protocol protocol = new Protocol(endpoint);
 		String measuredEndpoint = endpoint;
+		String default_units = endpoint;
 		I5_ROOT_OBJECTS category = null;
 
 		try {
@@ -727,6 +737,7 @@ class ProcessMeasurement extends ProcessSolution {
 			if (category == null)
 				category = ep.getCategory();
 			measuredEndpoint = ep.getTag();
+			default_units = ep.getUnit();
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
@@ -854,6 +865,9 @@ class ProcessMeasurement extends ProcessSolution {
 		try {
 			if (qs.get("valueUnit") != null) {
 				effect.setUnit(qs.get("valueUnit").asLiteral().getString());
+			} else {
+				//use default units
+				effect.setUnit(default_units);
 			}
 		} catch (Exception x) {
 			x.printStackTrace();
