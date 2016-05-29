@@ -394,6 +394,7 @@ class ProcessMeasurement extends ProcessSolution {
 			public String getTag() {
 				return I5CONSTANTS.eZETA_POTENTIAL;
 			}
+
 			@Override
 			public String getUnit() {
 				return "mV";
@@ -588,7 +589,7 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5_ROOT_OBJECTS.BAO_0003009;
 				// Cell_Viability_Assay
 			}
-			
+
 		},
 		Cytotoxicity {
 			@Override
@@ -611,6 +612,7 @@ class ProcessMeasurement extends ProcessSolution {
 				// best guess
 				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
 			}
+
 			@Override
 			public String getUnit() {
 				return "";
@@ -779,25 +781,42 @@ class ProcessMeasurement extends ProcessSolution {
 				null));
 
 		try {
+			if (qs.get("material_doilink") != null)
+				papp.setReference(qs.get("material_doilink").asResource()
+						.getURI());
+		} catch (Exception x) {
+		}
+
+		try {
+			if (qs.get("material_year") != null)
+				papp.setReferenceYear(qs.get("material_year").asLiteral()
+						.getString());
+		} catch (Exception x) {
+
+		}
+
+		try {
 			if (qs.get("doilink") != null)
 				papp.setReference(qs.get("doilink").asResource().getURI());
-			else
-				papp.setReference(qs.get("study").asResource().getURI());
+			// else papp.setReference(qs.get("study").asResource().getURI());
 
 		} catch (Exception x) {
-			if (citation != null) {
-				papp.setReference(citation.getURL());
-				papp.setReferenceOwner(citation.getTitle());
-			}
+
 		}
 
 		try {
 			if (qs.get("year") != null)
 				papp.setReferenceYear(qs.get("year").asLiteral().getString());
 		} catch (Exception x) {
-				x.printStackTrace();
+
 		}
-		
+
+/*		
+		if (papp.getReference() == null && homepage != null) {
+			papp.setReference(homepage);
+			// papp.setReferenceOwner(citation.getTitle());
+		}
+*/
 		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
 
@@ -861,7 +880,7 @@ class ProcessMeasurement extends ProcessSolution {
 			if (qs.get("valueUnit") != null) {
 				effect.setUnit(qs.get("valueUnit").asLiteral().getString());
 			} else {
-				//use default units
+				// use default units
 				effect.setUnit(default_units);
 			}
 		} catch (Exception x) {
@@ -1221,10 +1240,11 @@ class ProcessMaterial extends ProcessSolution {
 							.asResource().getLocalName()));
 		} catch (Exception x) {
 		}
+		String homepage = null;
 		try {
+			homepage = qs.get("homepage").asResource().getLocalName();
 			record.getExternalids().add(
-					new ExternalIdentifier("HOMEPAGE", qs.get("homepage")
-							.asResource().getLocalName()));
+					new ExternalIdentifier("HOMEPAGE", homepage));
 		} catch (Exception x) {
 		}
 		String material_cas = null;
@@ -1396,7 +1416,8 @@ class ProcessMaterial extends ProcessSolution {
 	private void parseMeasurement(Model rdf, RDFNode material,
 			SubstanceRecord record) throws IOException {
 		execQuery(rdf, String.format(NW.m_sparql.SPARQL(), material
-				.asResource().getURI()), new ProcessMeasurement(rdf, record));
+				.asResource().getURI(), material.asResource().getURI()),
+				new ProcessMeasurement(rdf, record));
 	}
 
 }
