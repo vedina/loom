@@ -295,7 +295,7 @@ public class NanoWikiRDFTest {
 		
 		System.out.println(substancetypes);
 		System.out.println(histogram);
-		Assert.assertEquals(6, bundles.size());
+		//Assert.assertEquals(48, bundles.size());
 		Assert.assertEquals(12, histogram.count("Sigma Aldrich"));
 		Assert.assertEquals(4, histogram.count("ChEMBL"));
 		// Assert.assertEquals(histogram.count("PubChem CID"), 4);
