@@ -1239,7 +1239,7 @@ class ProcessMaterial extends ProcessSolution {
 		}
 		String homepage = null;
 		try {
-			homepage = qs.get("homepage").asResource().getLocalName();
+			homepage = qs.get("homepage").toString();
 			record.getExternalids().add(
 					new ExternalIdentifier("HOMEPAGE", homepage));
 		} catch (Exception x) {
