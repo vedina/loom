@@ -14,7 +14,7 @@ public enum ENanoMapperSPARQLQueries {
 	}
 
 	public static String SPARQL(String resource) throws IOException {
-		URL url = Resources.getResource("net/idea/loom/nm/nanowiki/" + resource
+		URL url = Resources.getResource("net/idea/loom/nm/enmrdf/" + resource
 				+ ".sparql");
 		return Resources.toString(url, Charsets.UTF_8);
 
