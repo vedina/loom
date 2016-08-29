@@ -67,15 +67,6 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			IOException {
 		super();
 		setReader(reader);
-		InputStream in = null;
-		try {
-			in = getClass().getClassLoader().getResourceAsStream(
-					"net/idea/loom/nm/nanowiki/substance_type.properties");
-			substance_types.load(in);
-		} finally {
-			if (in != null)
-				in.close();
-		}
 	}
 
 	@Override
@@ -84,17 +75,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			rdf = ModelFactory.createDefaultModel();
 			rdf.read(reader, "http://ontology.enanomapper.net", "TURTLE");
 
-			Query query = QueryFactory.create(NW.m_allmaterials.SPARQL());
+			Query query = QueryFactory.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
 			qe_materials = QueryExecutionFactory.create(query, rdf);
 
 			materials = qe_materials.execSelect();
 		} catch (IOException x) {
-			throw new CDKException(x.getMessage());
-		} finally {
-			try {
-				reader.close();
-			} catch (Exception x) {
-			}
+			throw new CDKException("Error while reading the eNanoMapper RDF:" + x.getMessage());
 		}
 	}
 
@@ -102,6 +88,8 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	public void setReader(InputStream reader) throws CDKException {
 		try {
 			setReader(new InputStreamReader(reader, "UTF-8"));
+		} catch (CDKException x) {
+			throw x;
 		} catch (Exception x) {
 			throw new CDKException(x.getMessage(), x);
 		}
@@ -117,7 +105,6 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	public void close() throws IOException {
 		if (qe_materials != null)
 			qe_materials.close();
-
 		rdf.close();
 	}
 
@@ -127,20 +114,10 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			return false;
 		if (materials.hasNext()) {
 			QuerySolution qs = materials.next();
-			Resource material = qs.getResource("m");
-			Resource bundle = qs.getResource("bundle");
+			System.out.println("next material: " + qs);
+			Resource material = qs.getResource("material");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
-			if (bundle != null) {
-				BundleRoleFacet bf = bundles.get(bundle.getURI());
-				if (bf == null) {
-					bf = new BundleRoleFacet(null);
-					SubstanceEndpointsBundle b = new SubstanceEndpointsBundle();
-					bf.setValue(b);
-					bundles.put(bundle.getURI(), bf);
-				}
-				record.addFacet(bf);
-			}
 			try {
 				parseMaterial(rdf, material, record);
 				return true;
@@ -150,6 +127,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				return false;
 			}
 		} else {
+			System.out.println("Nothing next");
 			record = null;
 			return false;
 		}
@@ -179,6 +157,18 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 
 	private void parseMaterial(Model rdf, RDFNode material,
    	  SubstanceRecord record) throws IOException {
+		String sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material.asResource().getURI());
+		Query query = QueryFactory.create(sparqlQuery);
+		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
+		try {
+			ResultSet rs = qe.execSelect();
+			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
+			if (solution.contains("label")) {
+				record.setSubstanceName(solution.get("label").asLiteral().getString());
+			}
+		} finally {
+			qe.close();
+		}
 	}
 
 }
