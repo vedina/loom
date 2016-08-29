@@ -166,6 +166,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			if (solution.contains("label")) {
 				record.setSubstanceName(solution.get("label").asLiteral().getString());
 			}
+			if (solution.contains("type")) {
+				record.setSubstancetype(solution.get("type").asResource().getLocalName());
+			}
+			if (solution.contains("owner")) {
+				record.setOwnerName(solution.get("owner").asLiteral().getString());
+			}
 		} finally {
 			qe.close();
 		}
