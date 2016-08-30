@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -183,6 +184,17 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 					UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString()
 				);
 			}
+			List<ExternalIdentifier> identifiers = new ArrayList<>();
+			if (solution.contains("sameAs")) {
+				identifiers.add(new ExternalIdentifier("Same As", solution.get("sameAs").asResource().getURI()));
+			}
+			if (solution.contains("closeMatch")) {
+				identifiers.add(new ExternalIdentifier("Close Match", solution.get("closeMatch").asResource().getURI()));
+			}
+			if (solution.contains("page")) {
+				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution.get("page").asResource().getURI()));
+			}
+			if (identifiers.size() > 0) record.setExternalids(identifiers);
 		} finally {
 			qe.close();
 		}
