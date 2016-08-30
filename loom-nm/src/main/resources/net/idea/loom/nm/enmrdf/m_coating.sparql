@@ -1,12 +1,19 @@
-	PREFIX owl: <http://www.w3.org/2002/07/owl#>
-	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-	PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-	PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>
-	SELECT distinct ?coating ?chemical ?smiles
-	WHERE {
-	<%s> mw:Property-3AHas_Chemical_Coating ?coating.
-	?coating mw:Property-3AHas_Chemical ?chemical.
-	OPTIONAL {
-	?chemical mw:Property-3AHas_SMILES ?smiles.
-	}
-	} order by ?coating ?chemical ?smiles
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX npo:   <http://purl.bioontology.org/ontology/npo#>
+PREFIX sso:   <http://semanticscience.org/resource/>
+
+SELECT distinct ?component ?type ?smiles 
+WHERE {
+  BIND (<%s> AS ?material)
+  ?material npo:has_part ?component .
+  ?component a ?type .
+  OPTIONAL {
+    ?component sso:CHEMINF_000200 [
+       a sso:CHEMINF_000018 ;
+       sso:SIO_000300 ?smiles
+    ]
+  }
+}

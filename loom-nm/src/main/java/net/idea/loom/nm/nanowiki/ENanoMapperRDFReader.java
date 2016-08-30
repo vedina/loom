@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,13 +27,19 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 import ambit2.base.data.ILiteratureEntry;
+import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Protocol;
+import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.substance.ExternalIdentifier;
-import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.facet.BundleRoleFacet;
 import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
+import ambit2.base.relation.STRUCTURE_RELATION;
+import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
+import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 /**
  * @author nina
@@ -158,6 +165,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	private void parseMaterial(Model rdf, RDFNode material,
    	  SubstanceRecord record) throws IOException {
 		String sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material.asResource().getURI());
+		record.setSubstanceUUID(UUID.nameUUIDFromBytes(material.asResource().getURI().toString().getBytes()).toString());
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		try {
@@ -171,7 +179,61 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			}
 			if (solution.contains("owner")) {
 				record.setOwnerName(solution.get("owner").asLiteral().getString());
+				record.setOwnerUUID("DEMO-" +
+					UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString()
+				);
 			}
+		} finally {
+			qe.close();
+		}
+		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_coating.SPARQL(), material.asResource().getURI());
+		query = QueryFactory.create(sparqlQuery);
+		qe = QueryExecutionFactory.create(query, rdf);
+		try {
+			ResultSet rs = qe.execSelect();
+			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
+			StructureRecord structure = new StructureRecord();
+			System.out.println("component: " + solution.get("component").toString());
+			if (solution.contains("smiles")) {
+				String smiles = solution.get("smiles").asLiteral().toString();
+				System.out.println("SMILES: " + smiles);
+				structure.setContent(smiles);
+				structure.setFormat("INC");
+				structure.setSmiles(structure.getContent());
+			}
+			Proportion p = new Proportion();
+			p.setTypical_value(100.0);
+			p.setTypical_unit("%");
+			record.addStructureRelation(record.getSubstanceUUID(), structure, STRUCTURE_RELATION.HAS_CONSTITUENT, p);
+		} finally {
+			qe.close();
+		}
+		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_sparql.SPARQL(), material.asResource().getURI());
+		query = QueryFactory.create(sparqlQuery);
+		qe = QueryExecutionFactory.create(query, rdf);
+		try {
+			ResultSet rs = qe.execSelect();
+			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
+			String endpoint = "";
+			if (solution.contains("label")) endpoint = solution.get("label").asLiteral().toString();
+			System.out.println("New measurement: " + endpoint);
+			Protocol protocol = new Protocol(endpoint);
+			I5_ROOT_OBJECTS category = null;
+			try {
+				if (solution.contains("type")) {
+					String bao = solution.get("type").asResource().getURI().toString();
+					category = I5_ROOT_OBJECTS.valueOf(bao.replace(
+							"http://www.bioassayontology.org/bao#", ""));
+				}
+			} catch (Exception x) {
+			}
+			if (category == null)
+				category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			protocol.setCategory(category.name() + "_SECTION");
+			protocol.setTopCategory(category.getTopCategory());
+			ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
+					.createExperimentRecord(protocol);
+			record.addMeasurement(papp);
 		} finally {
 			qe.close();
 		}
