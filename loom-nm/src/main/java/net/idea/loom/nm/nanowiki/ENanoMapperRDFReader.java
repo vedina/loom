@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -58,6 +59,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	public static final Properties substance_types = new Properties();
 	
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
+	private Map<String,Integer> components = new HashMap<>();
 
 	public Logger getLogger() {
 		return logger;
@@ -206,7 +208,19 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			ResultSet rs = qe.execSelect();
 			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
 			StructureRecord structure = new StructureRecord();
-			System.out.println("component: " + solution.get("component").toString());
+			String componentRes = solution.get("component").toString();
+			String componentId = solution.get("component").asResource().getLocalName();
+			System.out.println("component: " + componentRes);
+			int componentInt = 0;
+			if (!components.containsKey(componentId)) {
+				componentInt = components.size() + 1;
+				components.put(componentId, componentInt);
+			} else {
+				componentInt = components.get(componentId);
+			}
+			structure.setIdchemical(componentInt);
+			structure.setIdstructure(componentInt);
+			System.out.println("Set structure ID: " + componentInt);
 			if (solution.contains("smiles")) {
 				String smiles = solution.get("smiles").asLiteral().toString();
 				System.out.println("SMILES: " + smiles);
@@ -214,6 +228,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				structure.setFormat("INC");
 				structure.setSmiles(structure.getContent());
 			}
+			System.out.println("struct: " + structure);
 			Proportion p = new Proportion();
 			p.setTypical_value(100.0);
 			p.setTypical_unit("%");
@@ -256,6 +271,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 					effect.setUnit(solution.get("unit").asLiteral().toString());
 				papp.addEffect(effect);
 				record.addMeasurement(papp);
+				System.out.println("Added the measurement");
 			}
 		} finally {
 			qe.close();
