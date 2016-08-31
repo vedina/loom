@@ -70,13 +70,16 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				: logger;
 	}
 
-	public ENanoMapperRDFReader(Reader reader) throws CDKException, IOException {
-		this(reader, null);
+	private String prefix = "DEMO";
+	
+	public ENanoMapperRDFReader(Reader reader, String prefix) throws CDKException, IOException {
+		this(reader, prefix, null);
 	}
 
-	public ENanoMapperRDFReader(Reader reader, Logger logger) throws CDKException,
+	public ENanoMapperRDFReader(Reader reader, String prefix, Logger logger) throws CDKException,
 			IOException {
 		super();
+		this.prefix = prefix;
 		setReader(reader);
 	}
 
@@ -169,7 +172,10 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	private void parseMaterial(Model rdf, RDFNode material,
    	  SubstanceRecord record) throws IOException {
 		String sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material.asResource().getURI());
-		record.setSubstanceUUID(UUID.nameUUIDFromBytes(material.asResource().getURI().toString().getBytes()).toString());
+		record.setSubstanceUUID(
+			this.prefix + "-" +
+		    UUID.nameUUIDFromBytes(material.asResource().getURI().toString().getBytes()).toString()
+		);
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		try {
@@ -183,7 +189,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			}
 			if (solution.contains("owner")) {
 				record.setOwnerName(solution.get("owner").asLiteral().getString());
-				record.setOwnerUUID("DEMO-" +
+				record.setOwnerUUID(prefix + "-" + 
 					UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString()
 				);
 			}
@@ -261,6 +267,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				protocol.setTopCategory(category.getTopCategory());
 				ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
 						.createExperimentRecord(protocol);
+				papp.setDocumentUUID(
+					this.prefix + "-" + UUID.nameUUIDFromBytes(
+						solution.get("mgroup").asResource().getURI().getBytes()
+					).toString()
+				);
+				System.out.println("ID: " + papp.getDocumentUUID());
 				// and now the actual measured value
 				EffectRecord<String, IParams, String> effect = category
 						.createEffectRecord();
