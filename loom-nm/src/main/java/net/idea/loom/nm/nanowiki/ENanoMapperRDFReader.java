@@ -30,6 +30,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import ambit2.base.data.ILiteratureEntry;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
@@ -225,27 +226,37 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
 			ResultSet rs = qe.execSelect();
-			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
-			String endpoint = "";
-			if (solution.contains("label")) endpoint = solution.get("label").asLiteral().toString();
-			System.out.println("New measurement: " + endpoint);
-			Protocol protocol = new Protocol(endpoint);
-			I5_ROOT_OBJECTS category = null;
-			try {
-				if (solution.contains("type")) {
-					String bao = solution.get("type").asResource().getURI().toString();
-					category = I5_ROOT_OBJECTS.valueOf(bao.replace(
-							"http://www.bioassayontology.org/bao#", ""));
+			while (rs.hasNext()) {
+				QuerySolution solution = rs.next();
+				String endpoint = "";
+				if (solution.contains("label")) endpoint = solution.get("label").asLiteral().toString();
+				Protocol protocol = new Protocol(endpoint);
+				I5_ROOT_OBJECTS category = null;
+				try {
+					if (solution.contains("type")) {
+						String bao = solution.get("type").asResource().getURI().toString();
+						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
+								"http://www.bioassayontology.org/bao#", ""));
+					}
+				} catch (Exception x) {
 				}
-			} catch (Exception x) {
+				if (category == null)
+					category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+				protocol.setCategory(category.name() + "_SECTION");
+				protocol.setTopCategory(category.getTopCategory());
+				ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
+						.createExperimentRecord(protocol);
+				// and now the actual measured value
+				EffectRecord<String, IParams, String> effect = category
+						.createEffectRecord();
+				effect.setEndpoint(endpoint);
+				if (solution.contains("value"))
+					effect.setTextValue(solution.get("value").asLiteral().toString());
+				if (solution.contains("unit"))
+					effect.setUnit(solution.get("unit").asLiteral().toString());
+				papp.addEffect(effect);
+				record.addMeasurement(papp);
 			}
-			if (category == null)
-				category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
-			protocol.setCategory(category.name() + "_SECTION");
-			protocol.setTopCategory(category.getTopCategory());
-			ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
-					.createExperimentRecord(protocol);
-			record.addMeasurement(papp);
 		} finally {
 			qe.close();
 		}
