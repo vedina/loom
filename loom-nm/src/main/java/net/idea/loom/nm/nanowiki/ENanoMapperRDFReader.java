@@ -60,6 +60,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
 	private Map<String,Integer> components = new HashMap<>();
+	private Map<String,Integer> endpoints = new HashMap<>();
 
 	public Logger getLogger() {
 		return logger;
@@ -276,6 +277,15 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				// and now the actual measured value
 				EffectRecord<String, IParams, String> effect = category
 						.createEffectRecord();
+				String effectId = solution.get("endpoint").asResource().getLocalName(); // Works until starts putting same local names with different namespaces in the same document
+				int effectInt = 0;
+				if (!endpoints.containsKey(effectInt)) {
+					effectInt = endpoints.size() + 1;
+					endpoints.put(effectId, effectInt);
+				} else {
+					effectInt = endpoints.get(effectId);
+				}
+				effect.setIdresult(effectInt);
 				effect.setEndpoint(endpoint);
 				if (solution.contains("value"))
 					effect.setTextValue(solution.get("value").asLiteral().toString());
