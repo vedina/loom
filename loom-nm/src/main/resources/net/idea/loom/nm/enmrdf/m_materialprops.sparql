@@ -1,0 +1,21 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
+
+
+SELECT distinct ?type ?label ?owner ?sameAs ?closeMatch ?page
+WHERE {
+  BIND (<%s> AS ?material)
+  ?material dcterms:type ?type .
+  OPTIONAL { ?material rdfs:label ?label . }
+  OPTIONAL {
+    ?material dcterms:source/dcterms:title ?owner .
+  }
+  OPTIONAL { ?material owl:sameAs ?sameAs . }
+  OPTIONAL { ?material skos:closeMatch ?closeMatch . }
+  OPTIONAL { ?material foaf:page ?page . }
+}

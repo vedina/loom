@@ -1,0 +1,13 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>
+SELECT ?condition ?endpoint ?endpointLabel ?value ?valueUnit
+WHERE {
+	?condition mw:Property-3AFor_Measurement <%s>.
+	?condition mw:Property-3AHas_Endpoint ?endpoint.
+	?endpoint rdfs:label ?endpointLabel.
+	?condition mw:Property-3AHas_Endpoint_Value ?value.
+	OPTIONAL {?condition mw:Property-3AHas_Endpoint_Value_Units ?valueUnit.}
+	OPTIONAL {?condition rdfs:label ?label.} 
+}

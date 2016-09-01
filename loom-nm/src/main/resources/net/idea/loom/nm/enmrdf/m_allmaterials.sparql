@@ -1,0 +1,6 @@
+PREFIX obo:  <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?material
+WHERE {
+   ?material a obo:CHEBI_59999 .
+}
