@@ -196,10 +196,10 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			}
 			List<ExternalIdentifier> identifiers = new ArrayList<>();
 			if (solution.contains("sameAs")) {
-				identifiers.add(new ExternalIdentifier("Same As", solution.get("sameAs").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Same as", solution.get("sameAs").asResource().getURI()));
 			}
 			if (solution.contains("closeMatch")) {
-				identifiers.add(new ExternalIdentifier("Close Match", solution.get("closeMatch").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Close match", solution.get("closeMatch").asResource().getURI()));
 			}
 			if (solution.contains("page")) {
 				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution.get("page").asResource().getURI()));
