@@ -229,7 +229,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			structure.setIdstructure(componentInt);
 			System.out.println("Set structure ID: " + componentInt);
 			if (solution.contains("smiles")) {
-				String smiles = solution.get("smiles").asLiteral().toString();
+				String smiles = solution.get("smiles").asLiteral().getValue().toString();
 				System.out.println("SMILES: " + smiles);
 				structure.setContent(smiles);
 				structure.setFormat("INC");
@@ -251,7 +251,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			while (rs.hasNext()) {
 				QuerySolution solution = rs.next();
 				String endpoint = "";
-				if (solution.contains("label")) endpoint = solution.get("label").asLiteral().toString();
+				if (solution.contains("label")) endpoint = solution.get("label").asLiteral().getValue().toString();
 				Protocol protocol = new Protocol(endpoint);
 				I5_ROOT_OBJECTS category = null;
 				try {
@@ -288,9 +288,9 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				effect.setIdresult(effectInt);
 				effect.setEndpoint(endpoint);
 				if (solution.contains("value"))
-					effect.setTextValue(solution.get("value").asLiteral().toString());
+					effect.setTextValue(solution.get("value").asLiteral().getValue().toString());
 				if (solution.contains("unit"))
-					effect.setUnit(solution.get("unit").asLiteral().toString());
+					effect.setUnit(solution.get("unit").asLiteral().getValue().toString());
 				papp.addEffect(effect);
 				record.addMeasurement(papp);
 				System.out.println("Added the measurement");
