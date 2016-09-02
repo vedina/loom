@@ -201,6 +201,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			if (solution.contains("closeMatch")) {
 				identifiers.add(new ExternalIdentifier("Close match", solution.get("closeMatch").asResource().getURI()));
 			}
+			if (solution.contains("relatedMatch")) {
+				identifiers.add(new ExternalIdentifier("Related match", solution.get("relatedMatch").asResource().getURI()));
+			}
+			if (solution.contains("seeAlso")) {
+				identifiers.add(new ExternalIdentifier("See also", solution.get("seeAlso").asResource().getURI()));
+			}
 			if (solution.contains("page")) {
 				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution.get("page").asResource().getURI()));
 			}

@@ -7,7 +7,7 @@ PREFIX owl:     <http://www.w3.org/2002/07/owl#>
 PREFIX foaf:    <http://xmlns.com/foaf/0.1/>
 
 
-SELECT distinct ?type ?label ?owner ?sameAs ?closeMatch ?page
+SELECT distinct ?type ?label ?owner ?sameAs ?closeMatch ?relatedMatch ?seeAlso ?page
 WHERE {
   BIND (<%s> AS ?material)
   ?material dcterms:type ?type .
@@ -17,5 +17,7 @@ WHERE {
   }
   OPTIONAL { ?material owl:sameAs ?sameAs . }
   OPTIONAL { ?material skos:closeMatch ?closeMatch . }
+  OPTIONAL { ?material skos:relatedMatch ?relatedMatch . }
+  OPTIONAL { ?material rdfs:seeAlso ?seeAlso . }
   OPTIONAL { ?material foaf:page ?page . }
 }
