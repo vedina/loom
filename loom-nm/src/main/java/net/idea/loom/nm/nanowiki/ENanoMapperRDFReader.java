@@ -280,6 +280,15 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 					).toString()
 				);
 				System.out.println("ID: " + papp.getDocumentUUID());
+				// set a reference
+				if (solution.contains("source")) {
+					String doiString = solution.get("source").asResource().getURI();
+					if (doiString.startsWith("https://")) doiString = doiString.substring(8);
+					if (doiString.startsWith("http://")) doiString = doiString.substring(7);
+					if (doiString.startsWith("doi.org/")) doiString = doiString.substring(8);
+					if (doiString.startsWith("dx.doi.org/")) doiString = doiString.substring(11);
+					papp.setReference(doiString);
+				}
 				// and now the actual measured value
 				EffectRecord<String, IParams, String> effect = category
 						.createEffectRecord();
