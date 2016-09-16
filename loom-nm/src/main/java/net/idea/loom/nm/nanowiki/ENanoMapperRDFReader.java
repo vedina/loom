@@ -231,8 +231,8 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			} else {
 				componentInt = components.get(componentId);
 			}
-			structure.setIdchemical(componentInt);
-			structure.setIdstructure(componentInt);
+			//structure.setIdchemical(componentInt);
+			//structure.setIdstructure(componentInt);
 			System.out.println("Set structure ID: " + componentInt);
 			if (solution.contains("smiles")) {
 				String smiles = solution.get("smiles").asLiteral().getValue().toString();
