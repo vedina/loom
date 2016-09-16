@@ -57,10 +57,11 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	protected SubstanceRecord record;
 	protected Logger logger;
 	public static final Properties substance_types = new Properties();
-	
+
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
-	private Map<String,Integer> components = new HashMap<>();
-	private Map<String,Integer> endpoints = new HashMap<>();
+
+	// private Map<String,Integer> components = new HashMap<>();
+	// private Map<String,Integer> endpoints = new HashMap<>();
 
 	public Logger getLogger() {
 		return logger;
@@ -72,13 +73,14 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	private String prefix = "DEMO";
-	
-	public ENanoMapperRDFReader(Reader reader, String prefix) throws CDKException, IOException {
+
+	public ENanoMapperRDFReader(Reader reader, String prefix)
+			throws CDKException, IOException {
 		this(reader, prefix, null);
 	}
 
-	public ENanoMapperRDFReader(Reader reader, String prefix, Logger logger) throws CDKException,
-			IOException {
+	public ENanoMapperRDFReader(Reader reader, String prefix, Logger logger)
+			throws CDKException, IOException {
 		super();
 		this.prefix = prefix;
 		setReader(reader);
@@ -90,12 +92,14 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			rdf = ModelFactory.createDefaultModel();
 			rdf.read(reader, "http://ontology.enanomapper.net", "TURTLE");
 
-			Query query = QueryFactory.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
+			Query query = QueryFactory
+					.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
 			qe_materials = QueryExecutionFactory.create(query, rdf);
 
 			materials = qe_materials.execSelect();
 		} catch (IOException x) {
-			throw new CDKException("Error while reading the eNanoMapper RDF:" + x.getMessage());
+			throw new CDKException("Error while reading the eNanoMapper RDF:"
+					+ x.getMessage());
 		}
 	}
 
@@ -171,71 +175,91 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	private void parseMaterial(Model rdf, RDFNode material,
-   	  SubstanceRecord record) throws IOException {
-		String sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material.asResource().getURI());
-		record.setSubstanceUUID(
-			this.prefix + "-" +
-		    UUID.nameUUIDFromBytes(material.asResource().getURI().toString().getBytes()).toString()
-		);
+			SubstanceRecord record) throws IOException {
+		String sparqlQuery = String.format(
+				ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material
+						.asResource().getURI());
+		record.setSubstanceUUID(this.prefix
+				+ "-"
+				+ UUID.nameUUIDFromBytes(
+						material.asResource().getURI().toString().getBytes())
+						.toString());
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		try {
 			ResultSet rs = qe.execSelect();
-			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
+			QuerySolution solution = rs.next(); // only pick the first. If we
+												// have more, the SPARQL is
+												// wrong
 			if (solution.contains("label")) {
-				record.setSubstanceName(solution.get("label").asLiteral().getString());
+				record.setSubstanceName(solution.get("label").asLiteral()
+						.getString());
 			}
 			if (solution.contains("type")) {
-				record.setSubstancetype(solution.get("type").asResource().getLocalName());
+				record.setSubstancetype(solution.get("type").asResource()
+						.getLocalName());
 			}
 			if (solution.contains("owner")) {
-				record.setOwnerName(solution.get("owner").asLiteral().getString());
-				record.setOwnerUUID(prefix + "-" + 
-					UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString()
-				);
+				record.setOwnerName(solution.get("owner").asLiteral()
+						.getString());
+				record.setOwnerUUID(prefix
+						+ "-"
+						+ UUID.nameUUIDFromBytes(
+								record.getOwnerName().getBytes()).toString());
 			}
 			List<ExternalIdentifier> identifiers = new ArrayList<>();
 			if (solution.contains("sameAs")) {
-				identifiers.add(new ExternalIdentifier("Same as", solution.get("sameAs").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Same as", solution
+						.get("sameAs").asResource().getURI()));
 			}
 			if (solution.contains("closeMatch")) {
-				identifiers.add(new ExternalIdentifier("Close match", solution.get("closeMatch").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Close match", solution
+						.get("closeMatch").asResource().getURI()));
 			}
 			if (solution.contains("relatedMatch")) {
-				identifiers.add(new ExternalIdentifier("Related match", solution.get("relatedMatch").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Related match",
+						solution.get("relatedMatch").asResource().getURI()));
 			}
 			if (solution.contains("seeAlso")) {
-				identifiers.add(new ExternalIdentifier("See also", solution.get("seeAlso").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("See also", solution
+						.get("seeAlso").asResource().getURI()));
 			}
 			if (solution.contains("page")) {
-				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution.get("page").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution
+						.get("page").asResource().getURI()));
 			}
-			if (identifiers.size() > 0) record.setExternalids(identifiers);
+			if (identifiers.size() > 0)
+				record.setExternalids(identifiers);
 		} finally {
 			qe.close();
 		}
-		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_coating.SPARQL(), material.asResource().getURI());
+		sparqlQuery = String.format(
+				ENanoMapperSPARQLQueries.m_coating.SPARQL(), material
+						.asResource().getURI());
 		query = QueryFactory.create(sparqlQuery);
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
 			ResultSet rs = qe.execSelect();
-			QuerySolution solution = rs.next(); // only pick the first. If we have more, the SPARQL is wrong
+			QuerySolution solution = rs.next(); // only pick the first. If we
+												// have more, the SPARQL is
+												// wrong
 			StructureRecord structure = new StructureRecord();
-			String componentRes = solution.get("component").toString();
-			String componentId = solution.get("component").asResource().getLocalName();
-			System.out.println("component: " + componentRes);
-			int componentInt = 0;
-			if (!components.containsKey(componentId)) {
-				componentInt = components.size() + 1;
-				components.put(componentId, componentInt);
-			} else {
-				componentInt = components.get(componentId);
-			}
-			//structure.setIdchemical(componentInt);
-			//structure.setIdstructure(componentInt);
-			System.out.println("Set structure ID: " + componentInt);
+			/*
+			 * String componentRes = solution.get("component").toString();
+			 * String componentId =
+			 * solution.get("component").asResource().getLocalName();
+			 * System.out.println("component: " + componentRes); int
+			 * componentInt = 0; if (!components.containsKey(componentId)) {
+			 * componentInt = components.size() + 1; components.put(componentId,
+			 * componentInt); } else { componentInt =
+			 * components.get(componentId); }
+			 * //structure.setIdchemical(componentInt);
+			 * //structure.setIdstructure(componentInt);
+			 * System.out.println("Set structure ID: " + componentInt);
+			 */
 			if (solution.contains("smiles")) {
-				String smiles = solution.get("smiles").asLiteral().getValue().toString();
+				String smiles = solution.get("smiles").asLiteral().getValue()
+						.toString();
 				System.out.println("SMILES: " + smiles);
 				structure.setContent(smiles);
 				structure.setFormat("INC");
@@ -245,11 +269,13 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			Proportion p = new Proportion();
 			p.setTypical_value(100.0);
 			p.setTypical_unit("%");
-			record.addStructureRelation(record.getSubstanceUUID(), structure, STRUCTURE_RELATION.HAS_CONSTITUENT, p);
+			record.addStructureRelation(record.getSubstanceUUID(), structure,
+					STRUCTURE_RELATION.HAS_CONSTITUENT, p);
 		} finally {
 			qe.close();
 		}
-		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_sparql.SPARQL(), material.asResource().getURI());
+		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_sparql.SPARQL(),
+				material.asResource().getURI());
 		query = QueryFactory.create(sparqlQuery);
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
@@ -257,55 +283,82 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			while (rs.hasNext()) {
 				QuerySolution solution = rs.next();
 				String endpoint = "";
-				if (solution.contains("label")) endpoint = solution.get("label").asLiteral().getValue().toString();
+				if (solution.contains("label"))
+					endpoint = solution.get("label").asLiteral().getValue()
+							.toString();
 				Protocol protocol = new Protocol(endpoint);
 				I5_ROOT_OBJECTS category = null;
 				try {
 					if (solution.contains("type")) {
-						String bao = solution.get("type").asResource().getURI().toString();
+						String bao = solution.get("type").asResource().getURI()
+								.toString();
 						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
 								"http://www.bioassayontology.org/bao#", ""));
 					}
 				} catch (Exception x) {
 				}
+				//change the default for now
 				if (category == null)
-					category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+					category = I5_ROOT_OBJECTS.PC_UNKNOWN;
 				protocol.setCategory(category.name() + "_SECTION");
 				protocol.setTopCategory(category.getTopCategory());
+
 				ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
 						.createExperimentRecord(protocol);
-				papp.setDocumentUUID(
-					this.prefix + "-" + UUID.nameUUIDFromBytes(
-						solution.get("mgroup").asResource().getURI().getBytes()
-					).toString()
-				);
+
+				papp.setDocumentUUID(this.prefix
+						+ "-"
+						+ UUID.nameUUIDFromBytes(
+								solution.get("mgroup").asResource().getURI()
+										.getBytes()).toString());
 				System.out.println("ID: " + papp.getDocumentUUID());
 				// set a reference
 				if (solution.contains("source")) {
-					String doiString = solution.get("source").asResource().getURI();
-					if (doiString.startsWith("https://")) doiString = doiString.substring(8);
-					if (doiString.startsWith("http://")) doiString = doiString.substring(7);
-					if (doiString.startsWith("doi.org/")) doiString = doiString.substring(8);
-					if (doiString.startsWith("dx.doi.org/")) doiString = doiString.substring(11);
+					String doiString = solution.get("source").asResource()
+							.getURI();
+					//the ui is happier with ful URL....
+					/*
+					if (doiString.startsWith("https://")) 		doiString = doiString.substring(8);
+					if (doiString.startsWith("http://"))
+						doiString = doiString.substring(7);
+
+					if (doiString.startsWith("doi.org/"))
+						doiString = "doiString.substring(8);
+					if (doiString.startsWith("dx.doi.org/"))
+						doiString = doiString.substring(11);
+					*/	
 					papp.setReference(doiString);
 				}
 				// and now the actual measured value
 				EffectRecord<String, IParams, String> effect = category
 						.createEffectRecord();
-				String effectId = solution.get("endpoint").asResource().getLocalName(); // Works until starts putting same local names with different namespaces in the same document
-				int effectInt = 0;
-				if (!endpoints.containsKey(effectInt)) {
-					effectInt = endpoints.size() + 1;
-					endpoints.put(effectId, effectInt);
-				} else {
-					effectInt = endpoints.get(effectId);
-				}
-				effect.setIdresult(effectInt);
+
+				/*
+				 * String effectId =
+				 * solution.get("endpoint").asResource().getLocalName(); //
+				 * Works until starts putting same local names with different
+				 * namespaces in the same document // what is the meaning of
+				 * namespace here? there could be endpoint of the same name from
+				 * different experiment, //this should be handled by specifying
+				 * proper protocol (in the guidance field) int effectInt = 0; if
+				 * (!endpoints.containsKey(effectInt)) { effectInt =
+				 * endpoints.size() + 1; endpoints.put(effectId, effectInt); }
+				 * else { effectInt = endpoints.get(effectId); }
+				 * effect.setIdresult(effectInt);
+				 */
 				effect.setEndpoint(endpoint);
-				if (solution.contains("value"))
-					effect.setTextValue(solution.get("value").asLiteral().getValue().toString());
+				if (solution.contains("value")) {
+					String value = solution.get("value").asLiteral()
+							.getString();
+					try {
+						effect.setLoValue(Double.parseDouble(value));
+					} catch (Exception x) {
+						effect.setTextValue(value);
+					}
+				}
 				if (solution.contains("unit"))
-					effect.setUnit(solution.get("unit").asLiteral().getValue().toString());
+					effect.setUnit(solution.get("unit").asLiteral().getValue()
+							.toString());
 				papp.addEffect(effect);
 				record.addMeasurement(papp);
 				System.out.println("Added the measurement");
