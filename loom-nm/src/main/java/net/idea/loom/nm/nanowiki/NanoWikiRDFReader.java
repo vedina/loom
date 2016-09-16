@@ -72,6 +72,18 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected Logger logger;
 	public static final Properties substance_types = new Properties();
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
+	protected String _rdfformat = "RDF/XML";
+
+	public String get_rdfformat() {
+		return _rdfformat;
+	}
+	/**
+	 * https://jena.apache.org/documentation/io/
+	 * @param _rdfformat
+	 */
+	public void set_rdfformat(String _rdfformat) {
+		this._rdfformat = _rdfformat;
+	}
 
 	public Logger getLogger() {
 		return logger;
@@ -88,7 +100,19 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 
 	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException,
 			IOException {
+		this(reader, logger, "RDF/XML");
+	}
+	/**
+	 * @param reader
+	 * @param logger
+	 * @param rdfformat https://jena.apache.org/documentation/io/
+	 * @throws CDKException
+	 * @throws IOException
+	 */
+	public NanoWikiRDFReader(Reader reader, Logger logger, String rdfformat)
+			throws CDKException, IOException {
 		super();
+		set_rdfformat(rdfformat);
 		setReader(reader);
 		InputStream in = null;
 		try {
@@ -141,7 +165,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	public void setReader(Reader reader) throws CDKException {
 		try {
 			rdf = ModelFactory.createDefaultModel();
-			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
+			rdf.read(reader, "http://ontology.enanomapper.net", _rdfformat);
 
 			Query query = QueryFactory.create(NW.m_allmaterials.SPARQL());
 			qe_materials = QueryExecutionFactory.create(query, rdf);

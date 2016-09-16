@@ -137,6 +137,10 @@ public class NanoWikiRDFTest {
 	public void testBundles() throws Exception {
 		testProperties("bundle", 9);
 	}
+	
+	protected String getNanoWikiFormat() {
+		return "RDF/XML";
+	}
 
 	public void testProperties(String resource, int expectedsize)
 			throws Exception {
@@ -152,13 +156,19 @@ public class NanoWikiRDFTest {
 			if (in != null)
 				in.close();
 		}
+		File nanowikiFile = getNanoWikiFile();
 		Assert.assertEquals(expectedsize, p.size());
-		InputStreamReader reader = new InputStreamReader(new GZIPInputStream(
-				new FileInputStream(getNanoWikiFile())), "UTF-8");
+		InputStreamReader reader = null;
+		if (nanowikiFile.getName().endsWith(".gz"))
+			reader = new InputStreamReader(new GZIPInputStream(
+					new FileInputStream(nanowikiFile)), "UTF-8");
+		else
+			reader = new InputStreamReader(new FileInputStream(nanowikiFile),
+					"UTF-8");
 		try {
 
 			Model rdf = ModelFactory.createDefaultModel();
-			rdf.read(reader, "http://ontology.enanomapper.net", "RDF/XML");
+			rdf.read(reader, "http://ontology.enanomapper.net",getNanoWikiFormat());
 
 			ProcessSolution.execQuery(rdf, NW.SPARQL(resource),
 					new ProcessSolution() {
@@ -201,10 +211,14 @@ public class NanoWikiRDFTest {
 		Multiset<IFacet> bundles = HashMultiset.create();
 
 		try {
-			File file = getNanoWikiFile();
-			reader = new NanoWikiRDFReader(new InputStreamReader(
-					new GZIPInputStream(new FileInputStream(file)), "UTF-8"));
-
+			File nanowikiFile = getNanoWikiFile();
+			if (nanowikiFile.getName().endsWith(".gz"))
+				reader = new NanoWikiRDFReader(new InputStreamReader(new GZIPInputStream(
+						new FileInputStream(nanowikiFile)), "UTF-8"),logger,getNanoWikiFormat());
+			else
+				reader = new NanoWikiRDFReader(new InputStreamReader(new FileInputStream(nanowikiFile),
+						"UTF-8"),logger,getNanoWikiFormat());
+			
 			while (reader.hasNext()) {
 				IStructureRecord record = reader.nextRecord();
 				Assert.assertTrue(record instanceof SubstanceRecord);
@@ -292,10 +306,10 @@ public class NanoWikiRDFTest {
 				reader.close();
 		}
 		System.out.println(bundles);
-		
+
 		System.out.println(substancetypes);
 		System.out.println(histogram);
-		//Assert.assertEquals(48, bundles.size());
+		// Assert.assertEquals(48, bundles.size());
 		Assert.assertEquals(12, histogram.count("Sigma Aldrich"));
 		Assert.assertEquals(4, histogram.count("ChEMBL"));
 		// Assert.assertEquals(histogram.count("PubChem CID"), 4);
