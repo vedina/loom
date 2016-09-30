@@ -146,6 +146,8 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			while (results.hasNext()) {
 				QuerySolution qs = results.next();
 				SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
+				bundle.setSource("http://dx.doi.org/10.6084/m9.figshare.1330208");
+				bundle.setURL("NanoWiki");
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
