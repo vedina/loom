@@ -13,6 +13,6 @@ WHERE {
    ?m rdf:type mw:Category-3AMaterials.
    OPTIONAL {?m mw:Property-3AHas_Bundle ?bundle}
    FILTER NOT EXISTS { 
-     ?m mw:Property-3AFormerly ?o.
+     ?o mw:Property-3AFormerly ?m.
    }
 }
