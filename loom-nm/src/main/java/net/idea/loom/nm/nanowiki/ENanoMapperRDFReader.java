@@ -23,6 +23,7 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -355,6 +356,18 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 					} catch (Exception x) {
 						effect.setTextValue(value);
 					}
+				}
+				if (solution.contains("range")) {
+					String valueLit = solution.get("range").asLiteral().getValue().toString();
+					if (valueLit.contains("-")) {
+						String[] loHigh = valueLit.split("-");
+						try {
+  						    effect.setLoValue(Double.parseDouble(loHigh[0]));
+						    effect.setUpValue(Double.parseDouble(loHigh[1]));
+						} catch (Exception x) {
+							effect.setTextValue(valueLit);
+						}
+					} // else: huh?
 				}
 				if (solution.contains("unit"))
 					effect.setUnit(solution.get("unit").asLiteral().getValue()
