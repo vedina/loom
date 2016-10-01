@@ -319,16 +319,16 @@ public class NanoWikiRDFTest {
 		Assert.assertEquals(66, histogram
 				.count("JRC Representative Manufactured Nanomaterials"));
 		Assert.assertEquals(25, histogram.count("HOMEPAGE"));
-		Assert.assertEquals(390, histogram.count("SOURCE"));
+		Assert.assertEquals(423, histogram.count("SOURCE"));
 		Assert.assertEquals(5, histogram.count("Close match"));
 		Assert.assertEquals(4, histogram.count("Same as"));
 
 		// [Alternative Identifier x 51, Coating x 68, SOURCE x 390, Composition
 		// x 391, PubChem SID x 4, DATASET x 407, Has_Identifier x 407]
 		// all materials without renamed JRC ones
-		Assert.assertEquals(403, records);
-		Assert.assertEquals(854, measurements);
-		Assert.assertEquals(2485, effectrecords);
+		Assert.assertEquals(404, records);
+		Assert.assertEquals(867, measurements);
+		Assert.assertEquals(2767, effectrecords);
 
 		logger.log(Level.INFO, "Substance records read\t" + records);
 	}
