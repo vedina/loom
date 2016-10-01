@@ -174,6 +174,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				bundle.setrightsHolder(nanowikiBundle.getrightsHolder());
 				bundle.setUserName(nanowikiBundle.getUserName());
 				bundle.setStatus(nanowikiBundle.getStatus());
+				bundle.setVersion(nanowikiBundle.getVersion());
 				
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
