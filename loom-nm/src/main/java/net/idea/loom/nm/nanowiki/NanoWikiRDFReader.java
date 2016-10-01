@@ -1320,7 +1320,7 @@ class ProcessMaterial extends ProcessSolution {
 		} catch (Exception x) {
 		}
 
-		if (record.getSubstanceName().startsWith("JRC2011")) {
+		if (record.getSubstanceName().startsWith("JRC2011") || record.getSubstanceName().startsWith("JRCNM")) {
 			ExternalIdentifier e = new ExternalIdentifier(
 					"JRC Representative Manufactured Nanomaterials", record
 							.getSubstanceName().replace("JRC2011 ", ""));

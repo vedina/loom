@@ -315,7 +315,8 @@ public class NanoWikiRDFTest {
 		// Assert.assertEquals(histogram.count("PubChem CID"), 4);
 		Assert.assertEquals(4, histogram.count("PubChem SID"));
 		Assert.assertEquals(8, histogram.count("COD"));
-		Assert.assertEquals(22, histogram
+		//these come from the external ids, not from bundle assignment!
+		Assert.assertEquals(66, histogram
 				.count("JRC Representative Manufactured Nanomaterials"));
 		Assert.assertEquals(25, histogram.count("HOMEPAGE"));
 		Assert.assertEquals(390, histogram.count("SOURCE"));
