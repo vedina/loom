@@ -73,12 +73,31 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	public static final Properties substance_types = new Properties();
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
 	protected String _rdfformat = "RDF/XML";
+	protected SubstanceEndpointsBundle nanowikiBundle = initNanoWikiBundle();
+
+	protected static SubstanceEndpointsBundle initNanoWikiBundle() {
+		SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
+		bundle.setName("NanoWiki");
+		bundle.setSource("http://dx.doi.org/10.6084/m9.figshare.1330208");
+		bundle.setrightsHolder("http://orcid.org/0000-0001-7542-0286");
+		bundle.setMaintainer("http://orcid.org/0000-0001-7542-0286");
+		bundle.setURL("NanoWiki");
+		bundle.setLicenseURI("https://creativecommons.org/publicdomain/zero/1.0/");
+		bundle.setVersion(3);
+		bundle.setBundle_number(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+		bundle.setUserName("enanomapper");
+		bundle.setDescription("Nanomaterials, physicochemical characterisations and toxicity data, imported via NanoWiki RDF dump");
+		bundle.setStatus("published");
+		return bundle;
+	}
 
 	public String get_rdfformat() {
 		return _rdfformat;
 	}
+
 	/**
 	 * https://jena.apache.org/documentation/io/
+	 * 
 	 * @param _rdfformat
 	 */
 	public void set_rdfformat(String _rdfformat) {
@@ -102,10 +121,12 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			IOException {
 		this(reader, logger, "RDF/XML");
 	}
+
 	/**
 	 * @param reader
 	 * @param logger
-	 * @param rdfformat https://jena.apache.org/documentation/io/
+	 * @param rdfformat
+	 *            https://jena.apache.org/documentation/io/
 	 * @throws CDKException
 	 * @throws IOException
 	 */
@@ -146,8 +167,14 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			while (results.hasNext()) {
 				QuerySolution qs = results.next();
 				SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
-				bundle.setSource("http://dx.doi.org/10.6084/m9.figshare.1330208");
-				bundle.setURL("NanoWiki");
+				bundle.setSource(nanowikiBundle.getSource());
+				bundle.setURL(nanowikiBundle.getURL());
+				bundle.setLicenseURI(nanowikiBundle.getLicenseURI());
+				bundle.setMaintainer(nanowikiBundle.getMaintainer());
+				bundle.setrightsHolder(bundle.getrightsHolder());
+				bundle.setUserName(nanowikiBundle.getUserName());
+				bundle.setStatus(nanowikiBundle.getStatus());
+				
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
@@ -216,8 +243,17 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			Resource bundle = qs.getResource("bundle");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
+			/** 
+			 * add nanowikibundle
+			 */
+			BundleRoleFacet bf = new BundleRoleFacet(null);
+			bf.setValue(nanowikiBundle);
+			record.addFacet(bf);
+			/**
+			 * Add other bundles, if any
+			 */
 			if (bundle != null) {
-				BundleRoleFacet bf = bundles.get(bundle.getURI());
+				bf = bundles.get(bundle.getURI());
 				if (bf == null) {
 					bf = new BundleRoleFacet(null);
 					SubstanceEndpointsBundle b = new SubstanceEndpointsBundle();
