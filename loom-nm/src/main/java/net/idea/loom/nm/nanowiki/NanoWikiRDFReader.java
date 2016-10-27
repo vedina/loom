@@ -320,6 +320,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				material.asResource().getURI(),
 				material.asResource().getURI(),
 				material.asResource().getURI(),
+				material.asResource().getURI(),
 				// new nw3
 				material.asResource().getURI(), material.asResource().getURI(),
 				material.asResource().getURI(), material.asResource().getURI(),
@@ -1203,6 +1204,11 @@ class ProcessMaterial extends ProcessSolution {
 						.toString());
 		try {
 			record.setSubstancetype(qs.get("type").asResource().getURI());
+		} catch (Exception x) {
+		}
+		;
+		try {
+			record.setSubstancetype(qs.get("specific").asResource().getURI());
 		} catch (Exception x) {
 		}
 		;

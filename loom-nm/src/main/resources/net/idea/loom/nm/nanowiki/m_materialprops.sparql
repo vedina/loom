@@ -11,6 +11,7 @@ OPTIONAL {<%s> mw:Property-3AHas_Chemical_Coating ?coating.}
 OPTIONAL {<%s> mw:Property-3AHas_Identifier ?id.}
 OPTIONAL {<%s> mw:Property-3AHas_Label ?label.}
 OPTIONAL {<%s> mw:Property-3AHas_NM_Type ?type.}
+OPTIONAL {<%s> mw:Property-3AHas_Specific_NM_Type ?specific.}
 OPTIONAL {<%s> mw:Property-3AHas_alternative_Identifier ?altid.}
 OPTIONAL {<%s> mw:Property-3AHas_PubChem_SID ?pubchem_sid.}
 OPTIONAL {<%s> mw:Property-3AHas_PubChem_CID ?pubchem_cid.}
