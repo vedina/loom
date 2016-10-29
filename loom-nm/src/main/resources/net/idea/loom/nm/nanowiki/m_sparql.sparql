@@ -5,7 +5,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>
 SELECT DISTINCT 
 ?study ?measurement ?label ?method ?definedBy ?study ?assaySource ?doilink ?year
-?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?dose ?doseUnit
+?assayType ?bao ?assayType1 ?bao1 ?o_celline ?t_celline ?endpoint ?endpointURI ?dose ?doseUnit
 ?value ?valueMin ?valueMax ?valueUnit ?valueError ?resultInterpretation ?assayJournalLabel ?assayJournalYear ?assaymethod ?baomethod ?material_doilink ?material_year
 WHERE {
 	?measurement mw:Property-3AHas_Entity <%s>.
@@ -16,6 +16,7 @@ WHERE {
 	OPTIONAL {?measurement mw:Property-3AHas_Dose_Units ?doseUnit.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Class ?resultInterpretation.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint ?endpointResource. ?endpointResource rdfs:label ?endpoint.}
+	OPTIONAL {?endpointResource owl:sameAs ?endpointURI .}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Min ?valueMin.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Max ?valueMax.}

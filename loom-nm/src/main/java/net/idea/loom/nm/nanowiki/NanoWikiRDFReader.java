@@ -751,6 +751,7 @@ class ProcessMeasurement extends ProcessSolution {
 		}
 
 		String assayType = null;
+		String endpointType = null; // FIXME: do something with this
 		String bao = null;
 		String celline = null;
 		try {
@@ -760,6 +761,10 @@ class ProcessMeasurement extends ProcessSolution {
 		try {
 			if (assayType == null)
 				assayType = qs.get("assayType1").asResource().getURI();
+		} catch (Exception x) {
+		}
+		try {
+			endpointType = qs.get("endpointURI").asResource().getURI();
 		} catch (Exception x) {
 		}
 		try {
