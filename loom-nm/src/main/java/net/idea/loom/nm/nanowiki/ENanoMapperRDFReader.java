@@ -241,37 +241,34 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
 			ResultSet rs = qe.execSelect();
-			QuerySolution solution = rs.next(); // only pick the first. If we
-												// have more, the SPARQL is
-												// wrong
-			StructureRecord structure = new StructureRecord();
-			/*
-			 * String componentRes = solution.get("component").toString();
-			 * String componentId =
-			 * solution.get("component").asResource().getLocalName();
-			 * System.out.println("component: " + componentRes); int
-			 * componentInt = 0; if (!components.containsKey(componentId)) {
-			 * componentInt = components.size() + 1; components.put(componentId,
-			 * componentInt); } else { componentInt =
-			 * components.get(componentId); }
-			 * //structure.setIdchemical(componentInt);
-			 * //structure.setIdstructure(componentInt);
-			 * System.out.println("Set structure ID: " + componentInt);
-			 */
-			if (solution.contains("smiles")) {
-				String smiles = solution.get("smiles").asLiteral().getValue()
+			while (rs.hasNext()) {
+			    QuerySolution solution = rs.next();
+			    StructureRecord structure = new StructureRecord();
+			    if (solution.contains("smiles")) {
+			        String smiles = solution.get("smiles").asLiteral().getValue()
 						.toString();
-				System.out.println("SMILES: " + smiles);
-				structure.setContent(smiles);
-				structure.setFormat("INC");
-				structure.setSmiles(structure.getContent());
+			        System.out.println("SMILES: " + smiles);
+			        structure.setContent(smiles);
+			        structure.setFormat("INC");
+			        structure.setSmiles(structure.getContent());
+			    }
+				System.out.println("struct: " + structure);
+				
+				STRUCTURE_RELATION relation = STRUCTURE_RELATION.HAS_CONSTITUENT;
+				if (solution.get("type") != null) {
+					String typeURI = solution.get("type").asResource().getURI();
+					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI)) {
+						relation = STRUCTURE_RELATION.HAS_CORE;
+					} else if ("http://purl.bioontology.org/ontology/npo#NPO_1367".equals(typeURI)) {
+						relation = STRUCTURE_RELATION.HAS_COATING;
+					}
+				}
+				record.addStructureRelation(
+					record.getSubstanceUUID(), structure,
+					relation,
+					null // no Proportion
+				);
 			}
-			System.out.println("struct: " + structure);
-			Proportion p = new Proportion();
-			p.setTypical_value(100.0);
-			p.setTypical_unit("%");
-			record.addStructureRelation(record.getSubstanceUUID(), structure,
-					STRUCTURE_RELATION.HAS_CONSTITUENT, p);
 		} finally {
 			qe.close();
 		}
