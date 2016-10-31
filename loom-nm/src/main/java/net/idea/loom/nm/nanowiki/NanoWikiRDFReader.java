@@ -808,6 +808,7 @@ class ProcessMeasurement extends ProcessSolution {
 					protocol.setCategory(protCategory.name());
 					protocol.setTopCategory(protCategory.getTopCategory());
 					match = true;
+					break;
 				}
 			}
 			if (!match) System.out.println("NO MATCH! " + endpointType);
