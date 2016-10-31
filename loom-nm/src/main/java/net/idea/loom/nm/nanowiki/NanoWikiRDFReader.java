@@ -828,8 +828,10 @@ class ProcessMeasurement extends ProcessSolution {
 
 		if (category == null)
 			category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
-		protocol.setCategory(category.name() + "_SECTION");
-		protocol.setTopCategory(category.getTopCategory());
+		if (protocol.getCategory() == null) {
+			protocol.setCategory(category.name() + "_SECTION");
+			protocol.setTopCategory(category.getTopCategory());
+		}
 
 		RDFNode method = qs.get("method");
 		try {
