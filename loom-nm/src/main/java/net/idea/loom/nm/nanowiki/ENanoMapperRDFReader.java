@@ -30,6 +30,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 import ambit2.base.data.ILiteratureEntry;
+import ambit2.base.data.Property;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
@@ -254,6 +255,13 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			    }
 				System.out.println("struct: " + structure);
 				
+			    if (solution.contains("componentName")) {
+			        String name = solution.get("componentName").asLiteral().getValue()
+						.toString();
+			        System.out.println("Name: " + name);
+			        structure.setRecordProperty(Property.getNameInstance(), name);
+			    }
+
 				STRUCTURE_RELATION relation = STRUCTURE_RELATION.HAS_CONSTITUENT;
 				if (solution.get("type") != null) {
 					String typeURI = solution.get("type").asResource().getURI();
