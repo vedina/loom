@@ -5,11 +5,12 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX npo:   <http://purl.bioontology.org/ontology/npo#>
 PREFIX sso:   <http://semanticscience.org/resource/>
 
-SELECT distinct ?component ?type ?smiles 
+SELECT distinct ?component ?componentName ?type ?smiles 
 WHERE {
   BIND (<%s> AS ?material)
   ?material npo:has_part ?component .
   ?component a ?type .
+  OPTIONAL { ?component rdfs:label ?componentName }
   OPTIONAL {
     ?component sso:CHEMINF_000200 [
        a sso:CHEMINF_000018 ;
