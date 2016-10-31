@@ -267,7 +267,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				record.addStructureRelation(
 					record.getSubstanceUUID(), structure,
 					relation,
-					null // no Proportion
+					new Proportion()
 				);
 			}
 		} finally {
