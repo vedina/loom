@@ -257,7 +257,8 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				STRUCTURE_RELATION relation = STRUCTURE_RELATION.HAS_CONSTITUENT;
 				if (solution.get("type") != null) {
 					String typeURI = solution.get("type").asResource().getURI();
-					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI)) {
+					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI) ||
+						"http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)) { // how to deal with subclasses??
 						relation = STRUCTURE_RELATION.HAS_CORE;
 					} else if ("http://purl.bioontology.org/ontology/npo#NPO_1367".equals(typeURI)) {
 						relation = STRUCTURE_RELATION.HAS_COATING;
