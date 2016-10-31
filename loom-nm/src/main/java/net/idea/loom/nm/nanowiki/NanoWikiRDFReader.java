@@ -764,7 +764,9 @@ class ProcessMeasurement extends ProcessSolution {
 		} catch (Exception x) {
 		}
 		try {
-			endpointType = qs.get("endpointURI").asResource().getURI();
+			if (qs.get("endpointURI") != null) {
+				endpointType = qs.get("endpointURI").asResource().getURI();
+			}
 		} catch (Exception x) {
 		}
 		try {
@@ -799,6 +801,18 @@ class ProcessMeasurement extends ProcessSolution {
 			}
 		} catch (Exception x) {
 		}
+		if (category == null && endpointType != null) {
+			boolean match = false;
+			for (Protocol._categories protCategory : Protocol._categories.values()) {
+				if (endpointType.equals(protCategory.getOntologyURI())) {
+					protocol.setCategory(protCategory.name());
+					protocol.setTopCategory(protCategory.getTopCategory());
+					match = true;
+				}
+			}
+			if (!match) System.out.println("NO MATCH! " + endpointType);
+		}
+
 		try {
 
 			endpoints ep = endpoints.valueOf(endpoint.replace("-", "_")
