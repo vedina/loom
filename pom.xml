@@ -25,7 +25,7 @@
     <dependency>
       <groupId>ambit</groupId>
       <artifactId>opentox-client</artifactId>
-      <version>3.0.1</version>
+      <version>3.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -210,5 +210,6 @@
     <i5.version>1.2.2-SNAPSHOT</i5.version>
 	<apache.jena.version>2.13.0</apache.jena.version>
     <org.apache.httpcomponents.httpclient.version>4.5</org.apache.httpcomponents.httpclient.version>
+    <jackson.version>2.4.0</jackson.version>
   </properties>
 </project>
