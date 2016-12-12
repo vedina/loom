@@ -1,6 +1,6 @@
 package net.idea.loom.pubchem.rest;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface ICallback<OUT> {
     OUT processJSON(JsonNode node);

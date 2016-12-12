@@ -7,22 +7,23 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import net.idea.loom.exceptions.NotSupportedMethodException;
-import net.idea.opentox.cli.AbstractURIClient;
-import net.idea.opentox.cli.IIdentifiableResource;
-import net.idea.opentox.cli.id.IIdentifier;
-import net.idea.opentox.cli.task.RemoteTask;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
 import org.opentox.rest.RestException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import net.idea.loom.exceptions.NotSupportedMethodException;
+import net.idea.opentox.cli.AbstractURIClient;
+import net.idea.opentox.cli.IIdentifiableResource;
+import net.idea.opentox.cli.id.IIdentifier;
+import net.idea.opentox.cli.task.RemoteTask;
 
 public abstract class AbstractOPSClient<T extends IIdentifiableResource<IIdentifier>>
 		extends AbstractURIClient<T,String> {
@@ -195,12 +196,12 @@ public abstract class AbstractOPSClient<T extends IIdentifiableResource<IIdentif
 			ObjectMapper m = new ObjectMapper();
 			JsonNode node = m.readTree(in);
 			JsonNode format = (JsonNode) node.get("format");
-			if (!"linked-data-api".equals(format.getTextValue()))
+			if (!"linked-data-api".equals(format.textValue()))
 				return null;
 			JsonNode result = node.get("result");
 			JsonNode uri = result.get("primaryTopic");
 			try {
-				return uri.get(field).getIntValue();
+				return uri.get(field).intValue();
 			} catch (Exception x) {
 				throw new IOException(x);
 			}
@@ -217,10 +218,10 @@ public abstract class AbstractOPSClient<T extends IIdentifiableResource<IIdentif
 			ObjectMapper m = new ObjectMapper();
 			JsonNode node = m.readTree(in);
 			JsonNode format = (JsonNode) node.get("format");
-			if (!"linked-data-api".equals(format.getTextValue()))
+			if (!"linked-data-api".equals(format.textValue()))
 				return null;
 			JsonNode version = (JsonNode) node.get("version");
-			api_version = version == null ? "1.2" : version.getTextValue();
+			api_version = version == null ? "1.2" : version.textValue();
 			JsonNode result = node.get("result");
 			JsonNode uri = result.get("items");
 			if (uri instanceof ArrayNode) {

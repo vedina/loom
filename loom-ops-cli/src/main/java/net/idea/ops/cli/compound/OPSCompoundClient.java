@@ -7,16 +7,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.HttpClient;
+import org.opentox.rest.RestException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import net.idea.opentox.cli.id.IIdentifier;
 import net.idea.opentox.cli.id.Identifier;
 import net.idea.opentox.cli.structure.Compound;
 import net.idea.ops.cli.AbstractOPSClient;
-
-import org.apache.http.client.HttpClient;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.opentox.rest.RestException;
+import net.idea.ops.cli.AbstractOPSClient._format;
+import net.idea.ops.cli.compound.OPSCompoundClient.QueryType;
 
 /**
  * Reads {@link Compound} via OPS Compound API https://dev.openphacts.org/docs
@@ -149,10 +152,10 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 			ObjectMapper m = new ObjectMapper();
 			JsonNode node = m.readTree(in);
 			JsonNode format = (JsonNode) node.get("format");
-			if (!"linked-data-api".equals(format.getTextValue()))
+			if (!"linked-data-api".equals(format.textValue()))
 				return null;
 			JsonNode version = (JsonNode) node.get("version");
-			api_version = version == null ? "1.2" : version.getTextValue();
+			api_version = version == null ? "1.2" : version.textValue();
 			Compound compound = null;
 			JsonNode result = node.get("result");
 			JsonNode primaryTopic = result.get("primaryTopic");
@@ -162,7 +165,7 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 				list = new ArrayList<Compound>();
 				for (int i = 0; i < results.size(); i++) {
 					compound = new Compound(new Identifier(results.get(i)
-							.getTextValue()));
+							.textValue()));
 					list.add(compound);
 				}
 			} else {
@@ -170,21 +173,21 @@ public class OPSCompoundClient extends AbstractOPSClient<Compound> {
 					uri = primaryTopic.get("_about");
 				if (uri != null) {
 					compound = new Compound();
-					compound.setResourceIdentifier(new Identifier(uri.getTextValue()));
+					compound.setResourceIdentifier(new Identifier(uri.textValue()));
 					list = new ArrayList<Compound>();
 					list.add(compound);
 				}
 				if (primaryTopic.get("Molecule") != null)
 					compound.setSMILES(primaryTopic.get("Molecule")
-							.getTextValue());
+							.textValue());
 				if (primaryTopic.get("smiles") != null)
 					compound.setSMILES(primaryTopic.get("smiles")
-							.getTextValue());
+							.textValue());
 				if (primaryTopic.get("inchi") != null)
-					compound.setInChI(primaryTopic.get("inchi").getTextValue());
+					compound.setInChI(primaryTopic.get("inchi").textValue());
 				if (primaryTopic.get("inchi_key") != null)
 					compound.setInChIKey(primaryTopic.get("inchi_key")
-							.getTextValue());
+							.textValue());
 			}
 			return list;
 		} else if (mime_rdfxml.equals(mediaType)) {

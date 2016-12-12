@@ -9,11 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.idea.opentox.cli.AbstractClient;
-import net.idea.opentox.cli.IIdentifiableResource;
-import net.idea.opentox.cli.id.IIdentifier;
-import net.idea.opentox.cli.id.Identifier;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,10 +16,16 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
 import org.opentox.rest.RestException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import net.idea.opentox.cli.AbstractClient;
+import net.idea.opentox.cli.IIdentifiableResource;
+import net.idea.opentox.cli.id.IIdentifier;
+import net.idea.opentox.cli.id.Identifier;
 
 public class PubChemRESTClient<T extends IIdentifiableResource<IIdentifier>>
 		extends AbstractClient<IIdentifier, T> {
@@ -181,14 +182,14 @@ class SubstanceSynonymsCallback<T extends IIdentifiableResource<String>>
 				JsonNode item = info.get(i);
 				try {
 					T id = (T) new PubChemIdentifier("PUBCHEM_SID",
-							Integer.toString(item.get("SID").getIntValue()));
+							Integer.toString(item.get("SID").intValue()));
 					list.add(id);
 				} catch (Exception x) {
 				}
 				ArrayNode synonyms = (ArrayNode) item.get("Synonym");
 				for (int j = 0; j < synonyms.size(); j++) {
 					String type = "PUBCHEM Name";
-					String value = synonyms.get(j).getTextValue();
+					String value = synonyms.get(j).textValue();
 					if (value.startsWith("DSSTox_RID_")) {
 						type = "DSSTox_RID";
 						value = value.substring(11);

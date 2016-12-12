@@ -10,13 +10,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.UUID;
 
-import net.idea.i5.io.I5CONSTANTS;
-import net.idea.i5.io.I5_ROOT_OBJECTS;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 import org.openscience.cdk.interfaces.IAtomContainer;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ambit2.base.data.LiteratureEntry;
 import ambit2.base.data.SubstanceRecord;
@@ -32,6 +30,8 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.data.MoleculeTools;
 import ambit2.core.io.IteratingDelimitedFileReader;
 import ambit2.core.io.RawIteratingWrapper;
+import net.idea.i5.io.I5CONSTANTS;
+import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 /**
  * 
@@ -985,26 +985,26 @@ public class PubChemAIDReader extends RawIteratingWrapper<IteratingDelimitedFile
 
 	JsonNode unitNode = tagNode == null ? null : tagNode.get("unit");
 	if (unitNode != null) {
-	    if ("none".equals(unitNode.getTextValue()))
+	    if ("none".equals(unitNode.textValue()))
 		effect.setUnit(null);
-	    else if ("percent".equals(unitNode.getTextValue()))
+	    else if ("percent".equals(unitNode.textValue()))
 		effect.setUnit("%");
 	    else
-		effect.setUnit(unitNode.getTextValue());
+		effect.setUnit(unitNode.textValue());
 	}
 	// tested concentration
 	JsonNode tcNode = tagNode == null ? null : tagNode.get("tc");
 	if (tcNode != null && tcNode.get("concentration") != null) {
-	    Value val = new Value(tcNode.get("concentration").getDoubleValue());
+	    Value val = new Value(tcNode.get("concentration").doubleValue());
 	    try {
-		val.setUnits(tcNode.get("unit").getTextValue());
+		val.setUnits(tcNode.get("unit").textValue());
 	    } catch (Exception x) {
 		val.setUnits(null);
 	    }
 	    val.setLoQualifier("=");
 	    if (tcNode.get("dr_id") != null) {
-		val.setAnnotation(tcNode.get("dr_id").getTextValue());
-		effect.setTextValue(tcNode.get("dr_id").getTextValue());
+		val.setAnnotation(tcNode.get("dr_id").textValue());
+		effect.setTextValue(tcNode.get("dr_id").textValue());
 	    }
 	    effect.getConditions().put(I5CONSTANTS.cDoses, val);
 	}

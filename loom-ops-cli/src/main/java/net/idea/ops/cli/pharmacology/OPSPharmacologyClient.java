@@ -7,6 +7,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.HttpClient;
+import org.opentox.rest.RestException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import net.idea.opentox.cli.id.Identifier;
 import net.idea.opentox.cli.structure.Compound;
 import net.idea.ops.cli.AbstractOPSClient;
@@ -23,13 +31,6 @@ import net.idea.ops.cli.lookup.CitationsLookup;
 import net.idea.ops.cli.lookup.CompoundLookup;
 import net.idea.ops.cli.lookup.DatasetLookup;
 import net.idea.ops.cli.lookup.TargetLookup;
-
-import org.apache.http.client.HttpClient;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-import org.opentox.rest.RestException;
 
 public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 	protected TargetLookup targets = new TargetLookup();
@@ -134,10 +135,10 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 			ObjectMapper m = new ObjectMapper();
 			JsonNode node = m.readTree(in);
 			JsonNode format = (JsonNode) node.get("format");
-			if (!"linked-data-api".equals(format.getTextValue()))
+			if (!"linked-data-api".equals(format.textValue()))
 				return null;
 			JsonNode version = (JsonNode) node.get("version");
-			api_version = version == null ? "1.2" : version.getTextValue();
+			api_version = version == null ? "1.2" : version.textValue();
 			JsonNode result = node.get("result");
 			JsonNode uri = result.get("items");
 			if (uri instanceof ArrayNode) {
@@ -158,11 +159,11 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 
 		Activity activity;
 		JsonNode node = item.get("_about");
-		if (node != null && (node.getTextValue() != null)) {
-			activity = activities.lookup(node.getTextValue());
+		if (node != null && (node.textValue() != null)) {
+			activity = activities.lookup(node.textValue());
 			node = item.get("activity_type");
-			if (node != null && (node.getTextValue() != null)) {
-				activity.setType(activityTypes.lookup(node.getTextValue()));
+			if (node != null && (node.textValue() != null)) {
+				activity.setType(activityTypes.lookup(node.textValue()));
 			}
 		} else
 			activity = null;
@@ -170,23 +171,23 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 		AssayResult readout = new AssayResult();
 		readout.setActivity(activity);
 		node = item.get("pmid");
-		if (node != null && (node.getTextValue() != null))
-			readout.setCitation(citations.lookup(node.getTextValue()));
+		if (node != null && (node.textValue() != null))
+			readout.setCitation(citations.lookup(node.textValue()));
 		node = item.get("relation");
-		if (node != null && (node.getTextValue() != null))
-			readout.setRelation(node.getTextValue());
+		if (node != null && (node.textValue() != null))
+			readout.setRelation(node.textValue());
 		node = item.get("standardValue");
 		if (node != null)
 			readout.setStandardValue(node.asDouble());
 		node = item.get("standardUnits");
-		if (node != null && (node.getTextValue() != null))
-			readout.setStandardUnits(node.getTextValue());
+		if (node != null && (node.textValue() != null))
+			readout.setStandardUnits(node.textValue());
 		node = item.get("activity_value");
 		if (node != null)
 			readout.setActivityValue(node.asDouble());
 		node = item.get("inDataset");
 		if (node != null)
-			readout.setInDataset(datasets.lookup(node.getTextValue()));
+			readout.setInDataset(datasets.lookup(node.textValue()));
 
 		// Compound
 		Compound compound = null;
@@ -201,8 +202,8 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 		 * afallback
 		 */
 		JsonNode uri = forMolecule.get("_about");
-		if (uri != null && uri.getTextValue() != null)
-			compound = compounds.lookup(uri.getTextValue());
+		if (uri != null && uri.textValue() != null)
+			compound = compounds.lookup(uri.textValue());
 
 		// compound details
 		JsonNode exactMatch = forMolecule.get("exactMatch");
@@ -210,29 +211,29 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 			for (int i = 0; i < ((ArrayNode) exactMatch).size(); i++) {
 				node = ((ArrayNode) exactMatch).get(i);
 				uri = node.get("_about");
-				if (uri != null && uri.getTextValue() != null) {
+				if (uri != null && uri.textValue() != null) {
 					if (compound == null)
-						compound = compounds.lookup(uri.getTextValue());
+						compound = compounds.lookup(uri.textValue());
 					else
 						compound.setResourceIdentifier(new Identifier(uri
-								.getTextValue()));
-					compounds.put(uri.getTextValue(), compound);
+								.textValue()));
+					compounds.put(uri.textValue(), compound);
 				}
 				JsonNode prefLabel = node.get("prefLabel");
 				if (prefLabel != null)
-					compound.setName(prefLabel.getTextValue());
+					compound.setName(prefLabel.textValue());
 				prefLabel = node.get("prefLabel_en");
 				if (prefLabel != null)
-					compound.setName(prefLabel.getTextValue());
+					compound.setName(prefLabel.textValue());
 				JsonNode inchi = node.get("inchi");
 				if (inchi != null)
-					compound.setInChI(inchi.getTextValue());
+					compound.setInChI(inchi.textValue());
 				JsonNode inchikey = node.get("inchikey");
 				if (inchikey != null)
-					compound.setInChIKey(inchikey.getTextValue());
+					compound.setInChIKey(inchikey.textValue());
 				JsonNode smiles = node.get("smiles");
 				if (smiles != null)
-					compound.setSMILES(smiles.getTextValue());
+					compound.setSMILES(smiles.textValue());
 			}
 		}
 		if (forMolecule.get("full_mwt") != null)
@@ -247,25 +248,25 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 			onAssay = item.get("onAssay");
 
 		uri = onAssay.get("_about");
-		if (uri != null && uri.getTextValue() != null) {
+		if (uri != null && uri.textValue() != null) {
 			// assay
-			Assay assay = assays.lookup(uri.getTextValue());
+			Assay assay = assays.lookup(uri.textValue());
 			JsonNode value = onAssay.get("description");
 			if (value != null)
-				assay.setDescription(value.getTextValue());
+				assay.setDescription(value.textValue());
 			value = onAssay.get("assay_organism");
 			if (value != null)
-				assay.setOrganism(value.getTextValue());
+				assay.setOrganism(value.textValue());
 			// target
 			value = onAssay.get("target");
 			if (value != null) {
 				if (value instanceof ObjectNode) {
 					uri = ((ObjectNode) value).get("_about");
-					if (uri != null && uri.getTextValue() != null) {
+					if (uri != null && uri.textValue() != null) {
 						assay.setTarget(parseTarget(((ObjectNode) value)));
 					}
-				} else if (value.getTextValue() != null) {
-					Target target = targets.lookup(value.getTextValue());
+				} else if (value.textValue() != null) {
+					Target target = targets.lookup(value.textValue());
 					assay.setTarget(target);
 				}
 			}
@@ -278,34 +279,34 @@ public class OPSPharmacologyClient extends AbstractOPSClient<AssayResult> {
 	protected Target parseTarget(ObjectNode node) throws MalformedURLException {
 		Target target = null;
 		JsonNode uri = ((ObjectNode) node).get("_about");
-		if (uri != null && uri.getTextValue() != null) {
+		if (uri != null && uri.textValue() != null) {
 			JsonNode match = ((ObjectNode) node).get("exactMatch");
 			if (match != null && (match instanceof ObjectNode)) {
 				JsonNode matchedURI = ((ObjectNode) match).get("_about");
-				if (matchedURI != null && (matchedURI.getTextValue() != null)) {
-					target = targets.lookup(matchedURI.getTextValue());
+				if (matchedURI != null && (matchedURI.textValue() != null)) {
+					target = targets.lookup(matchedURI.textValue());
 					JsonNode label = ((ObjectNode) match).get("prefLabel");
 					if (label != null)
-						target.setPrefLabel(label.getTextValue());
+						target.setPrefLabel(label.textValue());
 					label = ((ObjectNode) match).get("prefLabel_en");
 					if (label != null)
-						target.setPrefLabelEN(label.getTextValue());
+						target.setPrefLabelEN(label.textValue());
 
 					label = ((ObjectNode) match).get("inDataset");
 					if (label != null)
 						target.setInDataset(datasets.lookup(label
-								.getTextValue()));
+								.textValue()));
 				}
 			}
 			// put another pointer to the target
 			if (target != null)
-				targets.put(uri.getTextValue(), target);
+				targets.put(uri.textValue(), target);
 			else
-				target = targets.lookup(uri.getTextValue());
+				target = targets.lookup(uri.textValue());
 
 			uri = ((ObjectNode) node).get("title");
 			if (uri != null)
-				target.setTitle(uri.getTextValue());
+				target.setTitle(uri.textValue());
 
 			return target;
 		} else

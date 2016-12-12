@@ -5,15 +5,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.http.client.HttpClient;
+import org.opentox.rest.RestException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.idea.opentox.cli.id.Identifier;
 import net.idea.ops.cli.AbstractOPSClient;
 import net.idea.ops.cli.OPSClient.params;
 import net.idea.ops.cli.assay.Target;
-
-import org.apache.http.client.HttpClient;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.opentox.rest.RestException;
 
 public class OPSTargetClient extends AbstractOPSClient<Target> {
 
