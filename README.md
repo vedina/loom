@@ -2,7 +2,7 @@
 
 ### Downloads and Maven artifacts
 
- http://ambit.uni-plovdiv.bg:8083/nexus/index.html#nexus-search;gav~net.ideaconsult~loom~~~
+ https://nexus.ideaconsult.net/index.html#nexus-search;gav~net.ideaconsult~loom~~~
  
 #### Development 
 ##### [Ambit](http://ambit.sf.net) 3.0.3-SNAPSHOT dependency
