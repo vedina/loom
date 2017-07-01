@@ -20,6 +20,12 @@ https://iuclid6.echa.europa.eu/public-api</description>
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>net.idea</groupId>
+			<artifactId>i5z</artifactId>
+			<version>${i5.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
