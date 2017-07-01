@@ -5,12 +5,12 @@
  https://nexus.ideaconsult.net/index.html#nexus-search;gav~net.ideaconsult~loom~~~
  
 #### Development 
-##### [Ambit](http://ambit.sf.net) 3.0.3-SNAPSHOT dependency
+##### [Ambit](http://ambit.sf.net) 3.1.0-SNAPSHOT dependency
 ````
 <dependency>
   <groupId>net.ideaconsult</groupId>
   <artifactId>loom</artifactId>
-  <version>1.1.3-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
 </dependency>
 ````
 
