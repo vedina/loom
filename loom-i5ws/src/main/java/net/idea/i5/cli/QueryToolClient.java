@@ -10,10 +10,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import net.idea.opentox.cli.IIdentifiableResource;
-import net.idea.opentox.cli.id.IIdentifier;
-import net.idea.opentox.cli.id.Identifier;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,30 +19,32 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.opentox.rest.RestException;
 
-public class QueryToolClient extends I5AbstractClient {
+import net.idea.iuclid.cli.Container;
+import net.idea.iuclid.cli.IQueryToolClient;
+import net.idea.opentox.cli.IIdentifiableResource;
+import net.idea.opentox.cli.id.IIdentifier;
+import net.idea.opentox.cli.id.Identifier;
+
+public class QueryToolClient extends I5AbstractClient implements IQueryToolClient<PredefinedQuery> {
 
 	public QueryToolClient(HttpClient httpclient, String baseURL, String token) {
 		super(httpclient, baseURL, token);
 	}
 
-	public List<IIdentifiableResource<IIdentifier>> executeQuery(
-			PredefinedQuery queryID, String... params) throws RestException,
-			IOException {
+	public List<IIdentifiableResource<IIdentifier>> executeQuery(PredefinedQuery queryID, String... params)
+			throws RestException, IOException {
 		return getByIdentifier(queryID, "ExecuteQuery", params);
 	}
 
-	public List<IIdentifiableResource<IIdentifier>> countQuery(
-			PredefinedQuery queryID, String... params) throws RestException,
-			IOException {
+	public List<IIdentifiableResource<IIdentifier>> countQuery(PredefinedQuery queryID, String... params)
+			throws RestException, IOException {
 		return getByIdentifier(queryID, "CountQuery", params);
 	}
 
 	@Override
-	protected List<IIdentifiableResource<IIdentifier>> getByIdentifier(
-			IIdentifier queryID, String queryType, String... params)
-			throws RestException, IOException {
-		String xml = String.format(loadXML(String.format(
-				"net/idea/i5/cli/querytool/%s.xml", queryID)), token,
+	protected List<IIdentifiableResource<IIdentifier>> getByIdentifier(IIdentifier queryID, String queryType,
+			String... params) throws RestException, IOException {
+		String xml = String.format(loadXML(String.format("net/idea/i5/cli/querytool/%s.xml", queryID)), token,
 				params[0], params[1]);
 		HttpEntity content = new StringEntity(xml, "UTF-8");
 		HttpPost httpPOST = new HttpPost(baseURL + "/QueryToolEngine");
@@ -54,8 +52,7 @@ public class QueryToolClient extends I5AbstractClient {
 			for (Header header : headers)
 				httpPOST.addHeader(header);
 		httpPOST.addHeader("Accept-Encoding", "gzip,deflate");
-		httpPOST.addHeader(
-				"Content-type",
+		httpPOST.addHeader("Content-type",
 				String.format(
 						"application/soap+xml;charset=UTF-8;action=\"http://echa.europa.eu/iuclid5/i5webservice/service/QueryToolEngine/%s\"",
 						queryType));
@@ -74,9 +71,8 @@ public class QueryToolClient extends I5AbstractClient {
 			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { // AxisFault
 				return processFault(in, queryType.toString());
 			} else
-				throw new RestException(response.getStatusLine()
-						.getStatusCode(), response.getStatusLine()
-						.getReasonPhrase());
+				throw new RestException(response.getStatusLine().getStatusCode(),
+						response.getStatusLine().getReasonPhrase());
 
 		} finally {
 			try {
@@ -94,14 +90,13 @@ public class QueryToolClient extends I5AbstractClient {
 	}
 
 	@Override
-	public List<IIdentifiableResource<IIdentifier>> processPayload(
-			InputStream in, String mediaType) throws RestException, IOException {
+	public List<IIdentifiableResource<IIdentifier>> processPayload(InputStream in, String mediaType)
+			throws RestException, IOException {
 		List<IIdentifiableResource<IIdentifier>> list = new ArrayList<IIdentifiableResource<IIdentifier>>();
 		XMLStreamReader reader = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
-			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-					Boolean.TRUE);
+			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
 			reader = factory.createXMLStreamReader(in);
 			boolean queryResultItem = false;
 			while (reader.hasNext()) {
@@ -118,10 +113,8 @@ public class QueryToolClient extends I5AbstractClient {
 						switch (stag) {
 						case QueryResultItem: {
 							queryResultItem = true;
-							String indexPk = reader
-									.getAttributeValue(
-											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
-											"indexPk");
+							String indexPk = reader.getAttributeValue(
+									"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/", "indexPk");
 							list.add(new Container(new Identifier(indexPk), null));
 							break;
 						}

@@ -1,10 +1,11 @@
 package net.idea.i5.cli;
 
-import net.idea.opentox.cli.ApplicationClient;
-
 import org.apache.http.HttpRequest;
 
-public class I5LightClient extends ApplicationClient<String> {
+import net.idea.i5.cli.test.IUCLIDLightClient;
+import net.idea.opentox.cli.ApplicationClient;
+
+public class I5LightClient extends ApplicationClient<String> implements IUCLIDLightClient {
 	protected String baseURL;
 
 	public I5LightClient(String baseURL) {

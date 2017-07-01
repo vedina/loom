@@ -11,19 +11,16 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import net.idea.loom.common.DownloadTool;
-import net.idea.opentox.cli.AbstractClient;
-import net.idea.opentox.cli.IIdentifiableResource;
-import net.idea.opentox.cli.id.IIdentifier;
-
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.opentox.rest.RestException;
 
-public abstract class I5AbstractClient extends
-		AbstractClient<IIdentifier, IIdentifiableResource<IIdentifier>> {
-	protected String baseURL;
-	protected String token;
+import net.idea.iuclid.cli.IUCLIDAbstractClient;
+import net.idea.loom.common.DownloadTool;
+import net.idea.opentox.cli.IIdentifiableResource;
+import net.idea.opentox.cli.id.IIdentifier;
+
+public abstract class I5AbstractClient extends IUCLIDAbstractClient<String> {
 	protected Stack<String> tags = new Stack<String>();
 
 	private enum fault_tag {
@@ -31,19 +28,17 @@ public abstract class I5AbstractClient extends
 	}
 
 	public I5AbstractClient(HttpClient httpclient, String baseURL, String token) {
-		super(httpclient);
-		this.baseURL = baseURL;
-		this.token = token;
+		super(httpclient, baseURL, token);
+
 	}
 
-	protected List<IIdentifiableResource<IIdentifier>> processFault(InputStream in,
-			String mediaType) throws RestException, IOException {
+	protected List<IIdentifiableResource<IIdentifier>> processFault(InputStream in, String mediaType)
+			throws RestException, IOException {
 
 		XMLStreamReader reader = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
-			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-					Boolean.TRUE);
+			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
 			reader = factory.createXMLStreamReader(in);
 			boolean code = false;
 			boolean reason = false;
@@ -72,19 +67,15 @@ public abstract class I5AbstractClient extends
 							break;
 						}
 						case DocumentFault: {
-							String errorCode = reader
-									.getAttributeValue(
-											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
-											"errorCode");
-							logger.log(Level.SEVERE,errorCode);
+							String errorCode = reader.getAttributeValue(
+									"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/", "errorCode");
+							logger.log(Level.SEVERE, errorCode);
 							break;
 						}
 						case SessionFault: {
-							String errorCode = reader
-									.getAttributeValue(
-											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
-											"errorCode");
-							logger.log(Level.SEVERE,errorCode);
+							String errorCode = reader.getAttributeValue(
+									"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/", "errorCode");
+							logger.log(Level.SEVERE, errorCode);
 							break;
 						}
 						case errorMessage: {
@@ -151,8 +142,7 @@ public abstract class I5AbstractClient extends
 	protected String loadXML(String resourceName) throws IOException {
 		InputStream stream = null;
 		try {
-			stream = this.getClass().getClassLoader()
-					.getResourceAsStream(resourceName);
+			stream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
 			if (stream == null)
 				throw new IOException("Error loading " + resourceName);
 			return loadXML(stream);
@@ -177,15 +167,13 @@ public abstract class I5AbstractClient extends
 	}
 
 	@Override
-	protected List<IIdentifiableResource<IIdentifier>> get(
-			IIdentifier identifier, String mediaType, String... params)
+	protected List<IIdentifiableResource<IIdentifier>> get(IIdentifier identifier, String mediaType, String... params)
 			throws RestException, IOException {
 		return getByIdentifier(identifier, mediaType, params);
 	}
 
 	@Override
-	public List<IIdentifiableResource<IIdentifier>> get(IIdentifier identifier)
-			throws Exception {
+	public List<IIdentifiableResource<IIdentifier>> get(IIdentifier identifier) throws Exception {
 		return get(identifier, "application/soap+xml");
 	}
 }

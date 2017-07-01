@@ -20,6 +20,8 @@
     <module>loom-i5ws</module>
     <module>loom-tox21</module>
     <module>loom-effectopedia</module>
+    <module>loom-i6ws</module>
+    <module>loom-ixws</module>
   </modules>
   <dependencies>
     <dependency>

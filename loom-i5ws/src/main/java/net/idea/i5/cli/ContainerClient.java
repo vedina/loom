@@ -16,11 +16,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import net.idea.loom.common.DownloadTool;
-import net.idea.opentox.cli.IIdentifiableResource;
-import net.idea.opentox.cli.id.IIdentifier;
-import net.idea.opentox.cli.id.Identifier;
-
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -31,7 +26,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.opentox.rest.RestException;
 
-public class ContainerClient extends I5AbstractClient {
+import net.idea.iuclid.cli.Container;
+import net.idea.iuclid.cli.IContainerClient;
+import net.idea.loom.common.DownloadTool;
+import net.idea.opentox.cli.IIdentifiableResource;
+import net.idea.opentox.cli.id.IIdentifier;
+import net.idea.opentox.cli.id.Identifier;
+
+public class ContainerClient extends I5AbstractClient implements IContainerClient {
 
 	public ContainerClient(HttpClient httpclient, String baseURL, String token) {
 		super(httpclient, baseURL, token);
@@ -39,12 +41,9 @@ public class ContainerClient extends I5AbstractClient {
 	}
 
 	@Override
-	protected List<IIdentifiableResource<IIdentifier>> getByIdentifier(
-			IIdentifier identifier, String mediaType, String... params)
-			throws RestException, IOException {
-		String xml = String.format(
-				loadXML("net/idea/i5/cli/container/request.xml"), token,
-				identifier);
+	protected List<IIdentifiableResource<IIdentifier>> getByIdentifier(IIdentifier identifier, String mediaType,
+			String... params) throws RestException, IOException {
+		String xml = String.format(loadXML("net/idea/i5/cli/container/request.xml"), token, identifier);
 
 		HttpEntity content = new StringEntity(xml, "UTF-8");
 		HttpPost httpPOST = new HttpPost(baseURL + "/ContainerEngine");
@@ -52,8 +51,7 @@ public class ContainerClient extends I5AbstractClient {
 			for (Header header : headers)
 				httpPOST.addHeader(header);
 		httpPOST.addHeader("Accept-Encoding", "gzip,deflate");
-		httpPOST.addHeader(
-				"Content-type",
+		httpPOST.addHeader("Content-type",
 				"application/soap+xml;charset=UTF-8;action=\"http://echa.europa.eu/iuclid5/i5webservice/service/ContainerEngine/DownloadContainer\"");
 		httpPOST.setEntity(content);
 
@@ -70,9 +68,8 @@ public class ContainerClient extends I5AbstractClient {
 			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { // AxisFault
 				return processFault(in, mediaType);
 			} else
-				throw new RestException(response.getStatusLine()
-						.getStatusCode(), response.getStatusLine()
-						.getReasonPhrase());
+				throw new RestException(response.getStatusLine().getStatusCode(),
+						response.getStatusLine().getReasonPhrase());
 
 		} finally {
 			try {
@@ -89,23 +86,20 @@ public class ContainerClient extends I5AbstractClient {
 	}
 
 	@Override
-	public List<IIdentifiableResource<IIdentifier>> processPayload(
-			InputStream in, String identifier) throws RestException,
-			IOException {
+	public List<IIdentifiableResource<IIdentifier>> processPayload(InputStream in, String identifier)
+			throws RestException, IOException {
 		StringBuilder report = new StringBuilder();
 		File tmpFile = File.createTempFile("i5ws_", ".i5z");
-		Writer dataContentFile = new OutputStreamWriter(new Base64OutputStream(
-				new BufferedOutputStream(new FileOutputStream(tmpFile)), false));
+		Writer dataContentFile = new OutputStreamWriter(
+				new Base64OutputStream(new BufferedOutputStream(new FileOutputStream(tmpFile)), false));
 		XMLStreamReader reader = null;
 		InputStream xmlin = null;
 		String resultFlag = "";
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
-			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-					Boolean.TRUE);
+			factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
 
-			File xmlFile = new File(tmpFile.getAbsoluteFile().toString()
-					.replace(".i5z", ".xml"));
+			File xmlFile = new File(tmpFile.getAbsoluteFile().toString().replace(".i5z", ".xml"));
 			DownloadTool.download(in, xmlFile);
 			xmlin = new FileInputStream(xmlFile);
 			reader = factory.createXMLStreamReader(xmlin);
@@ -129,10 +123,8 @@ public class ContainerClient extends I5AbstractClient {
 						}
 						case resultReport: {
 							resultReport = true;
-							resultFlag = reader
-									.getAttributeValue(
-											"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/",
-											"resultFlag");
+							resultFlag = reader.getAttributeValue(
+									"http://echa.europa.eu/schemas/iuclid5/i5webservice/types/", "resultFlag");
 							break;
 						}
 						case message: {
@@ -168,8 +160,7 @@ public class ContainerClient extends I5AbstractClient {
 				case XMLStreamConstants.CHARACTERS: {
 					if (dataContent) {
 						String value = reader.getText();
-						dataContentFile.write(value.substring(0,
-								reader.getTextLength()));
+						dataContentFile.write(value.substring(0, reader.getTextLength()));
 					} else if (resultReport) {
 						String value = reader.getText();
 						report.append(value.substring(0, reader.getTextLength()));
@@ -203,12 +194,9 @@ public class ContainerClient extends I5AbstractClient {
 				} catch (Exception x) {
 				}
 				tmpFile = xmlFile; // return the xml output
-				throw new RestException(
-						HttpStatus.SC_BAD_GATEWAY,
-						String.format(
-								"Error when retrieving document %s from %s : %s. Response at %s",
-								identifier, baseURL, resultFlag,
-								xmlFile.getAbsolutePath()));
+				throw new RestException(HttpStatus.SC_BAD_GATEWAY,
+						String.format("Error when retrieving document %s from %s : %s. Response at %s", identifier,
+								baseURL, resultFlag, xmlFile.getAbsolutePath()));
 			}
 			return list;
 		} catch (RestException x) {

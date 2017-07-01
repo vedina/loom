@@ -1,4 +1,4 @@
-package net.idea.i5.cli;
+package net.idea.iuclid.cli;
 
 import java.io.File;
 
