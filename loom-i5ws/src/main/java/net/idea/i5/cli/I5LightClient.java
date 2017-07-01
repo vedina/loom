@@ -2,7 +2,7 @@ package net.idea.i5.cli;
 
 import org.apache.http.HttpRequest;
 
-import net.idea.i5.cli.test.IUCLIDLightClient;
+import net.idea.iuclid.cli.IUCLIDLightClient;
 import net.idea.opentox.cli.ApplicationClient;
 
 public class I5LightClient extends ApplicationClient<String> implements IUCLIDLightClient {
