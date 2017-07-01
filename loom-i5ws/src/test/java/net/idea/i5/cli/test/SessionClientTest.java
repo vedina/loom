@@ -1,10 +1,10 @@
 package net.idea.i5.cli.test;
 
 
-import net.idea.i5.cli.SessionClient;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import net.idea.i5.cli.SessionClient;
 
 public class SessionClientTest extends ClientTest {
 
