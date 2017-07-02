@@ -16,6 +16,7 @@ import net.idea.opentox.cli.ApplicationClient;
 
 public class I6LightClient extends ApplicationClient<I6Credentials> implements IUCLIDLightClient {
 
+	final static String MediaTypeI6Doc = "application/vnd.iuclid6.ext+json;type=iuclid6.Document";
 	final static String MediaTypeI6Job = "application/vnd.iuclid6.ext+json; type=iuclid6.Iuclid6Job";
 	final static String MediaTypeI6Export = "application/vnd.iuclid6.ext+json; type=iuclid6.FullExport";
 
@@ -55,18 +56,22 @@ public class I6LightClient extends ApplicationClient<I6Credentials> implements I
 				HttpResponse response = getHttpClient().execute(get);
 				int statuscode = response.getStatusLine().getStatusCode();
 				try (InputStream in = response.getEntity().getContent()) {
-					
+
 				}
-				if (HttpStatus.SC_UNAUTHORIZED==statuscode || HttpStatus.SC_FORBIDDEN==statuscode  ) return false;
-				if (HttpStatus.SC_OK==statuscode || HttpStatus.SC_NOT_FOUND==statuscode  || HttpStatus.SC_BAD_REQUEST == statuscode) return true;
+				if (HttpStatus.SC_UNAUTHORIZED == statuscode || HttpStatus.SC_FORBIDDEN == statuscode)
+					return false;
+				if (HttpStatus.SC_OK == statuscode || HttpStatus.SC_NOT_FOUND == statuscode
+						|| HttpStatus.SC_BAD_REQUEST == statuscode)
+					return true;
 
 				throw new Exception(response.getStatusLine().toString());
 			} catch (Exception x) {
 				throw x;
 			}
 
-		} else return false;
-		
+		} else
+			return false;
+
 	}
 
 	@Override
@@ -82,8 +87,7 @@ public class I6LightClient extends ApplicationClient<I6Credentials> implements I
 	}
 
 	public IQueryToolClient getQueryToolClient() {
-		// return new QueryToolClient(getHttpClient(), baseURL, ssoToken);
-		return null;
+		return new I6QueryToolClient(getHttpClient(), baseURL, ssoToken);
 	}
 
 }
