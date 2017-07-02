@@ -3,6 +3,7 @@ package net.idea.i6.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,10 +22,12 @@ import org.opentox.rest.RestException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.idea.iuclid.cli.Container;
 import net.idea.iuclid.cli.IContainerClient;
 import net.idea.iuclid.cli.IUCLIDAbstractClient;
 import net.idea.opentox.cli.IIdentifiableResource;
 import net.idea.opentox.cli.id.IIdentifier;
+import net.idea.opentox.cli.id.Identifier;
 
 public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> implements IContainerClient {
 
@@ -115,7 +118,7 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 
 							return processPayload(inr, identifier.toString());
 						}
-					
+
 				} catch (Exception x) {
 					logger.log(Level.WARNING, x.getMessage());
 				}
@@ -178,7 +181,9 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 			throws RestException, IOException {
 		File tmpFile = File.createTempFile("i6ws_", ".i6z");
 		net.idea.loom.common.DownloadTool.download(in, tmpFile);
-		return null;
+		List<IIdentifiableResource<IIdentifier>> list = new ArrayList<IIdentifiableResource<IIdentifier>>();
+		list.add(new Container(new Identifier(identifier), tmpFile));
+		return list;
 	}
 
 }
