@@ -19,10 +19,10 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
+import net.idea.i5.io.I5_ROOT_OBJECTS;
 import net.idea.i5.io.QASettings;
 import net.idea.i6.cli.I6LightClient;
 import net.idea.i6.io.I6ZReader;
-import net.idea.i6.io.I6_ROOT_OBJECTS;
 
 public class ClientTest {
 	protected static Logger logger = Logger.getLogger(ClientTest.class.getName());
@@ -96,7 +96,7 @@ public class ClientTest {
 							if (papp.getProtocol() != null) {
 								String category = ((Protocol) papp.getProtocol()).getCategory();
 								try {
-									I6_ROOT_OBJECTS r = I6_ROOT_OBJECTS.valueOf(
+									I5_ROOT_OBJECTS r = I5_ROOT_OBJECTS.valueOf(
 											((Protocol) papp.getProtocol()).getCategory().replace("_SECTION", ""));
 
 								} catch (Exception x) {
