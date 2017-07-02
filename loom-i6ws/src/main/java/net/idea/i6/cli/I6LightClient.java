@@ -1,7 +1,12 @@
 package net.idea.i6.cli;
 
+import java.io.InputStream;
+
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicHeader;
 
 import net.idea.iuclid.cli.IContainerClient;
@@ -10,6 +15,10 @@ import net.idea.iuclid.cli.IUCLIDLightClient;
 import net.idea.opentox.cli.ApplicationClient;
 
 public class I6LightClient extends ApplicationClient<I6Credentials> implements IUCLIDLightClient {
+
+	final static String MediaTypeI6Job = "application/vnd.iuclid6.ext+json; type=iuclid6.Iuclid6Job";
+	final static String MediaTypeI6Export = "application/vnd.iuclid6.ext+json; type=iuclid6.FullExport";
+
 	protected String baseURL;
 
 	public I6LightClient(String baseURL) {
@@ -36,6 +45,28 @@ public class I6LightClient extends ApplicationClient<I6Credentials> implements I
 			ssoToken.setPass(password);
 		}
 		return username != null && password != null;
+	}
+
+	public boolean ping(String username, String password) throws Exception {
+		if (login(username, password)) {
+			HttpGet get = new HttpGet(String.format("%s/query/iuclid6/bySubstance", baseURL));
+			token2header(get, ssoToken);
+			try {
+				HttpResponse response = getHttpClient().execute(get);
+				int statuscode = response.getStatusLine().getStatusCode();
+				try (InputStream in = response.getEntity().getContent()) {
+					
+				}
+				if (HttpStatus.SC_UNAUTHORIZED==statuscode || HttpStatus.SC_FORBIDDEN==statuscode  ) return false;
+				if (HttpStatus.SC_OK==statuscode || HttpStatus.SC_NOT_FOUND==statuscode  || HttpStatus.SC_BAD_REQUEST == statuscode) return true;
+
+				throw new Exception(response.getStatusLine().toString());
+			} catch (Exception x) {
+				throw x;
+			}
+
+		} else return false;
+		
 	}
 
 	@Override

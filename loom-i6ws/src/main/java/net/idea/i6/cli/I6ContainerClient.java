@@ -35,8 +35,6 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 		super(httpclient, baseURL, token);
 	}
 
-	final static String MediaTypeI6Job = "application/vnd.iuclid6.ext+json; type=iuclid6.Iuclid6Job";
-	final static String MediaTypeI6Export = "application/vnd.iuclid6.ext+json; type=iuclid6.FullExport";
 
 	protected enum _I6JOBSTATUS {
 		QUEUED {
@@ -68,8 +66,8 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 				httpPOST.addHeader(header);
 
 		// httpPOST.addHeader("Accept-Encoding", "gzip,deflate");
-		httpPOST.addHeader("Content-type", MediaTypeI6Export);
-		httpPOST.addHeader("Accept", MediaTypeI6Job);
+		httpPOST.addHeader("Content-type", I6LightClient.MediaTypeI6Export);
+		httpPOST.addHeader("Accept", I6LightClient.MediaTypeI6Job);
 
 		HttpEntity content = new StringEntity("{}", "UTF-8");
 		httpPOST.setEntity(content);
@@ -138,7 +136,7 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 	protected _I6JOBSTATUS polling(String uri) throws RestException, IOException {
 		ObjectMapper m = new ObjectMapper();
 		HttpGet polling = new HttpGet(String.format("%s/system%s", baseURL, uri));
-		polling.addHeader("Accept", MediaTypeI6Job);
+		polling.addHeader("Accept", I6LightClient.MediaTypeI6Job);
 		if (headers != null)
 			for (Header header : headers)
 				polling.addHeader(header);
