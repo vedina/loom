@@ -1,11 +1,15 @@
 package net.idea.i6.test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,10 +26,29 @@ import net.idea.i6.io.I6_ROOT_OBJECTS;
 
 public class ClientTest {
 	protected static Logger logger = Logger.getLogger(ClientTest.class.getName());
+
+	static final String loggingProperties = "logging.properties";
+	static final String log4jProperties = "log4j.properties";
+
 	static I6LightClient i6;
 
 	@BeforeClass
 	public static void init() throws Exception {
+
+		try (InputStream in = new FileInputStream(
+				ClientTest.class.getClassLoader().getResource(loggingProperties).getFile())) {
+			LogManager.getLogManager().readConfiguration(in);
+			logger.log(Level.INFO, String.format("Logging configuration loaded from %s", loggingProperties));
+		} catch (Exception x) {
+			System.err.println("logging configuration failed " + x.getMessage());
+		}
+
+		// now log4j for those who use it
+		try (InputStream in = ClientTest.class.getClassLoader().getResourceAsStream(log4jProperties)) {
+			PropertyConfigurator.configure(in);
+		} catch (Exception x) {
+			logger.log(Level.WARNING, x.getMessage());
+		}
 		i6 = new I6LightClient(PropertiesUtil.getTarget());
 	}
 
