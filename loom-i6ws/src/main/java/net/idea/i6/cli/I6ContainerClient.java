@@ -181,6 +181,7 @@ public class I6ContainerClient extends IUCLIDAbstractClient<I6Credentials> imple
 			throws RestException, IOException {
 		File tmpFile = File.createTempFile("i6ws_", ".i6z");
 		net.idea.loom.common.DownloadTool.download(in, tmpFile);
+		logger.log(Level.INFO, tmpFile.getAbsolutePath());
 		List<IIdentifiableResource<IIdentifier>> list = new ArrayList<IIdentifiableResource<IIdentifier>>();
 		list.add(new Container(new Identifier(identifier), tmpFile));
 		return list;
