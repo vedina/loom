@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>loom</artifactId>
 		<groupId>net.ideaconsult</groupId>
-		<version>1.2.1</version>
+		<version>1.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>loom-i5ws</artifactId>
 	<name>loom-iuclid5-ws</name>
