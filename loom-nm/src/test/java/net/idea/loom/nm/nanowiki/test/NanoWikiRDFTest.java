@@ -80,6 +80,22 @@ public class NanoWikiRDFTest {
 	}
 
 	public File getNanoWikiFile() throws Exception {
+		return getNanoWikiFile4();
+	}
+	
+	public File getNanoWikiFile5() throws Exception {
+		String nw3 = "nanowiki.cczero.5.rdf.gz";
+		URL url = new URL("https://ndownloader.figshare.com/files/13009007");
+		Assert.assertNotNull(url);
+		File baseDir = new File(System.getProperty("java.io.tmpdir"));
+		File file = new File(baseDir, nw3);
+		if (!file.exists())
+			DownloadTool.download(url, file);
+		Assert.assertTrue(file.exists());
+		return file;
+	}
+	
+	public File getNanoWikiFile4() throws Exception {
 		String nw3 = "nanowiki.cczero.4.rdf.gz";
 		URL url = new URL("https://ndownloader.figshare.com/files/6780819");
 		Assert.assertNotNull(url);
