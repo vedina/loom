@@ -725,6 +725,10 @@ class ProcessMeasurement extends ProcessSolution {
 		},
 		Bioassay_Profile {
 		// ????
+		},
+		Enzyme_activity {
+			
+			//http://purl.obolibrary.org/obo/GO_0003824
 		};
 		public I5_ROOT_OBJECTS getCategory() {
 			return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
