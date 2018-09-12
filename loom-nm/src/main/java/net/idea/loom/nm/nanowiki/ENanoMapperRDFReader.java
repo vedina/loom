@@ -7,7 +7,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -23,7 +22,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -370,6 +368,14 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 						try {
   						    effect.setLoValue(Double.parseDouble(loHigh[0]));
 						    effect.setUpValue(Double.parseDouble(loHigh[1]));
+						} catch (Exception x) {
+							effect.setTextValue(valueLit);
+						}
+					} else if (valueLit.contains("±")) {
+						String[] leHigh = valueLit.split("±");
+						try {
+  						    effect.setLoValue(Double.parseDouble(leHigh[0]));
+						    effect.setErrorValue(Double.parseDouble(leHigh[1]));
 						} catch (Exception x) {
 							effect.setTextValue(valueLit);
 						}
