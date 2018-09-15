@@ -1,22 +1,14 @@
 #all bundles
-PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>
-PREFIX fn: <http://www.w3.org/2005/xpath-functions#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX time: <http://www.w3.org/2006/time#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX mw: <http://127.0.0.1/mediawiki/index.php/Special:URIResolver/>
-PREFIX w: <http://semantic-mediawiki.org/swivt/1.0#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX pav: <http://purl.org/pav/>
 
-
-SELECT distinct  ?b ?date ?status ?purpose ?source ?label
+SELECT DISTINCT ?b ?description ?label ?license ?publisher
 WHERE {
-   ?m rdf:type mw:Category-3AMaterials.
-   ?m mw:Property-3AHas_Bundle ?b.
-   OPTIONAL {?b w:wikiPageModificationDate ?date.}
-   OPTIONAL {?b mw:Property-3AHas_Status ?status.}
-   OPTIONAL {?b mw:Property-3AHas_Purpose ?purpose.}
-   OPTIONAL {?b mw:Property-3AHas_Source ?source_r. ?source_r rdfs:label ?source.}
-   OPTIONAL {?b rdfs:label ?label.}
+   ?b rdf:type void:Dataset .
+   OPTIONAL { ?b dcterms:title ?label . }
+   OPTIONAL { ?b dcterms:license ?license . }
+   OPTIONAL { ?b dcterms:description ?description . }
+   OPTIONAL { ?b dcterms:publisher ?publisher . }
 }

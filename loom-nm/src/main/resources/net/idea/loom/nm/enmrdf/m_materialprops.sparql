@@ -12,9 +12,7 @@ WHERE {
   BIND (<%s> AS ?material)
   ?material dcterms:type ?type .
   OPTIONAL { ?material rdfs:label ?label . }
-  OPTIONAL {
-    ?material dcterms:source/dcterms:title ?owner .
-  }
+  OPTIONAL { ?material dcterms:source ?owner . }
   OPTIONAL { ?material owl:sameAs ?sameAs . }
   OPTIONAL { ?material skos:closeMatch ?closeMatch . }
   OPTIONAL { ?material skos:relatedMatch ?relatedMatch . }
