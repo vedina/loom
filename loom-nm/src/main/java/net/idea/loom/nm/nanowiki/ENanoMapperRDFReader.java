@@ -36,6 +36,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.substance.ExternalIdentifier;
+import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.facet.BundleRoleFacet;
 import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
@@ -91,6 +92,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 		try {
 			rdf = ModelFactory.createDefaultModel();
 			rdf.read(reader, "http://ontology.enanomapper.net", "TURTLE");
+			readBundles();
 
 			Query query = QueryFactory
 					.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
@@ -200,12 +202,23 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 						.getLocalName());
 			}
 			if (solution.contains("owner")) {
-				record.setOwnerName(solution.get("owner").asLiteral()
-						.getString());
-				record.setOwnerUUID(prefix
-						+ "-"
-						+ UUID.nameUUIDFromBytes(
-								record.getOwnerName().getBytes()).toString());
+				// this is the bundle URI
+				BundleRoleFacet bundleFacet = bundles.get(solution.get("owner").asResource().getURI());
+				if (bundleFacet != null && bundleFacet.getValue() != null) { // ok, we have more info
+					SubstanceEndpointsBundle bundle = bundleFacet.getValue();
+					String ownerName = bundle.getSource();
+					record.setOwnerName(ownerName);
+					record.setOwnerUUID(
+						prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString()
+					);
+					record.addFacet(bundleFacet);
+				} else {
+					String ownerName = solution.get("owner").toString();
+					record.setOwnerName(ownerName);
+					record.setOwnerUUID(
+						prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString()
+					);
+				}
 			}
 			List<ExternalIdentifier> identifiers = new ArrayList<>();
 			if (solution.contains("sameAs")) {
@@ -393,4 +406,32 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 		}
 	}
 
+	protected HashMap<String, BundleRoleFacet> readBundles() throws IOException {
+		Query query = QueryFactory.create(ENanoMapperSPARQLQueries.bundles_all.SPARQL());
+		QueryExecution qe_bundles = QueryExecutionFactory.create(query, rdf);
+		try {
+			ResultSet results = qe_bundles.execSelect();
+			while (results.hasNext()) {
+				QuerySolution qs = results.next();
+				SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
+				BundleRoleFacet facet = new BundleRoleFacet(null);
+				facet.setValue(bundle);
+				String bundle_uri = qs.get("b").asResource().getURI();
+				if (qs.contains("label"))
+				    bundle.setName(qs.get("label").asLiteral().getString());
+				if (qs.contains("description"))
+				    bundle.setDescription(qs.get("description").asLiteral().getString());
+				if (qs.contains("publisher"))
+				    bundle.setSource(qs.get("publisher").asLiteral().getString());
+				if (qs.contains("license"))
+				    bundle.setLicenseURI(qs.get("license").asResource().getURI().toString());
+				bundles.put(bundle_uri, facet);
+			}
+			return bundles;
+		} catch (Exception exception) {
+			return bundles;
+		} finally {
+			qe_bundles.close();
+		}
+	}
 }
