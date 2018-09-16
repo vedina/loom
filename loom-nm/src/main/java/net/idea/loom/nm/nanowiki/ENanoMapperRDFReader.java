@@ -307,7 +307,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				Protocol protocol = new Protocol(endpoint);
 				I5_ROOT_OBJECTS category = null;
 				try {
-					if (solution.contains("type")) {
+					if (solution.contains("assayType")) {
+						String bao = solution.get("assayType").asResource().getURI()
+								.toString();
+						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
+								"http://www.bioassayontology.org/bao#", ""));
+					} else if (solution.contains("type")) {
 						String bao = solution.get("type").asResource().getURI()
 								.toString();
 						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
