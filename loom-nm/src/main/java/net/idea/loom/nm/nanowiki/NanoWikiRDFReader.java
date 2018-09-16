@@ -259,6 +259,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				if (bf == null) {
 					bf = new BundleRoleFacet(null);
 					SubstanceEndpointsBundle b = new SubstanceEndpointsBundle();
+					b.setStatus("published");
 					bf.setValue(b);
 					bundles.put(bundle.getURI(), bf);
 				}
