@@ -423,7 +423,13 @@ class GuessTerms {
 	}
 
 	public static Protocol._categories category(String endpoint) throws Exception {
-		//this is really not right, we should not be geeting result outcomes as diameter and LC50 as assay types 
+		//this is really not right, we should not be geting result outcomes as diameter and LC50 as assay types
+		//Diameter , size etc should be PC_GRANULOMETRY_SECTION
+		//Surface area should be SPECIFIC_SURFACE_AREA_SECTION
+		//Fish toxicity should be EC_FISHTOX_SECTION
+		//Daphnia tox should be EC_DAPHNIATOX_SECTION
+		//Cell viability should be ENM_0000068_SECTION
+		
 		String categorystring = endpoint.replace("http://www.bioassayontology.org/bao#", "").replace("http://purl.bioontology.org/ontology/npo#","");
 		try {
 			return Protocol._categories.valueOf(categorystring+ "_SECTION");
