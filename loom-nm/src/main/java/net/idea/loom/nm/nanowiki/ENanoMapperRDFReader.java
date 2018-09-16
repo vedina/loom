@@ -199,6 +199,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 																				// info
 					SubstanceEndpointsBundle bundle = bundleFacet.getValue();
 					String ownerName = bundle.getSource();
+	
 					record.setOwnerName(ownerName);
 					record.setOwnerUUID(prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString());
 					record.addFacet(bundleFacet);
@@ -395,9 +396,11 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			while (results.hasNext()) {
 				QuerySolution qs = results.next();
 				SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
+				bundle.setStatus("published");
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
+				bundle.setURL(bundle_uri);
 				if (qs.contains("label"))
 					bundle.setName(qs.get("label").asLiteral().getString());
 				if (qs.contains("description"))
