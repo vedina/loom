@@ -83,7 +83,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		map.put("Sigma-Aldrich Products",UUID.fromString("13e147c3-ccb5-11e5-946b-80ee7350bfa7"));
 		map.put("JRC Representative Nanomaterials",UUID.fromString("646ab3a4-ccb5-11e5-946b-80ee7350bfa7"));
 		map.put("Crystallography Open Database",UUID.fromString("804608b3-ccb5-11e5-946b-80ee7350bfa7"));
-		
+		map.put("NanoWiki",UUID.fromString("00000000-0000-0000-0000-000000000001"));
 		return map;
 		
 	}
