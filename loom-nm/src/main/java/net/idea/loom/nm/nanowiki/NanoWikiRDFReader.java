@@ -6,17 +6,27 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.idea.i5.io.I5CONSTANTS;
-import net.idea.i5.io.I5_ROOT_OBJECTS;
-
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.iterator.DefaultIteratingChemObjectReader;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 import ambit2.base.data.ILiteratureEntry;
 import ambit2.base.data.LiteratureEntry;
@@ -38,18 +48,8 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
-
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import net.idea.i5.io.I5CONSTANTS;
+import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 /**
  * TODO bundles
@@ -74,6 +74,19 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
 	protected String _rdfformat = "RDF/XML";
 	protected SubstanceEndpointsBundle nanowikiBundle = initNanoWikiBundle();
+	
+	protected static Map<String,UUID> bundleNumbers = initBundleNumbers();
+	
+	protected static Map<String,UUID> initBundleNumbers() {
+		HashMap<String,UUID> map = new HashMap<String,UUID	>();
+		map.put("ArrayExpress",UUID.fromString("07ae5742-5448-4da3-b7f4-8535be81fad1"));
+		map.put("Sigma-Aldrich Products",UUID.fromString("31b04917-6a6a-4ce0-a114-36b227e71414"));
+		map.put("JRC Representative Nanomaterials",UUID.fromString("605b5603-3ed2-4e25-8013-b787c3ab56dd"));
+		map.put("Crystallography Open Database",UUID.fromString("170c7f3b-93b0-42f5-ba1f-e7b17d27f5f2"));
+		
+		return map;
+		
+	}
 
 	protected static SubstanceEndpointsBundle initNanoWikiBundle() {
 		SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
@@ -177,6 +190,8 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				bundle.setVersion(nanowikiBundle.getVersion());
 				bundle.setStatus("published");
 				
+				
+				
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
@@ -184,6 +199,12 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				bundle.setDescription(qs.get("purpose").asLiteral().getString());
 				bundle.setStatus(qs.get("status").asLiteral().getString());
 				bundles.put(bundle_uri, facet);
+				
+				UUID bundleNumber = bundleNumbers.get(bundle.getName());
+				if (bundleNumber==null)
+					bundleNumber= UUID.nameUUIDFromBytes(bundle.getName().getBytes());
+				
+				bundle.setBundle_number(bundleNumber);
 			}
 			return bundles;
 		} finally {
