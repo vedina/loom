@@ -33,6 +33,7 @@ import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.substance.ExternalIdentifier;
@@ -43,7 +44,6 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
-import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 /**
  * @author nina
@@ -69,19 +69,16 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	public void setLogger(Logger logger) {
-		this.logger = logger == null ? Logger.getLogger(getClass().getName())
-				: logger;
+		this.logger = logger == null ? Logger.getLogger(getClass().getName()) : logger;
 	}
 
 	private String prefix = "DEMO";
 
-	public ENanoMapperRDFReader(Reader reader, String prefix)
-			throws CDKException, IOException {
+	public ENanoMapperRDFReader(Reader reader, String prefix) throws CDKException, IOException {
 		this(reader, prefix, null);
 	}
 
-	public ENanoMapperRDFReader(Reader reader, String prefix, Logger logger)
-			throws CDKException, IOException {
+	public ENanoMapperRDFReader(Reader reader, String prefix, Logger logger) throws CDKException, IOException {
 		super();
 		this.prefix = prefix;
 		setReader(reader);
@@ -94,14 +91,12 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			rdf.read(reader, "http://ontology.enanomapper.net", "TURTLE");
 			readBundles();
 
-			Query query = QueryFactory
-					.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
+			Query query = QueryFactory.create(ENanoMapperSPARQLQueries.m_allmaterials.SPARQL());
 			qe_materials = QueryExecutionFactory.create(query, rdf);
 
 			materials = qe_materials.execSelect();
 		} catch (IOException x) {
-			throw new CDKException("Error while reading the eNanoMapper RDF:"
-					+ x.getMessage());
+			throw new CDKException("Error while reading the eNanoMapper RDF:" + x.getMessage());
 		}
 	}
 
@@ -176,16 +171,11 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 		return record;
 	}
 
-	private void parseMaterial(Model rdf, RDFNode material,
-			SubstanceRecord record) throws IOException {
-		String sparqlQuery = String.format(
-				ENanoMapperSPARQLQueries.m_materialprops.SPARQL(), material
-						.asResource().getURI());
-		record.setSubstanceUUID(this.prefix
-				+ "-"
-				+ UUID.nameUUIDFromBytes(
-						material.asResource().getURI().toString().getBytes())
-						.toString());
+	private void parseMaterial(Model rdf, RDFNode material, SubstanceRecord record) throws IOException {
+		String sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_materialprops.SPARQL(),
+				material.asResource().getURI());
+		record.setSubstanceUUID(this.prefix + "-"
+				+ UUID.nameUUIDFromBytes(material.asResource().getURI().toString().getBytes()).toString());
 		Query query = QueryFactory.create(sparqlQuery);
 		QueryExecution qe = QueryExecutionFactory.create(query, rdf);
 		try {
@@ -194,106 +184,96 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 												// have more, the SPARQL is
 												// wrong
 			if (solution.contains("label")) {
-				record.setSubstanceName(solution.get("label").asLiteral()
-						.getString());
+				record.setSubstanceName(solution.get("label").asLiteral().getString());
 			}
 			if (solution.contains("type")) {
-				record.setSubstancetype(solution.get("type").asResource()
-						.getLocalName());
+				record.setSubstancetype(solution.get("type").asResource().getLocalName());
 			}
 			if (solution.contains("owner")) {
 				// this is the bundle URI
 				BundleRoleFacet bundleFacet = bundles.get(solution.get("owner").asResource().getURI());
-				if (bundleFacet != null && bundleFacet.getValue() != null) { // ok, we have more info
+				if (bundleFacet != null && bundleFacet.getValue() != null) { // ok,
+																				// we
+																				// have
+																				// more
+																				// info
 					SubstanceEndpointsBundle bundle = bundleFacet.getValue();
 					String ownerName = bundle.getSource();
 					record.setOwnerName(ownerName);
-					record.setOwnerUUID(
-						prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString()
-					);
+					record.setOwnerUUID(prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString());
 					record.addFacet(bundleFacet);
 				} else {
 					String ownerName = solution.get("owner").toString();
 					record.setOwnerName(ownerName);
-					record.setOwnerUUID(
-						prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString()
-					);
+					record.setOwnerUUID(prefix + "-" + UUID.nameUUIDFromBytes(ownerName.getBytes()).toString());
 				}
 			}
 			List<ExternalIdentifier> identifiers = new ArrayList<>();
 			if (solution.contains("sameAs")) {
-				identifiers.add(new ExternalIdentifier("Same as", solution
-						.get("sameAs").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("Same as", solution.get("sameAs").asResource().getURI()));
 			}
 			if (solution.contains("closeMatch")) {
-				identifiers.add(new ExternalIdentifier("Close match", solution
-						.get("closeMatch").asResource().getURI()));
+				identifiers
+						.add(new ExternalIdentifier("Close match", solution.get("closeMatch").asResource().getURI()));
 			}
 			if (solution.contains("relatedMatch")) {
-				identifiers.add(new ExternalIdentifier("Related match",
-						solution.get("relatedMatch").asResource().getURI()));
+				identifiers.add(
+						new ExternalIdentifier("Related match", solution.get("relatedMatch").asResource().getURI()));
 			}
 			if (solution.contains("seeAlso")) {
-				identifiers.add(new ExternalIdentifier("See also", solution
-						.get("seeAlso").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("See also", solution.get("seeAlso").asResource().getURI()));
 			}
 			if (solution.contains("page")) {
-				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution
-						.get("page").asResource().getURI()));
+				identifiers.add(new ExternalIdentifier("HOMEPAGE", solution.get("page").asResource().getURI()));
 			}
 			if (identifiers.size() > 0)
 				record.setExternalids(identifiers);
 		} finally {
 			qe.close();
 		}
-		sparqlQuery = String.format(
-				ENanoMapperSPARQLQueries.m_coating.SPARQL(), material
-						.asResource().getURI());
+		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_coating.SPARQL(), material.asResource().getURI());
 		query = QueryFactory.create(sparqlQuery);
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
 			ResultSet rs = qe.execSelect();
 			while (rs.hasNext()) {
-			    QuerySolution solution = rs.next();
-			    StructureRecord structure = new StructureRecord();
-			    if (solution.contains("smiles")) {
-			        String smiles = solution.get("smiles").asLiteral().getValue()
-						.toString();
-			        System.out.println("SMILES: " + smiles);
-			        structure.setContent(smiles);
-			        structure.setFormat("INC");
-			        structure.setSmiles(structure.getContent());
-			    }
+				QuerySolution solution = rs.next();
+				StructureRecord structure = new StructureRecord();
+				if (solution.contains("smiles")) {
+					String smiles = solution.get("smiles").asLiteral().getValue().toString();
+					System.out.println("SMILES: " + smiles);
+					structure.setContent(smiles);
+					structure.setFormat("INC");
+					structure.setSmiles(structure.getContent());
+				}
 				System.out.println("struct: " + structure);
-				
-			    if (solution.contains("componentName")) {
-			        String name = solution.get("componentName").asLiteral().getValue()
-						.toString();
-			        System.out.println("Name: " + name);
-			        structure.setRecordProperty(Property.getNameInstance(), name);
-			    }
+
+				if (solution.contains("componentName")) {
+					String name = solution.get("componentName").asLiteral().getValue().toString();
+					System.out.println("Name: " + name);
+					structure.setRecordProperty(Property.getNameInstance(), name);
+				}
 
 				STRUCTURE_RELATION relation = STRUCTURE_RELATION.HAS_CONSTITUENT;
 				if (solution.get("type") != null) {
 					String typeURI = solution.get("type").asResource().getURI();
-					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI) ||
-						"http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)) { // how to deal with subclasses??
+					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI)
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)) { // how
+																										// to
+																										// deal
+																										// with
+																										// subclasses??
 						relation = STRUCTURE_RELATION.HAS_CORE;
 					} else if ("http://purl.bioontology.org/ontology/npo#NPO_1367".equals(typeURI)) {
 						relation = STRUCTURE_RELATION.HAS_COATING;
 					}
 				}
-				record.addStructureRelation(
-					record.getSubstanceUUID(), structure,
-					relation,
-					new Proportion()
-				);
+				record.addStructureRelation(record.getSubstanceUUID(), structure, relation, new Proportion());
 			}
 		} finally {
 			qe.close();
 		}
-		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_sparql.SPARQL(),
-				material.asResource().getURI());
+		sparqlQuery = String.format(ENanoMapperSPARQLQueries.m_sparql.SPARQL(), material.asResource().getURI());
 		query = QueryFactory.create(sparqlQuery);
 		qe = QueryExecutionFactory.create(query, rdf);
 		try {
@@ -302,59 +282,57 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				QuerySolution solution = rs.next();
 				String endpoint = "";
 				if (solution.contains("label"))
-					endpoint = solution.get("label").asLiteral().getValue()
-							.toString();
+					endpoint = solution.get("label").asLiteral().getValue().toString();
 				Protocol protocol = new Protocol(endpoint);
-				I5_ROOT_OBJECTS category = null;
+				Protocol._categories category = null;
+				String bao = null;
 				try {
-					if (solution.contains("assayType")) {
-						String bao = solution.get("assayType").asResource().getURI()
-								.toString();
-						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
-								"http://www.bioassayontology.org/bao#", ""));
-					} else if (solution.contains("type")) {
-						String bao = solution.get("type").asResource().getURI()
-								.toString();
-						category = I5_ROOT_OBJECTS.valueOf(bao.replace(
-								"http://www.bioassayontology.org/bao#", ""));
-					}
+					if (solution.contains("assayType"))
+						bao = solution.get("assayType").asResource().getURI().toString();
+					else if (solution.contains("type"))
+						bao = solution.get("type").asResource().getURI().toString();
+
+					category = GuessTerms.category(bao);
+
 				} catch (Exception x) {
+					System.err.println(x.getMessage());
+					category = null;
 				}
-				//change the default for now
+
+				// change the default for now
 				if (category == null)
-					category = I5_ROOT_OBJECTS.PC_UNKNOWN;
-				protocol.setCategory(category.name() + "_SECTION");
+					category = Protocol._categories.PC_UNKNOWN_SECTION;
+				protocol.setCategory(category.name());
 				protocol.setTopCategory(category.getTopCategory());
 
-				ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
-						.createExperimentRecord(protocol);
+				ProtocolApplication<Protocol, IParams, String, IParams, String> papp = new ProtocolApplication<Protocol, IParams, String, IParams, String>(
+						protocol);
 
-				papp.setDocumentUUID(this.prefix
-						+ "-"
-						+ UUID.nameUUIDFromBytes(
-								solution.get("mgroup").asResource().getURI()
-										.getBytes()).toString());
+				papp.setDocumentUUID(this.prefix + "-"
+						+ UUID.nameUUIDFromBytes(solution.get("mgroup").asResource().getURI().getBytes()).toString());
 				System.out.println("ID: " + papp.getDocumentUUID());
 				// set a reference
 				if (solution.contains("source")) {
-					String doiString = solution.get("source").asResource()
-							.getURI();
-					//the ui is happier with ful URL....
+					String doiString = solution.get("source").asResource().getURI();
+					// the ui is happier with ful URL....
 					/*
-					if (doiString.startsWith("https://")) 		doiString = doiString.substring(8);
-					if (doiString.startsWith("http://"))
-						doiString = doiString.substring(7);
-
-					if (doiString.startsWith("doi.org/"))
-						doiString = "doiString.substring(8);
-					if (doiString.startsWith("dx.doi.org/"))
-						doiString = doiString.substring(11);
-					*/	
+					 * if (doiString.startsWith("https://")) doiString =
+					 * doiString.substring(8); if
+					 * (doiString.startsWith("http://")) doiString =
+					 * doiString.substring(7);
+					 * 
+					 * if (doiString.startsWith("doi.org/")) doiString =
+					 * "doiString.substring(8); if
+					 * (doiString.startsWith("dx.doi.org/")) doiString =
+					 * doiString.substring(11);
+					 */
 					papp.setReference(doiString);
 				}
 				// and now the actual measured value
-				EffectRecord<String, IParams, String> effect = category
-						.createEffectRecord();
+
+				EffectRecord<String, IParams, String> effect = new EffectRecord<String, IParams, String>();
+				effect.setConditions(new Params());
+				// e.g. effect.getConditions().put("Species","Fish");
 
 				/*
 				 * String effectId =
@@ -371,8 +349,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				 */
 				effect.setEndpoint(endpoint);
 				if (solution.contains("value")) {
-					String value = solution.get("value").asLiteral()
-							.getString();
+					String value = solution.get("value").asLiteral().getString();
 					try {
 						effect.setLoValue(Double.parseDouble(value));
 					} catch (Exception x) {
@@ -384,24 +361,23 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 					if (valueLit.contains("-")) {
 						String[] loHigh = valueLit.split("-");
 						try {
-  						    effect.setLoValue(Double.parseDouble(loHigh[0]));
-						    effect.setUpValue(Double.parseDouble(loHigh[1]));
+							effect.setLoValue(Double.parseDouble(loHigh[0]));
+							effect.setUpValue(Double.parseDouble(loHigh[1]));
 						} catch (Exception x) {
 							effect.setTextValue(valueLit);
 						}
 					} else if (valueLit.contains("±")) {
 						String[] leHigh = valueLit.split("±");
 						try {
-  						    effect.setLoValue(Double.parseDouble(leHigh[0]));
-						    effect.setErrorValue(Double.parseDouble(leHigh[1]));
+							effect.setLoValue(Double.parseDouble(leHigh[0]));
+							effect.setErrorValue(Double.parseDouble(leHigh[1]));
 						} catch (Exception x) {
 							effect.setTextValue(valueLit);
 						}
 					} // else: huh?
 				}
 				if (solution.contains("unit"))
-					effect.setUnit(solution.get("unit").asLiteral().getValue()
-							.toString());
+					effect.setUnit(solution.get("unit").asLiteral().getValue().toString());
 				papp.addEffect(effect);
 				record.addMeasurement(papp);
 				System.out.println("Added the measurement");
@@ -423,13 +399,13 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
 				if (qs.contains("label"))
-				    bundle.setName(qs.get("label").asLiteral().getString());
+					bundle.setName(qs.get("label").asLiteral().getString());
 				if (qs.contains("description"))
-				    bundle.setDescription(qs.get("description").asLiteral().getString());
+					bundle.setDescription(qs.get("description").asLiteral().getString());
 				if (qs.contains("publisher"))
-				    bundle.setSource(qs.get("publisher").asLiteral().getString());
+					bundle.setSource(qs.get("publisher").asLiteral().getString());
 				if (qs.contains("license"))
-				    bundle.setLicenseURI(qs.get("license").asResource().getURI().toString());
+					bundle.setLicenseURI(qs.get("license").asResource().getURI().toString());
 				bundles.put(bundle_uri, facet);
 			}
 			return bundles;
@@ -437,6 +413,22 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 			return bundles;
 		} finally {
 			qe_bundles.close();
+		}
+	}
+}
+
+class GuessTerms {
+	private GuessTerms() {
+
+	}
+
+	public static Protocol._categories category(String endpoint) throws Exception {
+		try {
+			String categorystring = endpoint.replace("http://www.bioassayontology.org/bao#", "").replace("http://purl.bioontology.org/ontology/npo#","") + "_SECTION";
+			return Protocol._categories.valueOf(categorystring);
+		} catch (Exception x) {
+			System.err.print(String.format("%s\t%s", x.getMessage(),endpoint));
+			return null;
 		}
 	}
 }
