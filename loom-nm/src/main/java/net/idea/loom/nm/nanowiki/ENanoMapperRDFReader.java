@@ -301,7 +301,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 
 				// change the default for now
 				if (category == null)
-					category = Protocol._categories.PC_UNKNOWN_SECTION;
+					category = Protocol._categories.UNKNOWN_TOXICITY_SECTION;
 				protocol.setCategory(category.name());
 				protocol.setTopCategory(category.getTopCategory());
 
@@ -423,10 +423,27 @@ class GuessTerms {
 	}
 
 	public static Protocol._categories category(String endpoint) throws Exception {
+		//this is really not right, we should not be geeting result outcomes as diameter and LC50 as assay types 
+		String categorystring = endpoint.replace("http://www.bioassayontology.org/bao#", "").replace("http://purl.bioontology.org/ontology/npo#","");
 		try {
-			String categorystring = endpoint.replace("http://www.bioassayontology.org/bao#", "").replace("http://purl.bioontology.org/ontology/npo#","") + "_SECTION";
-			return Protocol._categories.valueOf(categorystring);
+			return Protocol._categories.valueOf(categorystring+ "_SECTION");
 		} catch (Exception x) {
+			// BAO_0002145 LC50 definition is not exactly correct, in case of animal toxicity its 50% of population, and BAO def is about treated cells  
+			if ("BAO_0002145".equals(categorystring)) 
+				return Protocol._categories.UNKNOWN_TOXICITY_SECTION; 
+			//EC%0
+			if ("BAO_0000188".equals(categorystring)) 
+				return Protocol._categories.UNKNOWN_TOXICITY_SECTION;
+			//NOEC
+			if ("ENM_0000060".equals(categorystring))
+				return Protocol._categories.UNKNOWN_TOXICITY_SECTION;
+			if ("BAO_0000190".equals(categorystring))
+				return Protocol._categories.UNKNOWN_TOXICITY_SECTION;
+			//tbchecked
+			if ("NPO_1302".equals(categorystring))
+				return Protocol._categories.ZETA_POTENTIAL_SECTION;
+			//BAO_0001235
+			//can't find what is BAO_0000190 is, but looks like TOX
 			System.err.print(String.format("%s\t%s", x.getMessage(),endpoint));
 			return null;
 		}
