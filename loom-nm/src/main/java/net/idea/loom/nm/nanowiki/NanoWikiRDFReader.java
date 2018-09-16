@@ -78,12 +78,12 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected static SubstanceEndpointsBundle initNanoWikiBundle() {
 		SubstanceEndpointsBundle bundle = new SubstanceEndpointsBundle();
 		bundle.setName("NanoWiki");
-		bundle.setSource("http://dx.doi.org/10.6084/m9.figshare.1330208");
+		bundle.setSource("http://dx.doi.org/10.6084/m9.figshare.4141593.v1");
 		bundle.setrightsHolder("http://orcid.org/0000-0001-7542-0286");
 		bundle.setMaintainer("http://orcid.org/0000-0001-7542-0286");
-		bundle.setURL("NanoWiki");
+		bundle.setURL("https://figshare.com/articles/NanoWiki_5/7075214");
 		bundle.setLicenseURI("https://creativecommons.org/publicdomain/zero/1.0/");
-		bundle.setVersion(3);
+		bundle.setVersion(5);
 		bundle.setBundle_number(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 		bundle.setUserName("enanomapper");
 		bundle.setDescription("Nanomaterials, physicochemical characterisations and toxicity data, imported via NanoWiki RDF dump");
@@ -260,6 +260,14 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 					bf = new BundleRoleFacet(null);
 					SubstanceEndpointsBundle b = new SubstanceEndpointsBundle();
 					b.setStatus("published");
+					b.setLicenseURI(nanowikiBundle.getLicenseURI());
+					b.setMaintainer(nanowikiBundle.getMaintainer());
+					b.setrightsHolder(nanowikiBundle.getrightsHolder());
+					b.setUserName(nanowikiBundle.getUserName());
+					b.setStatus(nanowikiBundle.getStatus());
+					b.setVersion(nanowikiBundle.getVersion());
+					
+										
 					bf.setValue(b);
 					bundles.put(bundle.getURI(), bf);
 				}
