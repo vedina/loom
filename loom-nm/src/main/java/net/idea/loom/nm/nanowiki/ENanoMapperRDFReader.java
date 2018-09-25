@@ -259,11 +259,18 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 				if (solution.get("type") != null) {
 					String typeURI = solution.get("type").asResource().getURI();
 					if ("http://purl.bioontology.org/ontology/npo#NPO_1888".equals(typeURI)
-							|| "http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)) { // how
-																										// to
-																										// deal
-																										// with
-																										// subclasses??
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)  // core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_279".equals(typeURI)   // dendrimer core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1861".equals(typeURI)  // inorganic core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1864".equals(typeURI)  // metal oxide core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1876".equals(typeURI)  // SPION core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1863".equals(typeURI)  // metallic core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1866".equals(typeURI)  // semiconducting core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1865".equals(typeURI)  // SiO2 core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1875".equals(typeURI)  // superparamagnetic core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1860".equals(typeURI)  // organic core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1862".equals(typeURI)  // polymeric core
+							|| "http://purl.bioontology.org/ontology/npo#NPO_1617".equals(typeURI)) {
 						relation = STRUCTURE_RELATION.HAS_CORE;
 					} else if ("http://purl.bioontology.org/ontology/npo#NPO_1367".equals(typeURI)) {
 						relation = STRUCTURE_RELATION.HAS_COATING;
