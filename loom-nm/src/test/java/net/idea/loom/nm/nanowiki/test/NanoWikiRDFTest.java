@@ -115,7 +115,7 @@ public class NanoWikiRDFTest {
 
 	@Test
 	public void testMaterialProperties() throws Exception {
-		testProperties("properties_material", 28);
+		testProperties("properties_material", 29);
 
 	}
 
@@ -151,7 +151,7 @@ public class NanoWikiRDFTest {
 
 	@Test
 	public void testEffectRecords() throws Exception {
-		testProperties("measurement_effectrecords", 872);
+		testProperties("measurement_effectrecords", 876);
 	}
 
 	protected String getNanoWikiFormat() {
@@ -218,7 +218,7 @@ public class NanoWikiRDFTest {
 				@Override
 				public void done() {
 					System.out.println(props);
-					Assert.assertEquals("Number found",props, p.size());
+					Assert.assertEquals("Number found",p.size(),props);
 				}
 			});
 		} finally {
@@ -326,18 +326,18 @@ public class NanoWikiRDFTest {
 		Assert.assertEquals(4, histogram.count("PubChem SID"));
 		Assert.assertEquals(8, histogram.count("COD"));
 		// these come from the external ids, not from bundle assignment!
-		Assert.assertEquals(66, histogram.count("JRC Representative Manufactured Nanomaterials"));
+		Assert.assertEquals(65, histogram.count("JRC Representative Manufactured Nanomaterials"));
 		Assert.assertEquals(25, histogram.count("HOMEPAGE"));
-		Assert.assertEquals(423, histogram.count("SOURCE"));
+		Assert.assertEquals(424, histogram.count("SOURCE"));
 		Assert.assertEquals(5, histogram.count("Close match"));
 		Assert.assertEquals(4, histogram.count("Same as"));
 
 		// [Alternative Identifier x 51, Coating x 68, SOURCE x 390, Composition
 		// x 391, PubChem SID x 4, DATASET x 407, Has_Identifier x 407]
 		// all materials without renamed JRC ones
-		Assert.assertEquals(404, records);
-		Assert.assertEquals(867, measurements);
-		Assert.assertEquals(867, effectrecords);
+		Assert.assertEquals(406, records);
+		Assert.assertEquals(866, measurements);
+		Assert.assertEquals(866, effectrecords);
 
 		logger.log(Level.INFO, "Substance records read\t" + records);
 	}
