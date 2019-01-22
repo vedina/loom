@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>loom</artifactId>
+		<groupId>net.ideaconsult</groupId>
+		<version>1.3.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>loom-x</artifactId>
+	<name>loom-x</name>
+	<description>content analysis</description>
+	<organization>
+		<name>Ideaconsult</name>
+		<url>http://www.ideaconsult.net</url>
+	</organization>
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-dl</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+
+	</dependencies>
+	<properties>
+		<tika.version>1.20</tika.version>
+	</properties>
+</project>

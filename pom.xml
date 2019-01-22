@@ -8,7 +8,7 @@
   <name>Loom</name>
   <description>Weaving the space</description>
   <modules>
-    <module>loom-actorws-cli</module>
+    <module>loom-x</module>
     <module>loom-ops-cli</module>
     <module>loom-pubchemrest-cli</module>
     <module>loom-tb-wiki</module>

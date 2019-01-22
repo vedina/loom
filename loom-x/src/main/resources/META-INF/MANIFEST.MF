@@ -1,13 +1,13 @@
 Manifest-version: 1.0
 Package: net.idea.loom.actorws
 
-Name: net/idea/loom/actorws
-Specification-Title: actorws
+Name: net/idea/loom/x
+Specification-Title: x
 Specification-Version: ${project.version}
 Specification-Vendor: Ideaconsult LTD
-Implementation-Title: net.idea.loom.actorws
+Implementation-Title: net.idea.loom.x
 Implementation-Version: ${project.version}-${buildNumber}-${timestamp}
 Implementation-Vendor: Ideaconsult Ltd.
-Package-Title: net.idea.loom.actorws
+Package-Title: net.idea.loom.x
 Package-Version: ${project.version}
 Package-Vendor: Ideaconsult Ltd.
