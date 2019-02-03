@@ -1,25 +1,21 @@
-package net.idea.loom.x.test;
+package net.idea.loom.x;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.Tika;
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.metadata.Metadata;
-import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import net.idea.loom.x.Xonfiguration;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinder;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -30,42 +26,18 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
 
-public class testAnalysis {
-	@Test
-	public void testImage() throws Exception {
-		// create parser as per desired parser
-		TikaConfig config;
-		String configfile = "configInceptionV3Net.xml";
-		// String configfile = "config_VGG16.xml";
-		try (InputStream stream = testAnalysis.class.getClassLoader()
-				.getResourceAsStream(String.format("net/idea/loom/x/%s", configfile))) {
-			config = new TikaConfig(stream);
-		}
-		Tika parser = new Tika(config);
+public class Xrecognition {
 
-		File imageFile = new File("DSC_0509.JPG");
-		// 12.59.57[R][0@0][0].jpg
-		Metadata meta = new Metadata();
-		long now = System.currentTimeMillis();
-		parser.parse(imageFile, meta);
+	SentenceDetectorME sentenceDetector;
+	Tokenizer tokenizer = null;
+	List<TokenNameFinder> finders = new ArrayList<TokenNameFinder>();
 
-		System.out.println(Arrays.toString(meta.getValues("OBJECT")));
-		System.out.println(String.format("%s", System.currentTimeMillis() - now));
+	public Xrecognition(File modelsPath) throws FileNotFoundException, IOException {
+		loadModels(modelsPath);
 	}
 
-	@Test
-	public void testText_docs() throws Exception {
-		File root_path = new File(Xonfiguration.getProperty("txt_path"));
-		File models_path = new File(Xonfiguration.getProperty("models_path"));
-		File out_path = new File(Xonfiguration.getProperty("results_path"));
-		ner(root_path,models_path,out_path);
-	}
+	protected void loadModels(File models_path) throws FileNotFoundException, IOException {
 
-	public void ner(File root_path,File models_path,File out_path ) throws Exception {
-
-		Tokenizer tokenizer = null;
-		List<TokenNameFinder> finders = new ArrayList<TokenNameFinder>();
-		SentenceDetectorME sentenceDetector;
 		String[] models = new String[] { "en-ner-person.bin", "en-ner-date.bin", "en-ner-organization.bin",
 				"en-ner-location.bin", "en-ner-time.bin", "en-ner-money.bin", "en-ner-percentage.bin" };
 
@@ -81,6 +53,10 @@ public class testAnalysis {
 				TokenNameFinder finder = new NameFinderME(new TokenNameFinderModel(modelIn2));
 				finders.add(finder);
 			}
+
+	}
+
+	public JsonNode process(File root_path, File terms_file) throws Exception {
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode terms = mapper.createObjectNode();
@@ -140,6 +116,8 @@ public class testAnalysis {
 
 		}
 		System.out.println(terms);
-		mapper.writeValue(new File(out_path,"terms.json"), terms);
+		mapper.writeValue(terms_file, terms);
+		System.out.println(terms_file);
+		return terms;
 	}
 }
