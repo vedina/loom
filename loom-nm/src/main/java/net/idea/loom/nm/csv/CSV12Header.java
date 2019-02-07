@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import net.idea.i5.io.I5CONSTANTS;
-import net.idea.i5.io.I5_ROOT_OBJECTS;
 import ambit2.base.data.Property;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
@@ -21,7 +19,9 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
+import ambit2.base.ro.I5CONSTANTS;
 import ambit2.core.io.StringArrayHeader;
+import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	public enum _lines {

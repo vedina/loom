@@ -47,8 +47,8 @@ import ambit2.base.interfaces.ICiteable;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.Proportion;
+import ambit2.base.ro.I5CONSTANTS;
 import ambit2.core.io.IRawReader;
-import net.idea.i5.io.I5CONSTANTS;
 import net.idea.i5.io.I5_ROOT_OBJECTS;
 
 /**
