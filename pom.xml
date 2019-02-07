@@ -202,6 +202,15 @@
         <sourceVersion>1.8</sourceVersion>
       </properties>
     </profile>
+    <profile>
+      <id>JRE9</id>
+      <activation>
+        <jdk>1.9</jdk>
+      </activation>
+      <properties>
+        <sourceVersion>1.9</sourceVersion>
+      </properties>
+    </profile>    
   </profiles>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -209,7 +218,7 @@
     <!-- ambit.sf.net -->
     <ambit.version>4.0.0-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>2.0.1-SNAPSHOT</i5.version>
+    <i5.version>2.1.0-SNAPSHOT</i5.version>
 	<apache.jena.version>2.13.0</apache.jena.version>
     <org.apache.httpcomponents.httpclient.version>4.5</org.apache.httpcomponents.httpclient.version>
     <jackson.version>2.4.0</jackson.version>
