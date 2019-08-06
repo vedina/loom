@@ -56,7 +56,7 @@ public class ENanoMapperRDFReader extends DefaultIteratingChemObjectReader
 	protected QueryExecution qe_materials;
 	protected ResultSet materials;
 	protected SubstanceRecord record;
-	protected Logger logger;
+	protected transient Logger logger;
 	public static final Properties substance_types = new Properties();
 
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
