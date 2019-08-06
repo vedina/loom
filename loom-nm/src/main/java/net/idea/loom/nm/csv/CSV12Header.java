@@ -23,6 +23,7 @@ import ambit2.base.ro.I5CONSTANTS;
 import ambit2.core.io.StringArrayHeader;
 import net.idea.i5.io.I5_ROOT_OBJECTS;
 
+@Deprecated
 public class CSV12Header extends StringArrayHeader<I5_ROOT_OBJECTS> {
 	public enum _lines {
 		endpointcategory {
