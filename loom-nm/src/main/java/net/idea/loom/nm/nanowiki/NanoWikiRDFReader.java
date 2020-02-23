@@ -787,6 +787,7 @@ class ProcessMeasurement extends ProcessSolution {
 
 		String assayType = null;
 		String endpointType = null; // FIXME: do something with this
+		String endpointCategory = null;
 		String bao = null;
 		String celline = null;
 		try {
@@ -804,6 +805,12 @@ class ProcessMeasurement extends ProcessSolution {
 			}
 		} catch (Exception x) {
 		}
+		try {
+			if (qs.get("endpointCategory") != null) {
+				endpointCategory = qs.get("endpointCategory").asResource().getLocalName();
+			}
+		} catch (Exception x) {
+		}		
 		try {
 			bao = qs.get("bao").asResource().getURI();
 		} catch (Exception x) {
@@ -830,16 +837,18 @@ class ProcessMeasurement extends ProcessSolution {
 		I5_ROOT_OBJECTS category = null;
 
 		try {
-			if (bao != null) {
-				category = I5_ROOT_OBJECTS.valueOf(bao.replace(
-						"http://www.bioassayontology.org/bao#", ""));
+			System.out.println(endpointCategory);
+			if (endpointCategory != null) {
+				//category = I5_ROOT_OBJECTS.valueOf(bao.replace("http://www.bioassayontology.org/bao#", ""));
+				category = I5_ROOT_OBJECTS.valueOf(endpointCategory);
 			}
+			protocol.setEndpoint(endpointCategory);
 		} catch (Exception x) {
 		}
 		if (category == null && endpointType != null) {
 			boolean match = false;
 			for (Protocol._categories protCategory : Protocol._categories.values()) {
-				if (endpointType.equals(protCategory.getOntologyURI())) {
+				if (endpointCategory.equals(protCategory.getOntologyURI())) {
 					protocol.setCategory(protCategory.name());
 					protocol.setTopCategory(protCategory.getTopCategory());
 					match = true;
@@ -858,7 +867,7 @@ class ProcessMeasurement extends ProcessSolution {
 			measuredEndpoint = ep.getTag();
 			default_units = ep.getUnit();
 		} catch (Exception x) {
-			x.printStackTrace();
+			System.err.println(x.getMessage());
 		}
 
 		if (category == null)
