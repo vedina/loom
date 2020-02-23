@@ -16,7 +16,8 @@ WHERE {
 	OPTIONAL {?measurement mw:Property-3AHas_Dose_Units ?doseUnit.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Class ?resultInterpretation.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint ?endpointResource. ?endpointResource rdfs:label ?endpoint.}
-	OPTIONAL {?endpointResource owl:sameAs ?endpointURI. ?endpointURI  mw:Property-3AHas_Category ?endpointCategory.}
+	OPTIONAL {?endpointResource owl:sameAs ?endpointURI.}
+	OPTIONAL {?endpointResource  mw:Property-3AHas_Category ?endpointCategory.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value ?value.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Min ?valueMin.}
 	OPTIONAL {?measurement mw:Property-3AHas_Endpoint_Value_Max ?valueMax.}

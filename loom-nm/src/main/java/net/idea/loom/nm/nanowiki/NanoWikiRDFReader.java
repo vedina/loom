@@ -74,18 +74,18 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	protected HashMap<String, BundleRoleFacet> bundles = new HashMap<String, BundleRoleFacet>();
 	protected String _rdfformat = "RDF/XML";
 	protected SubstanceEndpointsBundle nanowikiBundle = initNanoWikiBundle();
-	
-	protected static Map<String,UUID> bundleNumbers = initBundleNumbers();
-	
-	protected static Map<String,UUID> initBundleNumbers() {
-		HashMap<String,UUID> map = new HashMap<String,UUID	>();
-		map.put("ArrayExpress",UUID.fromString("ee0cdb4c-cce1-11e5-946b-80ee7350bfa7"));
-		map.put("Sigma-Aldrich Products",UUID.fromString("13e147c3-ccb5-11e5-946b-80ee7350bfa7"));
-		map.put("JRC Representative Nanomaterials",UUID.fromString("646ab3a4-ccb5-11e5-946b-80ee7350bfa7"));
-		map.put("Crystallography Open Database",UUID.fromString("804608b3-ccb5-11e5-946b-80ee7350bfa7"));
-		map.put("NanoWiki",UUID.fromString("00000000-0000-0000-0000-000000000001"));
+
+	protected static Map<String, UUID> bundleNumbers = initBundleNumbers();
+
+	protected static Map<String, UUID> initBundleNumbers() {
+		HashMap<String, UUID> map = new HashMap<String, UUID>();
+		map.put("ArrayExpress", UUID.fromString("ee0cdb4c-cce1-11e5-946b-80ee7350bfa7"));
+		map.put("Sigma-Aldrich Products", UUID.fromString("13e147c3-ccb5-11e5-946b-80ee7350bfa7"));
+		map.put("JRC Representative Nanomaterials", UUID.fromString("646ab3a4-ccb5-11e5-946b-80ee7350bfa7"));
+		map.put("Crystallography Open Database", UUID.fromString("804608b3-ccb5-11e5-946b-80ee7350bfa7"));
+		map.put("NanoWiki", UUID.fromString("00000000-0000-0000-0000-000000000001"));
 		return map;
-		
+
 	}
 
 	protected static SubstanceEndpointsBundle initNanoWikiBundle() {
@@ -99,7 +99,8 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		bundle.setVersion(5);
 		bundle.setBundle_number(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 		bundle.setUserName("enanomapper");
-		bundle.setDescription("Nanomaterials, physicochemical characterisations and toxicity data, imported via NanoWiki RDF dump");
+		bundle.setDescription(
+				"Nanomaterials, physicochemical characterisations and toxicity data, imported via NanoWiki RDF dump");
 		bundle.setStatus("published");
 		return bundle;
 	}
@@ -122,36 +123,31 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	public void setLogger(Logger logger) {
-		this.logger = logger == null ? Logger.getLogger(getClass().getName())
-				: logger;
+		this.logger = logger == null ? Logger.getLogger(getClass().getName()) : logger;
 	}
 
 	public NanoWikiRDFReader(Reader reader) throws CDKException, IOException {
 		this(reader, null);
 	}
 
-	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException,
-			IOException {
+	public NanoWikiRDFReader(Reader reader, Logger logger) throws CDKException, IOException {
 		this(reader, logger, "RDF/XML");
 	}
 
 	/**
 	 * @param reader
 	 * @param logger
-	 * @param rdfformat
-	 *            https://jena.apache.org/documentation/io/
+	 * @param rdfformat https://jena.apache.org/documentation/io/
 	 * @throws CDKException
 	 * @throws IOException
 	 */
-	public NanoWikiRDFReader(Reader reader, Logger logger, String rdfformat)
-			throws CDKException, IOException {
+	public NanoWikiRDFReader(Reader reader, Logger logger, String rdfformat) throws CDKException, IOException {
 		super();
 		set_rdfformat(rdfformat);
 		setReader(reader);
 		InputStream in = null;
 		try {
-			in = getClass().getClassLoader().getResourceAsStream(
-					"net/idea/loom/nm/nanowiki/substance_type.properties");
+			in = getClass().getClassLoader().getResourceAsStream("net/idea/loom/nm/nanowiki/substance_type.properties");
 			substance_types.load(in);
 		} finally {
 			if (in != null)
@@ -165,10 +161,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 	}
 
 	public static String generateUUIDfromString(String prefix, String id) {
-		return prefix
-				+ "-"
-				+ (id == null ? UUID.randomUUID() : UUID.nameUUIDFromBytes(id
-						.getBytes()));
+		return prefix + "-" + (id == null ? UUID.randomUUID() : UUID.nameUUIDFromBytes(id.getBytes()));
 	}
 
 	protected HashMap<String, BundleRoleFacet> readBundles() throws IOException {
@@ -189,9 +182,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				bundle.setStatus(nanowikiBundle.getStatus());
 				bundle.setVersion(nanowikiBundle.getVersion());
 				bundle.setStatus("published");
-				
-				
-				
+
 				BundleRoleFacet facet = new BundleRoleFacet(null);
 				facet.setValue(bundle);
 				String bundle_uri = qs.get("b").asResource().getURI();
@@ -199,11 +190,11 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 				bundle.setDescription(qs.get("purpose").asLiteral().getString());
 				bundle.setStatus(qs.get("status").asLiteral().getString());
 				bundles.put(bundle_uri, facet);
-				
+
 				UUID bundleNumber = bundleNumbers.get(bundle.getName());
-				if (bundleNumber==null)
-					bundleNumber= UUID.nameUUIDFromBytes(bundle.getName().getBytes());
-				
+				if (bundleNumber == null)
+					bundleNumber = UUID.nameUUIDFromBytes(bundle.getName().getBytes());
+
 				bundle.setBundle_number(bundleNumber);
 			}
 			return bundles;
@@ -266,7 +257,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 			Resource bundle = qs.getResource("bundle");
 			record = new SubstanceRecord();
 			record.setExternalids(new ArrayList<ExternalIdentifier>());
-			/** 
+			/**
 			 * add nanowikibundle
 			 */
 			BundleRoleFacet bf = new BundleRoleFacet(null);
@@ -287,8 +278,7 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 					b.setUserName(nanowikiBundle.getUserName());
 					b.setStatus(nanowikiBundle.getStatus());
 					b.setVersion(nanowikiBundle.getVersion());
-					
-										
+
 					bf.setValue(b);
 					bundles.put(bundle.getURI(), bf);
 				}
@@ -331,35 +321,25 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		return record;
 	}
 
-	private void parseCoatings(Model rdf, RDFNode material,
-			SubstanceRecord record) throws IOException {
-		ProcessSolution.execQuery(rdf, String.format(NW.m_coating.SPARQL(),
-				material.asResource().getURI()), new ProcessCoatings(rdf,
-				material, record));
+	private void parseCoatings(Model rdf, RDFNode material, SubstanceRecord record) throws IOException {
+		ProcessSolution.execQuery(rdf, String.format(NW.m_coating.SPARQL(), material.asResource().getURI()),
+				new ProcessCoatings(rdf, material, record));
 	}
 
 	private void parseMaterial(Model rdf, RDFNode material,
 
-	SubstanceRecord record) throws IOException {
-		ProcessSolution.execQuery(rdf, String.format(
-				NW.m_materialprops.SPARQL(), material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				material.asResource().getURI(),
-				// new nw3
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI(), material.asResource().getURI(),
-				material.asResource().getURI()), new ProcessMaterial(rdf,
-				material, record));
+			SubstanceRecord record) throws IOException {
+		ProcessSolution.execQuery(rdf,
+				String.format(NW.m_materialprops.SPARQL(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						// new nw3
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI(), material.asResource().getURI(),
+						material.asResource().getURI(), material.asResource().getURI()),
+				new ProcessMaterial(rdf, material, record));
 	}
 
 }
@@ -428,11 +408,71 @@ class ProcessMeasurement extends ProcessSolution {
 	void processHeader(ResultSet rs) {
 	}
 
+	enum endpoint_category {
+		Additional_physico_2Dchemical_information, Additional_toxicological_information {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.UNKNOWN_TOXICITY_SECTION;
+			}
+		},
+		Boiling_Point_Category {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_BOILING_SECTION;
+			}
+		},
+		Cell_Viability {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000068_SECTION;
+			}
+		},
+		Cellular_uptake_category {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.NPO_296_SECTION;
+			}
+		},
+
+		Fibre_length_and_diameter_distribution {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
+			}
+		},
+		Genetic_toxicity_in_vitro {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.TO_GENETIC_IN_VITRO_SECTION;
+			}
+		},
+		Nanomaterial_Zeta_potential {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ZETA_POTENTIAL_SECTION;
+			}
+		},
+		Nanomaterial_crystalline_phase {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.CRYSTALLINE_PHASE_SECTION;
+			}
+		},
+		Nanomaterial_specific_surface_area {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.SPECIFIC_SURFACE_AREA_SECTION;
+			}
+		},
+		freezing_point {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_MELTING_SECTION;
+			}
+		};
+
+		public Protocol._categories getCategory() {
+			return Protocol._categories.PC_UNKNOWN_SECTION;
+		}
+
+	};
+
 	enum endpoints {
 		BET {
+
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.SPECIFIC_SURFACE_AREA_SECTION;
 			}
 
 			@Override
@@ -442,23 +482,22 @@ class ProcessMeasurement extends ProcessSolution {
 		},
 		HOMO {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_UNKNOWN;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_UNKNOWN_SECTION;
 			}
 
 		},
 		LUMO {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_UNKNOWN;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_UNKNOWN_SECTION;
 			}
-
 		},
 
-		Boiling_Point {
+		BOILING_POINT {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_BOILING;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_BOILING_SECTION;
 			}
 
 			@Override
@@ -466,10 +505,11 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.BOILINGPOINT;
 			}
 		},
-		Melting_Point {
+		MELTING_POINT {
+
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_MELTING;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_MELTING_SECTION;
 			}
 
 			@Override
@@ -477,10 +517,11 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.eMELTINGPOINT;
 			}
 		},
-		Zeta_Potential {
+		ZETA_POTENTIAL {
+
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.ZETA_POTENTIAL;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ZETA_POTENTIAL_SECTION;
 			}
 
 			@Override
@@ -493,10 +534,11 @@ class ProcessMeasurement extends ProcessSolution {
 				return "mV";
 			}
 		},
-		Isoelectric_Point {
+		ISOELECTRIC_POINT {
+
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.ZETA_POTENTIAL;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ZETA_POTENTIAL_SECTION;
 			}
 
 			@Override
@@ -504,10 +546,11 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.eISOELECTRIC_POINT;
 			}
 		},
-		Aggregation {
+		AGGREGATION {
+
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.AGGLOMERATION_AGGREGATION;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.AGGLOMERATION_AGGREGATION_SECTION;
 			}
 
 			@Override
@@ -515,10 +558,10 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.eAGGLO_AGGR_SIZE;
 			}
 		},
-		Primary_Particle_Size {
+		PRIMARY_PARTICLE_SIZE {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 
 			@Override
@@ -526,10 +569,25 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.pPARTICLESIZE;
 			}
 		},
-		Mean_Particle_Size {
+		MEAN_PARTICLE_SIZE {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
+			}
+
+			@Override
+			public String getTag() {
+				return I5CONSTANTS.pPARTICLESIZE;
+			}
+			@Override
+			public String getResultType() {
+				return "MEAN";
+			}
+		},
+		PARTICLE_SIZE {
+			@Override
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 
 			@Override
@@ -537,81 +595,76 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.pPARTICLESIZE;
 			}
 		},
-		Particle_Size {
+		AVERAGE_LENGTH {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 
 			@Override
 			public String getTag() {
-				return I5CONSTANTS.pPARTICLESIZE;
+				return "LENGTH";
+			}
+			@Override
+			public String getResultType() {
+				return "AVERAGE";
 			}
 		},
-		Average_Length {
+		DIAMETER {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 
 			@Override
 			public String getTag() {
-				return "Average Length";
+				return "DIAMETER";
 			}
 		},
-		Diameter {
+		Z_AVERAGE_DIAMETER {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
-
 			@Override
 			public String getTag() {
-				return "Diameter";
+				return "DIAMETER";
+			}
+			@Override
+			public String getResultType() {
+				return "Z-AVERAGE";
 			}
 		},
-		Z_Average_Diameter {
+		INNER_DIAMETER {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 		},
-		Inner_Diameter {
+		WIDTH {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 		},
-		Width {
+		HYDRODYNAMIC_SIZE {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
-			}
-		},
-		Hydrodynamic_size {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 
+		},
+		THICKNESS {
+
 			@Override
-			public String getTag() {
-				// hydrodynamic and aerodynamic size is the same
-				// MMAD is Mass median aerodynamic diameter - is this what
-				// NanoWiki assumes here?
-				return I5CONSTANTS.pMMAD;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_GRANULOMETRY_SECTION;
 			}
 		},
-		Thickness {
+		SHAPE {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.PC_GRANULOMETRY;
-			}
-		},
-		Shape {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.ASPECT_RATIO_SHAPE;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ASPECT_RATIO_SHAPE_SECTION;
 			}
 
 			@Override
@@ -619,10 +672,10 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.eSHAPE;
 			}
 		},
-		Specific_Surface_Area {
+		SPECIFIC_SURFACE_AREA {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.SPECIFIC_SURFACE_AREA_SECTION;
 			}
 
 			@Override
@@ -630,10 +683,10 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 			}
 		},
-		Surface_Area {
+		SURFACE_AREA {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.SPECIFIC_SURFACE_AREA;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.SPECIFIC_SURFACE_AREA_SECTION;
 			}
 
 			@Override
@@ -641,69 +694,32 @@ class ProcessMeasurement extends ProcessSolution {
 				return I5CONSTANTS.SPECIFIC_SURFACE_AREA;
 			}
 		},
-		Toxicity {
-			// what kind of toxicity endpoint???
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.TO_GENETIC_IN_VITRO;
-			}
-		},
-		Toxicity_Classifier {
-			// what kind of toxicity endpoint???
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.TO_GENETIC_IN_VITRO;
-			}
+
+		TOXICITY_CLASSIFIER {
 
 			@Override
 			public String getTag() {
 				return name().replace("_", " ");
 			}
 		},
-		Oxidation_State_Concentration {
+		OXIDATION_STATE_CONCENTRATION {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000037_SECTION;
 			}
 		},
-		IC50 {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
-			}
-		},
-		Log_Reciprocal_EC50 {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0003009;
-				// Cell_Viability_Assay
-			}
 
-		},
-		Cytotoxicity {
+		CYTOTOXICITY {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0002993;
-				// Cytotoxicity_Assay
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000068_SECTION;
 			}
 		},
-		GI50, Log_GI50, Negative_Log_GI50 {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0002100;
-				// Cell_Growth_Assay
-			}
 
-		},
-		Particles_Per_Cell {
+		PARTICLES_PER_CELL {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000068_SECTION;
 			}
 
 			@Override
@@ -711,11 +727,10 @@ class ProcessMeasurement extends ProcessSolution {
 				return "";
 			}
 		},
-		Percentage_Non_2DViable_Cells, Percentage_Viable_Cells {
+		PERCENTAGE_NON_2DVIABLE_CELLS, PERCENTAGE_VIABLE_CELLS {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0003009;
-				// Cell_Viability_Assay
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000068_SECTION;
 			}
 
 			@Override
@@ -723,55 +738,94 @@ class ProcessMeasurement extends ProcessSolution {
 				return "%";
 			}
 		},
-		Concentration_in_cell {
+		CONCENTRATION_IN_CELL {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				// best guess
-				return I5_ROOT_OBJECTS.BAO_0002993;
+			public Protocol._categories getCategory() {
+				return Protocol._categories.NPO_296_SECTION;
 			}
 		},
-		LDH_Release {
+		DENSITY {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0003009;
-				// Cell_Membrane_Integrity_Assay
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_DENSITY_SECTION;
+			}
+		},		
+		PURITY {
+			@Override
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ANALYTICAL_METHODS_SECTION;
 			}
 		},
-		Metabolic_Activity {
+		LDH_RELEASE {
 			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0003009;
-				// Metabolic_Activity_Assay
+			public Protocol._categories getCategory() {
+				return Protocol._categories.ENM_0000068_SECTION;
 			}
 		},
-		DNA_in_Tail {
-			@Override
-			public I5_ROOT_OBJECTS getCategory() {
-				return I5_ROOT_OBJECTS.BAO_0002167;
-				// DNA_Damage_Assay
-			}
-		},
-		Concentration_in_culture_medium {
+		METABOLIC_ACTIVITY {
 
 		},
-		Bioassay_Profile {
-		// ????
+		DNA_IN_TAIL {
+			@Override
+			public Protocol._categories getCategory() {
+				return Protocol._categories.TO_GENETIC_IN_VITRO_SECTION;
+			}
 		},
-		Enzyme_activity {
-			
-			//http://purl.obolibrary.org/obo/GO_0003824
+		CONCENTRATION_IN_CULTURE_MEDIUM {
+
+		},
+		BIOASSAY_PROFILE {
+			// ????
+		},
+		ENZYME_ACTIVITY {
+
+			// http://purl.obolibrary.org/obo/GO_0003824
 		};
-		public I5_ROOT_OBJECTS getCategory() {
-			return I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+
+		public Protocol._categories getCategory() {
+			return Protocol._categories.UNKNOWN_TOXICITY_SECTION;
 		}
 
 		public String getTag() {
-			return name();
+			return name().toUpperCase();
 		}
 
 		public String getUnit() {
 			return null;
 		}
+		public String getResultType() {
+			return null;
+		}
+	}
+
+	public EffectRecord<String, IParams, String> createEffectRecord() {
+		EffectRecord<String, IParams, String> record = new EffectRecord<String, IParams, String>();
+		record.setConditions(new Params());
+		String[] conditions = new String[] {};
+		if (conditions != null)
+			for (String condition : conditions)
+				record.getConditions().put(condition, null);
+		return record;
+	}
+
+	public String[] getProtocolParameters() {
+		return new String[] {};
+	}
+
+	public IParams createProtocolParameters() {
+		IParams protocolParams = new Params();
+		String[] params = getProtocolParameters();
+		if (params != null)
+			for (String param : params)
+				protocolParams.put(param, null);
+		return protocolParams;
+	}
+
+	public ProtocolApplication<Protocol, IParams, String, IParams, String> createExperimentRecord(Protocol protocol) {
+		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = new ProtocolApplication<Protocol, IParams, String, IParams, String>(
+				protocol);
+		experiment.setParameters(createProtocolParameters());
+		return experiment;
 	}
 
 	@Override
@@ -779,12 +833,20 @@ class ProcessMeasurement extends ProcessSolution {
 
 		String endpoint = null;
 		try {
-			endpoint = qs.get("endpoint").asResource().getLocalName()
-					.replace("_", " ");
+			endpoint = qs.get("endpoint").asResource().getLocalName().replace("_", " ");
 		} catch (Exception x) {
 			endpoint = qs.get("endpoint").toString();
 		}
-
+		String valueUnit= "";
+		try {
+			RDFNode nodeunit = qs.get("valueUnit");
+			if (nodeunit != null)
+				valueUnit = qs.get("valueUnit").asResource().getLocalName().replace("_", " ");
+			else 
+				valueUnit = null;
+		} catch (Exception x) {
+			valueUnit = qs.get("valueUnit").toString();
+		}
 		String assayType = null;
 		String endpointType = null; // FIXME: do something with this
 		String endpointCategory = null;
@@ -810,7 +872,8 @@ class ProcessMeasurement extends ProcessSolution {
 				endpointCategory = qs.get("endpointCategory").asResource().getLocalName();
 			}
 		} catch (Exception x) {
-		}		
+			x.printStackTrace();
+		}
 		try {
 			bao = qs.get("bao").asResource().getURI();
 		} catch (Exception x) {
@@ -833,48 +896,61 @@ class ProcessMeasurement extends ProcessSolution {
 
 		Protocol protocol = new Protocol(endpoint);
 		String measuredEndpoint = endpoint;
-		String default_units = endpoint;
-		I5_ROOT_OBJECTS category = null;
+		String default_units = valueUnit;
+		Protocol._categories category = null;
 
 		try {
 			System.out.println(endpointCategory);
-			if (endpointCategory != null) {
-				//category = I5_ROOT_OBJECTS.valueOf(bao.replace("http://www.bioassayontology.org/bao#", ""));
-				category = I5_ROOT_OBJECTS.valueOf(endpointCategory);
-			}
 			protocol.setEndpoint(endpointCategory);
+			if (endpointCategory != null)
+				try {
+					// category =
+					// I5_ROOT_OBJECTS.valueOf(bao.replace("http://www.bioassayontology.org/bao#",
+					// ""));
+					category = endpoint_category.valueOf(endpointCategory.replace("-", "_").replace(" ", "_")).getCategory();
+					protocol.setTopCategory(category.getTopCategory());
+					protocol.setCategory(category.name());
+				} catch (Exception x) {
+					x.printStackTrace();
+				}
+
 		} catch (Exception x) {
+			System.err.println(x.getMessage());
 		}
+		/*
 		if (category == null && endpointType != null) {
 			boolean match = false;
 			for (Protocol._categories protCategory : Protocol._categories.values()) {
-				if (endpointCategory.equals(protCategory.getOntologyURI())) {
+				if (endpointCategory.equals(protCategory.toString())) {
 					protocol.setCategory(protCategory.name());
 					protocol.setTopCategory(protCategory.getTopCategory());
+					protocol.setEndpoint(endpointCategory);
 					match = true;
 					break;
 				}
 			}
-			if (!match) System.out.println("NO MATCH! " + endpointType);
+			if (!match)
+				System.out.println("NO MATCH! " + endpointType);
 		}
+		*/
 
 		try {
 
-			endpoints ep = endpoints.valueOf(endpoint.replace("-", "_")
-					.replace(" ", "_"));
+			endpoints ep = endpoints.valueOf(endpoint.replace("-", "_").replace(" ", "_").toUpperCase());
 			if (category == null)
 				category = ep.getCategory();
-			measuredEndpoint = ep.getTag();
+			measuredEndpoint = ep.getTag().toUpperCase();
 			default_units = ep.getUnit();
 		} catch (Exception x) {
 			System.err.println(x.getMessage());
 		}
 
 		if (category == null)
-			category = I5_ROOT_OBJECTS.UNKNOWN_TOXICITY;
+			category = Protocol._categories.UNKNOWN_TOXICITY_SECTION;
 		if (protocol.getCategory() == null) {
-			protocol.setCategory(category.name() + "_SECTION");
 			protocol.setTopCategory(category.getTopCategory());
+			protocol.setCategory(category.name());
+			protocol.setEndpoint(endpointCategory);
 		}
 
 		RDFNode method = qs.get("method");
@@ -895,30 +971,25 @@ class ProcessMeasurement extends ProcessSolution {
 			} catch (Exception x) {
 			}
 
-		ProtocolApplication<Protocol, IParams, String, IParams, String> papp = category
-				.createExperimentRecord(protocol);
+		ProtocolApplication<Protocol, IParams, String, IParams, String> papp = createExperimentRecord(protocol);
 		// papp.setReliability(reliability)
 		try {
 			if (method != null)
-				papp.getParameters().put(I5CONSTANTS.methodType,
-						method.asResource().getLocalName().replace("_", " "));
+				papp.getParameters().put(I5CONSTANTS.methodType, method.asResource().getLocalName().replace("_", " "));
 		} catch (Exception x) {
 
 		}
-		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI",
-				null));
+		papp.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
 
 		try {
 			if (qs.get("material_doilink") != null)
-				papp.setReference(qs.get("material_doilink").asResource()
-						.getURI());
+				papp.setReference(qs.get("material_doilink").asResource().getURI());
 		} catch (Exception x) {
 		}
 
 		try {
 			if (qs.get("material_year") != null)
-				papp.setReferenceYear(qs.get("material_year").asLiteral()
-						.getString());
+				papp.setReferenceYear(qs.get("material_year").asLiteral().getString());
 		} catch (Exception x) {
 
 		}
@@ -941,8 +1012,8 @@ class ProcessMeasurement extends ProcessSolution {
 
 		/*
 		 * if (papp.getReference() == null && homepage != null) {
-		 * papp.setReference(homepage); //
-		 * papp.setReferenceOwner(citation.getTitle()); }
+		 * papp.setReference(homepage); // papp.setReferenceOwner(citation.getTitle());
+		 * }
 		 */
 		papp.setReferenceOwner("NanoWiki");
 		Resource measurement = qs.get("measurement").asResource();
@@ -952,21 +1023,18 @@ class ProcessMeasurement extends ProcessSolution {
 		} catch (Exception x) {
 		}
 		try {
-			papp.setInterpretationResult(qs.get("resultInterpretation")
-					.asLiteral().getString());
+			papp.setInterpretationResult(qs.get("resultInterpretation").asLiteral().getString());
 		} catch (Exception x) {
 		}
 
 		if (celline != null)
 			papp.getParameters().put("Cell line", celline);
 
-		EffectRecord<String, IParams, String> effect = category
-				.createEffectRecord();
+		EffectRecord<String, IParams, String> effect = createEffectRecord();
 		effect.setEndpoint(measuredEndpoint);
 
 		try {
-			effect.setTextValue(qs.get("resultInterpretation").asLiteral()
-					.getString());
+			effect.setTextValue(qs.get("resultInterpretation").asLiteral().getString());
 		} catch (Exception x) {
 		}
 
@@ -989,8 +1057,7 @@ class ProcessMeasurement extends ProcessSolution {
 		RDFNode value = qs.get("value");
 		try {
 			if (value != null)
-				effect.setLoValue(Double.parseDouble(value.asLiteral()
-						.getString()));
+				effect.setLoValue(Double.parseDouble(value.asLiteral().getString()));
 		} catch (Exception x) {
 			effect.setTextValue(value.asLiteral().getString());
 			papp.setInterpretationResult(value.asLiteral().getString());
@@ -998,8 +1065,7 @@ class ProcessMeasurement extends ProcessSolution {
 
 		RDFNode valueError = qs.get("valueError");
 		try {
-			effect.setStdDev(Double.parseDouble(valueError.asLiteral()
-					.getString()));
+			effect.setStdDev(Double.parseDouble(valueError.asLiteral().getString()));
 		} catch (Exception x) {
 		}
 
@@ -1034,8 +1100,7 @@ class ProcessMeasurement extends ProcessSolution {
 		}
 
 		try {
-			ProcessSolution.execQuery(rdf, String.format(
-					NW.m_condition.SPARQL(), measurement.getURI()),
+			ProcessSolution.execQuery(rdf, String.format(NW.m_condition.SPARQL(), measurement.getURI()),
 					new ProcessCondition(effect));
 
 			papp.addEffect(effect);
@@ -1137,17 +1202,14 @@ class ProcessCoatings extends ProcessSolution {
 	public void process(ResultSet rs, QuerySolution qs) {
 
 		// now add the same info as measurement - at least to test the approach
-		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY
-				.getProtocol("Unknown");
+		Protocol protocol = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.getProtocol("Unknown");
 		ProtocolApplication<Protocol, IParams, String, IParams, String> experiment = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY
 				.createExperimentRecord(protocol);
-		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString(
-				"NWKI", null));
+		experiment.setDocumentUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
 		// record.addMeasurement(experiment);// should be one and the same
 
 		try {
-			experiment
-					.setReference(qs.get("study").asResource().getLocalName());
+			experiment.setReference(qs.get("study").asResource().getLocalName());
 		} catch (Exception x) {
 		}
 
@@ -1156,24 +1218,20 @@ class ProcessCoatings extends ProcessSolution {
 		// experiment...
 		EffectRecord<String, IParams, String> erecord;
 
-		if (record.getRelatedStructures() == null
-				|| (record.getRelatedStructures().size() < 2)) {
+		if (record.getRelatedStructures() == null || (record.getRelatedStructures().size() < 2)) {
 			if (record.getFormula() != null && !"".equals(record.getFormula())) {
-				erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY
-						.createEffectRecord();
+				erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 				erecord.setEndpoint("ATOMIC COMPOSITION");
 				erecord.setTextValue(record.getFormula());
 				erecord.getConditions().put("TYPE", new Value("CORE"));
-				erecord.getConditions().put("ELEMENT_OR_GROUP",
-						new Value(record.getFormula()));
+				erecord.getConditions().put("ELEMENT_OR_GROUP", new Value(record.getFormula()));
 				experiment.addEffect(erecord);
 			}
 		}
 		// coating
 		IStructureRecord coating = new StructureRecord();
 
-		record.addStructureRelation(composition_uuid, coating,
-				STRUCTURE_RELATION.HAS_COATING, new Proportion());
+		record.addStructureRelation(composition_uuid, coating, STRUCTURE_RELATION.HAS_COATING, new Proportion());
 		try {
 			coating.setRecordProperty(Property.getTradeNameInstance("COATING"),
 					qs.get("coating").asResource().getLocalName());
@@ -1181,8 +1239,7 @@ class ProcessCoatings extends ProcessSolution {
 		}
 		;
 		try {
-			coating.setRecordProperty(Property.getNameInstance(),
-					qs.get("chemical").asResource().getLocalName());
+			coating.setRecordProperty(Property.getNameInstance(), qs.get("chemical").asResource().getLocalName());
 		} catch (Exception x) {
 		}
 		;
@@ -1194,10 +1251,8 @@ class ProcessCoatings extends ProcessSolution {
 		}
 		;
 		try {
-			coating.setRecordProperty(
-					Property.getI5UUIDInstance(),
-					NanoWikiRDFReader.generateUUIDfromString("NWKI",
-							qs.get("chemical").asResource().getLocalName()));
+			coating.setRecordProperty(Property.getI5UUIDInstance(),
+					NanoWikiRDFReader.generateUUIDfromString("NWKI", qs.get("chemical").asResource().getLocalName()));
 		} catch (Exception x) {
 			coating.setRecordProperty(Property.getI5UUIDInstance(),
 					NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
@@ -1206,8 +1261,7 @@ class ProcessCoatings extends ProcessSolution {
 		erecord = I5_ROOT_OBJECTS.SURFACE_CHEMISTRY.createEffectRecord();
 		erecord.setEndpoint("ATOMIC COMPOSITION");
 		try {
-			erecord.getConditions().put("ELEMENT_OR_GROUP",
-					new Value(coating.getContent()));
+			erecord.getConditions().put("ELEMENT_OR_GROUP", new Value(coating.getContent()));
 		} catch (Exception x) {
 		}
 		;
@@ -1224,8 +1278,7 @@ class ProcessCoatings extends ProcessSolution {
 		} catch (Exception x) {
 		}
 		try {
-			erecord.getConditions().put("DESCRIPTION",
-					new Value(qs.get("chemical").asResource().getLocalName()));
+			erecord.getConditions().put("DESCRIPTION", new Value(qs.get("chemical").asResource().getLocalName()));
 		} catch (Exception x) {
 		}
 		experiment.addEffect(erecord);
@@ -1256,18 +1309,14 @@ class ProcessMaterial extends ProcessSolution {
 		}
 		;
 
-		record.setReferenceSubstanceUUID(NanoWikiRDFReader
-				.generateUUIDfromString("NWKI", name));
-		record.setSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString(
-				"NWKI", name));
+		record.setReferenceSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", name));
+		record.setSubstanceUUID(NanoWikiRDFReader.generateUUIDfromString("NWKI", name));
 		// ?source variable is a pointer to the paper the material
 		// try
 		// {record.setOwnerName(qs.get("source").asResource().getLocalName());}
 		// catch (Exception x) {};
 		record.setOwnerName("NanoWiki");
-		record.setOwnerUUID("NWKI-"
-				+ UUID.nameUUIDFromBytes(record.getOwnerName().getBytes())
-						.toString());
+		record.setOwnerUUID("NWKI-" + UUID.nameUUIDFromBytes(record.getOwnerName().getBytes()).toString());
 		try {
 			record.setSubstancetype(qs.get("type").asResource().getURI());
 		} catch (Exception x) {
@@ -1293,46 +1342,36 @@ class ProcessMaterial extends ProcessSolution {
 		}
 		;
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Has_Identifier", qs.get("id")
-							.asLiteral().getString()));
+			record.getExternalids().add(new ExternalIdentifier("Has_Identifier", qs.get("id").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Alternative Identifier", qs
-							.get("altid").asLiteral().getString()));
+			record.getExternalids()
+					.add(new ExternalIdentifier("Alternative Identifier", qs.get("altid").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Sigma Aldrich", qs
-							.get("aldrich_id").asLiteral().getString()));
+			record.getExternalids()
+					.add(new ExternalIdentifier("Sigma Aldrich", qs.get("aldrich_id").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("ChEMBL", qs.get("chembl_id")
-							.asLiteral().getString()));
+			record.getExternalids().add(new ExternalIdentifier("ChEMBL", qs.get("chembl_id").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("PubChem SID", qs.get("pubchem_sid")
-							.asLiteral().getString()));
+			record.getExternalids()
+					.add(new ExternalIdentifier("PubChem SID", qs.get("pubchem_sid").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("PubChem CID", qs.get("pubchem_cid")
-							.asLiteral().getString()));
+			record.getExternalids()
+					.add(new ExternalIdentifier("PubChem CID", qs.get("pubchem_cid").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("COD", qs.get("cod_id").asLiteral()
-							.getString()));
+			record.getExternalids().add(new ExternalIdentifier("COD", qs.get("cod_id").asLiteral().getString()));
 		} catch (Exception x) {
 		}
 		String material_formula = null;
@@ -1341,42 +1380,34 @@ class ProcessMaterial extends ProcessSolution {
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Same as", qs.get("same_as")
-							.asResource().getURI()));
+			record.getExternalids().add(new ExternalIdentifier("Same as", qs.get("same_as").asResource().getURI()));
 		} catch (Exception x) {
 		}
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("Close match", qs.get("close_match")
-							.asResource().getURI()));
+			record.getExternalids()
+					.add(new ExternalIdentifier("Close match", qs.get("close_match").asResource().getURI()));
 		} catch (Exception x) {
 		}
 		String material_coating = null;
 		try {
 			material_coating = qs.get("coating").asResource().getLocalName();
-			record.getExternalids().add(
-					new ExternalIdentifier("Coating", material_coating));
+			record.getExternalids().add(new ExternalIdentifier("Coating", material_coating));
 		} catch (Exception x) {
 		}
 
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("DATASET", "NanoWiki"));
+			record.getExternalids().add(new ExternalIdentifier("DATASET", "NanoWiki"));
 		} catch (Exception x) {
 		}
 
 		try {
-			record.getExternalids().add(
-					new ExternalIdentifier("SOURCE", qs.get("source")
-							.asResource().getLocalName()));
+			record.getExternalids().add(new ExternalIdentifier("SOURCE", qs.get("source").asResource().getLocalName()));
 		} catch (Exception x) {
 		}
 		String homepage = null;
 		try {
 			homepage = qs.get("homepage").toString();
-			record.getExternalids().add(
-					new ExternalIdentifier("HOMEPAGE", homepage));
+			record.getExternalids().add(new ExternalIdentifier("HOMEPAGE", homepage));
 		} catch (Exception x) {
 		}
 		String material_cas = null;
@@ -1393,9 +1424,8 @@ class ProcessMaterial extends ProcessSolution {
 		}
 
 		if (record.getSubstanceName().startsWith("JRC2011") || record.getSubstanceName().startsWith("JRCNM")) {
-			ExternalIdentifier e = new ExternalIdentifier(
-					"JRC Representative Manufactured Nanomaterials", record
-							.getSubstanceName().replace("JRC2011 ", ""));
+			ExternalIdentifier e = new ExternalIdentifier("JRC Representative Manufactured Nanomaterials",
+					record.getSubstanceName().replace("JRC2011 ", ""));
 			record.getExternalids().add(e);
 		}
 		ParticleTypes particletype = null;
@@ -1416,19 +1446,14 @@ class ProcessMaterial extends ProcessSolution {
 					p.setTypical_value(100.0);
 					p.setTypical_unit("%");
 				}
-				record.addStructureRelation(
-						composition_uuid,
-						core,
-						material_coating == null ? STRUCTURE_RELATION.HAS_CONSTITUENT
-								: STRUCTURE_RELATION.HAS_CORE, p);
+				record.addStructureRelation(composition_uuid, core,
+						material_coating == null ? STRUCTURE_RELATION.HAS_CONSTITUENT : STRUCTURE_RELATION.HAS_CORE, p);
 				try {
 					core.setRecordProperty(Property.getI5UUIDInstance(),
-							NanoWikiRDFReader.generateUUIDfromString("NWKI",
-									record.getFormula()));
+							NanoWikiRDFReader.generateUUIDfromString("NWKI", record.getFormula()));
 				} catch (Exception x) {
 					core.setRecordProperty(Property.getI5UUIDInstance(),
-							NanoWikiRDFReader.generateUUIDfromString("NWKI",
-									null));
+							NanoWikiRDFReader.generateUUIDfromString("NWKI", null));
 				}
 				core.setFormula(record.getFormula());
 				if (material_smiles != null) {
@@ -1437,15 +1462,13 @@ class ProcessMaterial extends ProcessSolution {
 					core.setSmiles(material_smiles);
 				}
 				if (material_cas != null)
-					core.setRecordProperty(Property.getCASInstance(),
-							material_cas);
+					core.setRecordProperty(Property.getCASInstance(), material_cas);
 			}
 
 			// now guess for the rest
 			if (record.getSubstancetype() != null) {
 				String term = NanoWikiRDFReader.substance_types
-						.getProperty(record.getSubstancetype()
-								.replace(":", "|"));
+						.getProperty(record.getSubstancetype().replace(":", "|"));
 				try {
 					particletype = ParticleTypes.valueOf(term);
 					record.setSubstancetype(particletype.getAnnotation());
@@ -1462,8 +1485,7 @@ class ProcessMaterial extends ProcessSolution {
 				// do nothing
 				particletype = ParticleTypes.Alloy;
 				record.setSubstancetype(particletype.getAnnotation());
-			} else if (record.getSubstancetype() == null
-					|| "".equals(record.getSubstancetype().trim())) {
+			} else if (record.getSubstancetype() == null || "".equals(record.getSubstancetype().trim())) {
 				particletype = ParticleTypes.NPO_199;
 				record.setSubstancetype(particletype.getAnnotation());
 			} else {
@@ -1486,13 +1508,9 @@ class ProcessMaterial extends ProcessSolution {
 						}
 						if (core.getRecordProperty(Property.getCASInstance()) == null)
 							if (ptype.getCAS() != null)
-								core.setRecordProperty(
-										Property.getCASInstance(),
-										ptype.getCAS());
+								core.setRecordProperty(Property.getCASInstance(), ptype.getCAS());
 						if (ptype.getEINECS() != null)
-							core.setRecordProperty(
-									Property.getEINECSInstance(),
-									ptype.getEINECS());
+							core.setRecordProperty(Property.getEINECSInstance(), ptype.getEINECS());
 
 						particletype = ptype;
 						break;
@@ -1503,8 +1521,7 @@ class ProcessMaterial extends ProcessSolution {
 				record.setSubstancetype(particletype.name());
 				StringBuilder b = new StringBuilder();
 				b.append(particletype.toString());
-				if (record.getPublicName() != null
-						&& (b.toString().indexOf(record.getPublicName()) < 0)) {
+				if (record.getPublicName() != null && (b.toString().indexOf(record.getPublicName()) < 0)) {
 					b.append(" ");
 					b.append(record.getPublicName());
 				}
@@ -1513,8 +1530,7 @@ class ProcessMaterial extends ProcessSolution {
 
 			// todo more info
 			try {
-				core.setRecordProperty(Property.getNameInstance(),
-						record.getFormula());
+				core.setRecordProperty(Property.getNameInstance(), record.getFormula());
 			} catch (Exception x) {
 			}
 
@@ -1524,10 +1540,8 @@ class ProcessMaterial extends ProcessSolution {
 		;
 		try {
 			LiteratureEntry ref = new LiteratureEntry(
-					qs.get("journal_title") == null ? null : qs
-							.get("journal_title").asLiteral().getString(),
-					qs.get("doilink") == null ? null : (qs.get("doilink"))
-							.asResource().getURI());
+					qs.get("journal_title") == null ? null : qs.get("journal_title").asLiteral().getString(),
+					qs.get("doilink") == null ? null : (qs.get("doilink")).asResource().getURI());
 			record.setReference(ref);
 		} catch (Exception x) {
 			// System.out.println(record.getCompanyName());
@@ -1545,10 +1559,10 @@ class ProcessMaterial extends ProcessSolution {
 		return material_smiles == null ? ptype.getSMILES() : material_smiles;
 	}
 
-	private void parseMeasurement(Model rdf, RDFNode material,
-			SubstanceRecord record) throws IOException {
-		execQuery(rdf, String.format(NW.m_sparql.SPARQL(), material
-				.asResource().getURI(), material.asResource().getURI()),
+	private void parseMeasurement(Model rdf, RDFNode material, SubstanceRecord record) throws IOException {
+		System.out.println(material);
+		execQuery(rdf,
+				String.format(NW.m_sparql.SPARQL(), material.asResource().getURI(), material.asResource().getURI()),
 				new ProcessMeasurement(rdf, record));
 	}
 
