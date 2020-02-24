@@ -95,8 +95,9 @@ public class NanoWikiRDFReader extends DefaultIteratingChemObjectReader
 		bundle.setrightsHolder("http://orcid.org/0000-0001-7542-0286");
 		bundle.setMaintainer("http://orcid.org/0000-0001-7542-0286");
 		bundle.setURL("https://figshare.com/articles/NanoWiki_5/7075214");
+		bundle.setURL("https://github.com/egonw/nanowiki");
 		bundle.setLicenseURI("https://creativecommons.org/publicdomain/zero/1.0/");
-		bundle.setVersion(5);
+		bundle.setVersion(6);
 		bundle.setBundle_number(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 		bundle.setUserName("enanomapper");
 		bundle.setDescription(
