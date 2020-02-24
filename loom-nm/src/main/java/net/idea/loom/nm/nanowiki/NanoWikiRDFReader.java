@@ -459,8 +459,22 @@ class ProcessMeasurement extends ProcessSolution {
 			public Protocol._categories getCategory() {
 				return Protocol._categories.PC_MELTING_SECTION;
 			}
+		},
+		Transcriptomics_section {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.TRANSCRIPTOMICS_SECTION;
+			}
+		},
+		Proteomics_section {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PROTEOMICS_SECTION;
+			}
+		},
+		Metabolomics_section {
+			public Protocol._categories getCategory() {
+				return Protocol._categories.METABOLOMICS_SECTION;
+			}
 		};
-
 		public Protocol._categories getCategory() {
 			return Protocol._categories.PC_UNKNOWN_SECTION;
 		}
@@ -745,6 +759,12 @@ class ProcessMeasurement extends ProcessSolution {
 			}
 		},
 		DENSITY {
+			@Override
+			public Protocol._categories getCategory() {
+				return Protocol._categories.PC_DENSITY_SECTION;
+			}
+		},		
+		EFFECTIVE_DENSITY {
 			@Override
 			public Protocol._categories getCategory() {
 				return Protocol._categories.PC_DENSITY_SECTION;
@@ -1475,15 +1495,18 @@ class ProcessMaterial extends ProcessSolution {
 				} catch (Exception x) {
 					x.printStackTrace();
 				}
-			} else if ("Glass wool".equals(record.getPublicName().trim())) {
-				particletype = ParticleTypes.CHEBI_131191;
+				
+			} else if ("Graphenel".equals(record.getPublicName().trim())) {
+				particletype = ParticleTypes.CHEBI_36973;
 				record.setSubstancetype(particletype.getAnnotation());
+			} else if ("Glass wool".equals(record.getPublicName().trim())) {
+				
 			} else if ("Asbestos".equals(record.getPublicName().trim())) {
 				particletype = ParticleTypes.CHEBI_46661;
 				record.setSubstancetype(particletype.getAnnotation());
 			} else if ("Alloy".equals(record.getSubstancetype())) {
 				// do nothing
-				particletype = ParticleTypes.Alloy;
+				particletype = ParticleTypes.CHEBI_142648;
 				record.setSubstancetype(particletype.getAnnotation());
 			} else if (record.getSubstancetype() == null || "".equals(record.getSubstancetype().trim())) {
 				particletype = ParticleTypes.NPO_199;
