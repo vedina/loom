@@ -5,7 +5,21 @@
  https://nexus.ideaconsult.net/index.html#nexus-search;gav~net.ideaconsult~loom~~~
  
 #### Development 
-##### [Ambit](http://ambit.sf.net) 4.0.0-SNAPSHOT dependency
+##### [Ambit](http://ambit.sf.net) 4.0.1-SNAPSHOT dependency
+
+Note `loom-nm` is not anymore in this repository, moved to https://github.com/enanomapper/nmdataparser/ !
+
+````
+<dependency>
+  <groupId>net.ideaconsult</groupId>
+  <artifactId>loom</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+</dependency>
+````
+
+#### Releases
+
+##### [Ambit](http://ambit.sf.net) 4.0.0 dependency
 ````
 <dependency>
   <groupId>net.ideaconsult</groupId>
@@ -13,8 +27,6 @@
   <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ````
-
-#### Releases
 
 ##### [Ambit](http://ambit.sf.net) 3.1.0 dependency
 ````
