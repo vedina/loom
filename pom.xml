@@ -15,12 +15,14 @@
     <module>loom-common</module>
     <!--
     <module>loom-isa</module>
-    -->
-    <module>loom-i5ws</module>
-    <module>loom-tox21</module>
-    <module>loom-effectopedia</module>
     <module>loom-i6ws</module>
     <module>loom-ixws</module>
+    <module>loom-i5ws</module>
+    -->    
+    <module>loom-tox21</module>
+    <module>loom-effectopedia</module>
+
+    <module>loom-python</module>
   </modules>
   <dependencies>
     <dependency>
@@ -57,46 +59,52 @@
     </repository>
   </distributionManagement>
   <repositories>
-    <repository>
-      <id>mvnrepository</id>
-      <name>mvnrepository</name>
-      <url>http://mvnrepository.com/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>nexus-idea</id>
-      <url>https://nexus.ideaconsult.net/content/repositories/thirdparty</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>      
-    </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>      
-      <id>nexus-idea-releases</id>
-      <name>nexus-idea-releases</name>
-      <url>https://nexus.ideaconsult.net/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>      
-      <id>nexus-idea-snapshots</id>
-      <name>nexus-idea-snapshots</name>
-      <url>https://nexus.ideaconsult.net/content/repositories/snapshots</url>
-    </repository>
+  	<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>nexus-idea</id>
+			<url>https://nexus.ideaconsult.net/content/repositories/thirdparty</url>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+
+		</repository>
+		<repository>
+			<id>nexus-idea-releases</id>
+			<url>https://nexus.ideaconsult.net/content/repositories/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>nexus-idea-snapshots</id>
+			<url>https://nexus.ideaconsult.net/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>mvnrepository</id>
+			<name>mvnrepository</name>
+			<url>https://mvnrepository.com/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
   </repositories>
   <organization>
     <name>Ideaconsult Ltd</name>
@@ -174,52 +182,20 @@
         <ops.app_key>opsappkey</ops.app_key>
       </properties>
     </profile>
-    <profile>
-      <id>JRE6</id>
-      <activation>
-        <jdk>1.6</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.6</sourceVersion>
-      </properties>
-    </profile>
-    <profile>
-      <id>JRE7</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.7</sourceVersion>
-      </properties>
-    </profile>
-    <profile>
-      <id>JRE8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.8</sourceVersion>
-      </properties>
-    </profile>
-    <profile>
-      <id>JRE9</id>
-      <activation>
-        <jdk>1.9</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.9</sourceVersion>
-      </properties>
-    </profile>    
+   
   </profiles>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>4.8.1</junit.version>
+    <junit.version>[4.13.1,)</junit.version>
     <!-- ambit.sf.net -->
-    <ambit.version>4.0.0-SNAPSHOT</ambit.version>
+    <ambit.version>4.1.0-SNAPSHOT</ambit.version>
     <!--  https://github.com/ideaconsult/i5 -->
-    <i5.version>2.1.0-SNAPSHOT</i5.version>
+    <i5.version>2.2.0-SNAPSHOT</i5.version>
 	<apache.jena.version>2.13.0</apache.jena.version>
     <org.apache.httpcomponents.httpclient.version>4.5</org.apache.httpcomponents.httpclient.version>
     <jackson.version>2.4.0</jackson.version>
+		<sourceVersion>1.8</sourceVersion>
+		<maven.compiler.source>${sourceVersion}</maven.compiler.source>
+        <maven.compiler.target>${sourceVersion}</maven.compiler.target>	    
   </properties>
 </project>
